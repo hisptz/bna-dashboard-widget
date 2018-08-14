@@ -1,0 +1,28 @@
+{
+	"version": "1.0.2",
+	"name": "BNA widget",
+	"description": "BNA widget",
+	"launch_path": "index.html",
+	"appType": "DASHBOARD_WIDGET",
+	"icons": {
+		"16": "favicon.ico",
+		"48": "favicon.ico",
+		"128": "favicon.ico"
+		},
+	"developer": {
+        "name": "HISPTZ",
+        "url": "https://hisptanzania.org"
+    },
+    "default_locale": "en",
+    "activities": {
+        "dhis": {
+            "href": "../../../"
+        }
+    },
+	"authorities": [
+"MY_APP_ADD_NEW",
+"MY_APP_UPDATE",
+"MY_APP_DELETE"
+
+	]
+}
