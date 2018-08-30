@@ -1,4 +1,4 @@
 export interface RootCauseAnalysisWidget {
-  widgetId: string;
+  id: string;
   configurationId: string;
 }

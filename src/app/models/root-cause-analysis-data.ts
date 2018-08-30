@@ -1,9 +1,19 @@
 import {DatasetElement} from './root-cause-analysis-configurations';
 
 export interface RootCauseAnalysisData {
-  widgetId: string;
-  dataId: string;
+  id: string;
+  configurationId: string;
+  isActive: boolean;
   dataValues: {
-    [cellId: string]: string
-  };
+    orgUnitName: string,
+    orgUnitId: string,
+    periodName: string,
+    periodId: string,
+    interventionName: string,
+    interventionId: string,
+    bottleneckName: string,
+    bottleneckId: string,
+    indicatorName: string,
+    indicatorId: string;
+}
 }

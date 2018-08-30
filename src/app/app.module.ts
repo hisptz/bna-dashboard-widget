@@ -19,9 +19,10 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { HomeComponent } from './pages/home/home.component';
 import { BnaWidgetComponent } from './pages/bna-widget/bna-widget.component';
+import { DataItemComponent } from './components/data-item/data-item.component';
 
 @NgModule({
-  declarations: [AppComponent, HomeComponent, BnaWidgetComponent],
+  declarations: [AppComponent, HomeComponent, BnaWidgetComponent, DataItemComponent],
   imports: [
     BrowserModule,
 

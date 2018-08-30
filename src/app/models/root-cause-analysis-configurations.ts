@@ -1,9 +1,7 @@
 export interface RootCauseAnalysisConfigurations {
-  configurationId: string;
+  id: string;
   configurationName: string;
-  datasetElements: {
-    [key: string]: DatasetElement
-  };
+  datasetElements: [DatasetElement];
 }
 
 export interface DatasetElement {
