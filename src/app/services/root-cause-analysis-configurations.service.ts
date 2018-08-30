@@ -19,62 +19,120 @@ export class RootCauseAnalysisConfigurationsService {
       if (error.status !== 404) {
               return throwError(error);
       }
-      const dataSetElementDetails: any = [ {
-        dataElementName: "OrgUnit",
-        dataElementId: helper.generateUid(),
-        valueType: "AUTO_FILLED",
-        isLabel: true,
-        isInput: false,
-        isSelect: false
+      const dataSetElementDetails: any = [
+        {
+          name: "OrgUnit",
+          id: helper.generateUid(),
+          valueType: "AUTO_FILLED",
+          optionSetValue: false,
+          categoryCombo: {
+              id: helper.generateUid(),
+              name: "default",
+              categoryOptionCombos: [
+              {
+                id: helper.generateUid(),
+                name: " default"
+              }
+            ]
+          }
+        },
+        {
+          name: "Period",
+          id: helper.generateUid(),
+          valueType: "AUTO_FILLED",
+          optionSetValue: false,
+          categoryCombo: {
+              id: helper.generateUid(),
+              name: "default",
+              categoryOptionCombos: [
+              {
+                id: helper.generateUid(),
+                name: " default"
+              }
+            ]
+          }
+        },
+        {
+          name: "Intervention",
+          id: helper.generateUid(),
+          valueType: "AUTO_FILLED",
+          optionSetValue: false,
+        categoryCombo: {
+            id: helper.generateUid(),
+            name: "default",
+            categoryOptionCombos: [
+            {
+              id: helper.generateUid(),
+              name: " default"
+            }
+          ]
+        }
       },
-      {
-        dataElementName: "Period",
-        dataElementId: helper.generateUid(),
-        valueType: "AUTO_FILLED",
-        isLabel: true,
-        isInput: false,
-        isSelect: false
-      },
-      {
-        dataElementName: "Intervention",
-        dataElementId: helper.generateUid(),
-        valueType: "AUTO_FILLED",
-        isLabel: true,
-        isInput: false,
-        isSelect: false
-      },
-      {
-        dataElementName: "Bottleneck",
-        dataElementId: helper.generateUid(),
-        valueType: "TEXT",
-        isLabel: false,
-        isInput: false,
-        isSelect: true
-      },
-      {
-        dataElementName: "Indicator",
-        dataElementId: helper.generateUid(),
-        valueType: "TEXT",
-        isLabel: false,
-        isInput: false,
-        isSelect: true
-      },
-      {
-        dataElementName: "Root cause",
-        dataElementId: helper.generateUid(),
-        valueType: "TEXT",
-        isLabel: false,
-        isInput: true,
-        isSelect: false
+        {
+          name: "Bottleneck",
+          id: helper.generateUid(),
+          valueType: "TEXT",
+          optionSetValue: false,
+        categoryCombo: {
+            id: helper.generateUid(),
+            name: "default",
+            categoryOptionCombos: [
+                {
+                  id: helper.generateUid(),
+                  name: " default"
+                }
+              ]
+            }
+          },
+          {
+            name: "Indicator",
+            id: helper.generateUid(),
+            valueType: "TEXT",
+            optionSetValue: false,
+          categoryCombo: {
+              id: helper.generateUid(),
+              name: "default",
+              categoryOptionCombos: [
+              {
+                id: helper.generateUid(),
+                name: " default"
+              }
+            ]
+          }
+        },
+        {
+          name: "Root cause",
+          id: helper.generateUid(),
+          valueType: "TEXT",
+          optionSetValue: false,
+        categoryCombo: {
+            id: helper.generateUid(),
+            name: "default",
+            categoryOptionCombos: [
+            {
+              id: helper.generateUid(),
+              name: " default"
+            }
+          ]
+        }
       },
       {
         dataElementName: "Solution",
         dataElementId: helper.generateUid(),
         valueType: "TEXT",
-        isLabel: false,
-        isInput: true,
-        isSelect: false
-      }];
+        optionSetValue: false,
+      categoryCombo: {
+          id: helper.generateUid(),
+          name: "default",
+          categoryOptionCombos: [
+          {
+            id: helper.generateUid(),
+            name: " default"
+          }
+        ]
+      }
+      }
+      ];
       const configurationObject: RootCauseAnalysisConfigurations = {id: configurationId, configurationName:"Root Cause Analysis Widget", datasetElements: dataSetElementDetails };
         return this.http.post('dataStore/rca-config/' + configurationObject.id, configurationObject).pipe(map(() => {
           this.http.get(`dataStore/rca-config/${configurationId}`)

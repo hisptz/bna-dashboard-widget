@@ -1,22 +1,23 @@
 <table *ngIf="(configuration$ | async)">
   <thead>
     <tr>
-          <th *ngFor="let datasetElement of (configuration$ | async)?.datasetElements">
-            {{ datasetElement.dataElementName }}
+          <th *ngFor="let dataElement of (configuration$ | async)?.dataElements">
+            {{ dataElement.name }}
           </th>
         <th> Actions </th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let dataArray of (data$ | async)">
-      <td *ngFor="let datasetElement of (configuration$ | async)?.datasetElements"> 
-        
+      <td *ngFor="let dataElement of (configuration$ | async)?.dataElements"> 
+          <app-data-item [dataSetElement] = '(datasetElement)' [rowData] = '(dataArray)' > </app-data-item>
+            <!-- {{ datasetElement.dataElementName }} -->
       </td>
     </tr>
   </tbody>
 </table>
 
 <div>
-  <!-- <button class="pull-right" (click)=""> Add New </button> -->
+  <button class="pull-right" (click)="addNewRow()"> Add New </button>
 </div>
 

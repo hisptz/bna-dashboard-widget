@@ -2,13 +2,13 @@
   "/api": {
     "target": "https://scorecard-dev.dhis2.org/dev/",
     "secure": "false",
-    "auth": "system:System123",
+    "auth": "admin:district",
     "changeOrigin": "true"
   },
   "/": {
     "target": "https://scorecard-dev.dhis2.org/dev/",
     "secure": "false",
-    "auth": "system:System123",
+    "auth": "admin:district",
     "changeOrigin": "true"
   }
 }

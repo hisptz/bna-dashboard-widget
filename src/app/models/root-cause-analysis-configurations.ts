@@ -1,7 +1,7 @@
 export interface RootCauseAnalysisConfigurations {
   id: string;
   configurationName: string;
-  datasetElements: [DatasetElement];
+  datasetElements: any;
 }
 
 export interface DatasetElement {

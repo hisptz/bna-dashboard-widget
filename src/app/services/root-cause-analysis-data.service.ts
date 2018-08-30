@@ -19,7 +19,7 @@ export class RootCauseAnalysisDataService {
     }
 
     addData(payload){
-      return this.http.post('dataStore/rca-data/' + payload.configurationId + '_' + payload.id , payload).pipe(map(() => {
+      return this.http.post('dataStore/rca-data/' + payload.configurationId + '_' + payload.id , {}).pipe(map(() => {
         return this.http.get(`dataStore/rca-data/${payload.configurationId + '_' + payload.id}`)
       }))    
     }

@@ -32,6 +32,8 @@ export class BnaWidgetComponent implements OnInit {
       solution: ""
     };
 
+   
+
   constructor(
     public rcaWidget: service.RootCauseAnalysisWidgetService,
     public rcaConfigurations: service.RootCauseAnalysisConfigurationsService,
@@ -43,5 +45,17 @@ export class BnaWidgetComponent implements OnInit {
     this.configuration$ = this.rcaConfigurations.getConfiguration('myrcaconfig');
     this.widget$ = this.rcaWidget.getWidget('myrcawidget');
     this.data$ = this.rcaData.getData(this.params);
+    
+    this.rcaData.getData(this.params)
+  }
+
+  addNewRow() {
+    let rowPayload = {
+      id: helper.generateUid(),
+      configurationId: 'myrcaconfig',
+      isActive: false,
+      dataValues: this.params
+    };
+    this.rcaData.addData(rowPayload)
   }
 }
