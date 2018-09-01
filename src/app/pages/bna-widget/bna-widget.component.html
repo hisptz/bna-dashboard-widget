@@ -1,23 +1,77 @@
-<table *ngIf="(configuration$ | async)">
+<form [formGroup]="analysisRow">
+<table>
   <thead>
-    <tr>
+
+    <pre>
+      {{ analysisRow.value | json }}
+    </pre>
+      <!-- <tr>
           <th *ngFor="let dataElement of (configuration$ | async)?.dataElements">
             {{ dataElement.name }}
           </th>
-        <th> Actions </th>
-    </tr>
+        <th *ngIf="(configuration$ | async)"> Actions </th>
+      </tr> -->
   </thead>
   <tbody>
-    <tr *ngFor="let dataArray of (data$ | async)">
-      <td *ngFor="let dataElement of (configuration$ | async)?.dataElements"> 
-          <app-data-item [dataSetElement] = '(datasetElement)' [rowData] = '(dataArray)' > </app-data-item>
-            <!-- {{ datasetElement.dataElementName }} -->
+    
+  
+      <!-- <div formArrayName="dataItems">
+          <div *ngFor="let dataRow of dataValuesForms.controls; let i = index;" [formGroupName]="i">
+            <div formGroupName="dataValues">
+              <input formControlName="orgUnitName">
+              <input formControlName="periodName">
+              <input formControlName="interventionName">
+              <input formControlName="bottleneckName">
+              <input formControlName="indicatorName">
+              <input formControlName="rootCause">
+              <input formControlName="solution">
+            </div>
+          </div>
+        </div> -->
+
+    <tr *ngFor="let dataItem of (data$ | async); trackBy:dataItem?.id">
+      <td *ngFor="let dataElement of (configuration$ | async)?.dataElements;" [ngClass]="{
+        'auto-filled': dataElement.valueType == 'AUTO_FILLED',
+        'select-box': dataElement.optionSetValue == true}"> 
+          <app-auto-filled-input  *ngIf="(!dataElement.optionSetValue && dataElement.valueType == 'AUTO_FILLED') " [element]="dataElement" [orgUnit]="'Kabamba'" [period]="'July 2018 - September 2018'" [dashboard]="'ANC'"></app-auto-filled-input>
+          <app-select-box-input *ngIf="dataElement.optionSetValue" [element]="dataElement"></app-select-box-input>
+          <app-text-area-input *ngIf="!dataElement.optionSetValue && dataElement.valueType == 'TEXT'" [element]="dataElement"></app-text-area-input>
+      </td>
+      <td>
+       
+        <div *ngIf="!dataItem.showDeleteNotification && (data$ | async)">
+            <button (click)="onToggleDeleteRow(dataItem,$event)" class="btn delete-button pull-right" title="Delete row">
+                <i class="icon-trash-empty" title="Delete Row"> Delete </i>
+              </button>
+            <button class="btn edit-button pull-right" (click)="onToggleEditRow(dataItem,$event)" *ngIf="!dataItem.isActive">
+                <i class="icon-edit" title="Edit Row"> Edit </i>
+              </button>
+              <button class="btn edit-button pull-right" (click)="onUpdateRow(dataItem,$event)" *ngIf="dataItem.isActive">
+                  Save
+                </button>
+        </div>
+
+        <div *ngIf="dataItem.showDeleteNotification">
+            <span style="font-size: 14px"> {{ DeleteMessage }} </span>
+          <button (click)="onToggleDeleteRow(dataItem,$event)" class="btn edit-button pull-right" title="Abort Delete">
+              No
+            </button>
+          <button (click)="onConfirmDelete(dataItem,$event)" class="btn delete-button pull-right" title="Confirm Delete">
+              Yes
+          </button>
+        </div>
+
       </td>
     </tr>
+    
+
+
+  
+
+
   </tbody>
 </table>
-
+</form>
 <div>
-  <button class="pull-right" (click)="addNewRow()"> Add New </button>
+  <button class="pull-right" (click)="onAddNewRow()"> Add New </button>
 </div>
-

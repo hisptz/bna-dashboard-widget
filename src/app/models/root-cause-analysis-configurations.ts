@@ -1,14 +1,27 @@
 export interface RootCauseAnalysisConfigurations {
-  id: string;
-  configurationName: string;
-  datasetElements: any;
-}
-
-export interface DatasetElement {
-  dataElementId: string;
-  dataElementName: string;
-  valueType: string;
-  isLabel: boolean;
-  isInput: boolean;
-  isSelect: boolean;
-}
+    name: string;
+    id : string;
+    dataElement: [{
+      name: string;
+      id: string;
+      valueType: string;
+      optionSetValue: boolean;
+      optionSet?: {
+        option: [{
+          id: string;
+          name: string;
+          code: number;
+       }]
+     };
+     categoryCombo: {
+        id: string;
+        name: string;
+        categoryOptionCombos :[
+          {
+          id: string;
+          name : string;
+          }
+        ]
+      }
+      }]
+   }
