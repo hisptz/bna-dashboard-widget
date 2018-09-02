@@ -1,12 +1,12 @@
-import { Injectable } from "@angular/core";
-import { NgxDhis2HttpClientService } from "@hisptz/ngx-dhis2-http-client";
-import { RootCauseAnalysisWidget } from "../models/root-cause-analysis-widget";
-import { RootCauseAnalysisConfigurationsService } from "./root-cause-analysis-configurations.service";
-import { catchError, map } from "rxjs/operators";
-import { Observable, throwError } from "rxjs";
+import { Injectable } from '@angular/core';
+import { NgxDhis2HttpClientService } from '@hisptz/ngx-dhis2-http-client';
+import { RootCauseAnalysisWidget } from '../store/models/root-cause-analysis-widget.model';
+import { RootCauseAnalysisConfigurationsService } from './root-cause-analysis-configurations.service';
+import { catchError, map } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
 
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root'
 })
 export class RootCauseAnalysisWidgetService {
   configurationId: string;
@@ -27,7 +27,7 @@ export class RootCauseAnalysisWidgetService {
           configurationId: this.configurationId
         };
         return this.http
-          .post("dataStore/rca-widget/" + widgetObject.id, widgetObject)
+          .post('dataStore/rca-widget/' + widgetObject.id, widgetObject)
           .pipe(map(() => widgetObject));
       })
     );

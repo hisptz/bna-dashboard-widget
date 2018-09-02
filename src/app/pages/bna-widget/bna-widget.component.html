@@ -1,77 +1,36 @@
-<form [formGroup]="analysisRow">
-<table>
+<table *ngIf="configuration$ | async as rootCauseAnalysisConfiguration;">
   <thead>
-
-    <pre>
-      {{ analysisRow.value | json }}
-    </pre>
-      <!-- <tr>
-          <th *ngFor="let dataElement of (configuration$ | async)?.dataElements">
-            {{ dataElement.name }}
-          </th>
-        <th *ngIf="(configuration$ | async)"> Actions </th>
-      </tr> -->
+    <tr>
+      <th [hidden]="dataElement.isHidden" *ngFor="let dataElement of rootCauseAnalysisConfiguration.dataElements;">
+        {{dataElement.name}}
+      </th>
+      <th> Actions </th>
+    </tr>
   </thead>
-  <tbody>
-    
-  
-      <!-- <div formArrayName="dataItems">
-          <div *ngFor="let dataRow of dataValuesForms.controls; let i = index;" [formGroupName]="i">
-            <div formGroupName="dataValues">
-              <input formControlName="orgUnitName">
-              <input formControlName="periodName">
-              <input formControlName="interventionName">
-              <input formControlName="bottleneckName">
-              <input formControlName="indicatorName">
-              <input formControlName="rootCause">
-              <input formControlName="solution">
-            </div>
-          </div>
-        </div> -->
-
-    <tr *ngFor="let dataItem of (data$ | async); trackBy:dataItem?.id">
-      <td *ngFor="let dataElement of (configuration$ | async)?.dataElements;" [ngClass]="{
-        'auto-filled': dataElement.valueType == 'AUTO_FILLED',
-        'select-box': dataElement.optionSetValue == true}"> 
-          <app-auto-filled-input  *ngIf="(!dataElement.optionSetValue && dataElement.valueType == 'AUTO_FILLED') " [element]="dataElement" [orgUnit]="'Kabamba'" [period]="'July 2018 - September 2018'" [dashboard]="'ANC'"></app-auto-filled-input>
-          <app-select-box-input *ngIf="dataElement.optionSetValue" [element]="dataElement"></app-select-box-input>
-          <app-text-area-input *ngIf="!dataElement.optionSetValue && dataElement.valueType == 'TEXT'" [element]="dataElement"></app-text-area-input>
+  <tbody *ngIf=" data$ | async as rootCauseAnalysisData;">
+    <tr *ngFor="let dataItem of rootCauseAnalysisData ;  let i = index; trackBy:dataItem?.id">
+      <td [hidden]="dataElement.isHidden" *ngFor="let dataElement of rootCauseAnalysisConfiguration.dataElements; let j = index"
+        [ngClass]="{
+          'auto-filled': dataElement.valueType == 'AUTO_FILLED',
+          'select-box': dataElement.optionSetValue == true}">
+        <span *ngIf="!dataItem.isActive && !dataElement.isHidden">{{dataItem.dataValues[dataElement.id]}}</span>
+        <app-auto-filled-input *ngIf="dataItem.isActive && !dataElement.optionSetValue && dataElement.valueType == 'AUTO_FILLED'"
+          [dataItemValue]="dataItem.dataValues[dataElement.id]" [dataElement]="dataElement" [orgUnit]="routerParams.orgUnit"
+          [period]="routerParams.period" [dashboard]="routerParams.dashboard"></app-auto-filled-input>
+        <app-select-box-input *ngIf="dataItem.isActive && dataElement.optionSetValue" [dataItemValue]="dataItem.dataValues[dataElement.id]"
+          [dataElement]="dataElement"></app-select-box-input>
+        <textarea *ngIf="dataItem.isActive && !dataElement.optionSetValue && dataElement.valueType == 'TEXT'" placeholder="{{dataElement.name}}"
+          (keyup)="onDataValueUpdate($event, dataElement.id, dataItem)" autofocus>{{dataItem.dataValues[dataElement.id]}}</textarea>
       </td>
+
       <td>
-       
-        <div *ngIf="!dataItem.showDeleteNotification && (data$ | async)">
-            <button (click)="onToggleDeleteRow(dataItem,$event)" class="btn delete-button pull-right" title="Delete row">
-                <i class="icon-trash-empty" title="Delete Row"> Delete </i>
-              </button>
-            <button class="btn edit-button pull-right" (click)="onToggleEditRow(dataItem,$event)" *ngIf="!dataItem.isActive">
-                <i class="icon-edit" title="Edit Row"> Edit </i>
-              </button>
-              <button class="btn edit-button pull-right" (click)="onUpdateRow(dataItem,$event)" *ngIf="dataItem.isActive">
-                  Save
-                </button>
-        </div>
+        <button (click)="onToggleEdit(dataItem)" *ngIf="!dataItem.isActive"> Edit </button>
+        <button (click)="onSaveRootCauseAnalysisData(dataItem, $event)" *ngIf="dataItem.isActive"> Save </button>
 
-        <div *ngIf="dataItem.showDeleteNotification">
-            <span style="font-size: 14px"> {{ DeleteMessage }} </span>
-          <button (click)="onToggleDeleteRow(dataItem,$event)" class="btn edit-button pull-right" title="Abort Delete">
-              No
-            </button>
-          <button (click)="onConfirmDelete(dataItem,$event)" class="btn delete-button pull-right" title="Confirm Delete">
-              Yes
-          </button>
-        </div>
-
+        <button> Delete </button>
       </td>
     </tr>
-    
-
-
-  
-
-
   </tbody>
 </table>
-</form>
-<div>
-  <button class="pull-right" (click)="onAddNewRow()"> Add New </button>
-</div>
+
+<button *ngIf="(configuration$ | async)" class="pull-right"> Add New </button>

@@ -3,8 +3,14 @@ import { Store } from "@ngrx/store";
 
 import * as fromRoot from "./store/reducers/index";
 import { LoadRootCauseAnalysisDatas } from "./store/actions/root-cause-analysis-data.actions";
-import { LoadRootCauseAnalysisWidget } from "./store/actions/root-cause-analysis-widget.actions";
-import { LoadRootCauseAnalysisConfiguration } from "./store/actions/root-cause-analysis-configuration.actions";
+import {
+  LoadRootCauseAnalysisWidget,
+  SetCurrentRootCauseAnalysisWidget
+} from "./store/actions/root-cause-analysis-widget.actions";
+import {
+  AddRootCauseAnalysisConfigurations,
+  LoadRootCauseAnalysisConfigurations
+} from "./store/actions/root-cause-analysis-configuration.actions";
 @Component({
   selector: "app-root",
   templateUrl: "./app.component.html",
@@ -18,11 +24,14 @@ export class AppComponent {
   configurationId = "myrcaconfig";
   constructor(private store: Store<fromRoot.State>) {
     store.dispatch(
-      new LoadRootCauseAnalysisConfiguration(this.configurationId)
+      new LoadRootCauseAnalysisConfigurations(
+        this.configurationId,
+        this.routeParams.dashboardItemId
+      )
     );
+
     store.dispatch(
-      new LoadRootCauseAnalysisWidget(this.routeParams.dashboardItemId)
+      new SetCurrentRootCauseAnalysisWidget(this.routeParams.dashboardItemId)
     );
-    store.dispatch(new LoadRootCauseAnalysisDatas());
   }
 }

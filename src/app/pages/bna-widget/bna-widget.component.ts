@@ -1,138 +1,105 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { State } from '../../store';
-import * as helper from '../../helpers/index';
-import * as service from '../../services';
 import { Observable } from 'rxjs';
-import { FormBuilder, FormGroup, FormControl, FormArray } from '@angular/forms';
-import * as _ from 'lodash'
-import { RootCauseAnalysisData } from '../../models/root-cause-analysis-data';
+import * as _ from 'lodash';
+import * as fromModels from '../../store/models';
+import * as fromRootCauseAnalysisDataActions from '../../store/actions/root-cause-analysis-data.actions';
+import * as fromSelectors from '../../store/selectors';
 
 @Component({
   selector: 'app-bna-widget',
   templateUrl: './bna-widget.component.html',
   styleUrls: ['./bna-widget.component.css']
 })
-
 export class BnaWidgetComponent implements OnInit {
-  @Input() routerParams: any;
-  configuration$: Observable<any[]>;
-  widget$: Observable<any[]>;
-  data$: Observable<{} | {}[]>;
+  @Input()
+  routerParams;
+  configuration$: Observable<fromModels.RootCauseAnalysisConfiguration>;
+  widget$: Observable<fromModels.RootCauseAnalysisWidget>;
+  data$: Observable<fromModels.RootCauseAnalysisData[]>;
+  saveEditButtonTitle: string = 'Edit';
 
-  analysisData: FormArray;
-  analysisRow: FormGroup;
+  unSavedDataItemValues: any;
 
-  params = 
-    {
-      orgUnitName: "Kigumbe",
-      orgUnitId: "uh3q8r4qhjr",
-      periodName: "July - September 2018",
-      periodId: "2018Q3",
-      interventionName: "ANC",
-      interventionId: "jm2sad5jfop",
-      bottleneckName: "",
-      bottleneckId: "",
-      indicatorName: "",
-      indicatorId: ""
-    };
-
-    confirmDeleteNotification: boolean = false;
-    DeleteMessage: string = "Are you sure you wish to delete row?"
-    confirmClicked: boolean = false;
-    cancelClicked: boolean = false;
-
-  constructor(
-    public rcaWidget: service.RootCauseAnalysisWidgetService,
-    public rcaConfigurations: service.RootCauseAnalysisConfigurationsService,
-    public rootCauseAnalysisData: service.RootCauseAnalysisDataService,
-    private analysisForm : FormBuilder,
-    private store: Store<State>
-  ) { }
-
-  ngOnInit() {
-    this.configuration$ = this.rcaConfigurations.getConfiguration('myrcaconfig');
-    this.widget$ = this.rcaWidget.getWidget('myrcawidget');
-    this.data$ = this.rootCauseAnalysisData.getData();
-
-    this.analysisRow = this.analysisForm.group({
-      dataItems: this.analysisForm.array([])
-    });
-
-    this.analysisRow.valueChanges.subscribe()
+  constructor(private store: Store<State>) {
+    this.widget$ = store.select(
+      fromSelectors.getCurrentRootCauseAnalysisWidget
+    );
+    this.configuration$ = store.select(
+      fromSelectors.getCurrentRootCauseAnalysisConfiguration
+    );
+    this.data$ = store.select(fromSelectors.getAllRootCauseAnalysisData);
+    this.unSavedDataItemValues = {};
   }
 
+  ngOnInit() {}
 
-  getAnalysisData(form){
-    return form.get('dataItems').controls;
+  onUpdateRootCauseAnalysisData(rootCauseAnalysisData: any) {
+    rootCauseAnalysisData.isActive = !rootCauseAnalysisData.isActive;
+    this.store.dispatch(
+      new fromRootCauseAnalysisDataActions.SaveRootCauseAnalysisData(
+        rootCauseAnalysisData
+      )
+    );
   }
 
-  get dataValuesForms(){
-    return this.analysisRow.get('dataItems') as FormArray;
+  onAddRootCauseAnalysis(rootCauseAnalysisData: any) {
+    this.store.dispatch(
+      new fromRootCauseAnalysisDataActions.CreateRootCauseAnalysisData(
+        rootCauseAnalysisData
+      )
+    );
   }
 
-  initDataValues() {
-    const rowData = this.analysisForm.group({
-      id: helper.generateUid(),
-      configurationId: 'myrcaconfig',
-      isActive: true,
-      dataValues: this.analysisForm.group({
-        orgUnitName: this.params.orgUnitName,
-        orgUnitId: this.params.orgUnitId,
-        periodName: this.params.periodName,
-        periodId: this.params.periodId,
-        interventionName: this.params.interventionName,
-        interventionId: this.params.indicatorId,
-        bottleneckName: '',
-        bottleneckId: '',
-        indicatorName: '',
-        indicatorId: '',
-        rootCause: '',
-        solution: ''
+  deleteRow() {}
+
+  onAddNewRow() {}
+
+  onToggleEdit(dataItem) {
+    this.store.dispatch(
+      new fromRootCauseAnalysisDataActions.UpdateRootCauseAnalysisData({
+        ...dataItem,
+        isActive: true
       })
-    })
-    return this.dataValuesForms.push(rowData);
+    );
   }
 
-  deleteRow(rowId) {
-      this.dataValuesForms.removeAt(rowId);
-  }
-
-  onAddNewRow() {
-    const rowPayload = _.last(this.analysisRow.value.dataItems);
-    this.initDataValues()
-    rowPayload ?
-     this.rootCauseAnalysisData.addData(helper.postSanitizedRcaData(rowPayload)).subscribe() : 
-     null;
-  }
-
-  onUpdateRow(item: any, e?) {
-    if (e) {
-      e.stopPropagation();
+  onDataValueUpdate(e, dataValueId, dataItem) {
+    e.stopPropagation();
+    console.log('here');
+    const dataValue = e.target.value.trim();
+    if (dataValue !== '') {
+      const unSavedDataItem = this.unSavedDataItemValues[dataItem.id];
+      this.unSavedDataItemValues[dataItem.id] = unSavedDataItem
+        ? {
+            ...unSavedDataItem,
+            dataValues: {
+              ...unSavedDataItem.dataValues,
+              ...{ [dataValueId]: dataValue }
+            }
+          }
+        : {
+            ...dataItem,
+            unsaved: true,
+            dataValues: {
+              ...dataItem.dataValues,
+              ...{ [dataValueId]: dataValue }
+            }
+          };
     }
-    item.isActive = !item.isActive;
-    this.rootCauseAnalysisData.updateData(item, {isActive: !item.isActive}).subscribe()
   }
 
-  onConfirmDelete(item,e?) {
-    if (e) {
-      e.stopPropagation();
+  onSaveRootCauseAnalysisData(dataItem, e) {
+    e.stopPropagation();
+    const newDataItem = this.unSavedDataItemValues[dataItem.id];
+    if (newDataItem) {
+      this.store.dispatch(
+        new fromRootCauseAnalysisDataActions.SaveRootCauseAnalysisData({
+          ...newDataItem,
+          isActive: false
+        })
+      );
     }
-    this.rootCauseAnalysisData.deleteData(item).subscribe();
-    item.showDeleteNotification = !item.showDeleteNotification;
-  }
-
-  onToggleEditRow(item: any, e?) {
-    if (e) {
-      e.stopPropagation();
-    }
-    item.isActive = !item.isActive;
-  }
-
-  onToggleDeleteRow(item: any, e?) {
-    if (e) {
-      e.stopPropagation();
-    }
-    item.showDeleteNotification = !item.showDeleteNotification;
   }
 }

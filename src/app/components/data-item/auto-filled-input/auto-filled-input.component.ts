@@ -6,27 +6,32 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./auto-filled-input.component.css']
 })
 export class AutoFilledInputComponent implements OnInit {
-  @Input() element: any;
-  @Input() orgUnit: string;
-  @Input() period: string;
-  @Input() dashboard: string;
+  @Input()
+  dataElement: any;
+  @Input()
+  orgUnit: string;
+  @Input()
+  period: string;
+  @Input()
+  dashboard: string;
+  @Input()
+  dataItemValue: any;
   displayText: string;
 
-  constructor() { }  
+  constructor() {}
   ngOnInit() {
     this.displayText = this.textIdentifier();
   }
 
-  textIdentifier(): string{
-    if(this.element.name == 'OrgUnit'){
+  textIdentifier(): string {
+    if (this.dataElement.name == 'OrgUnit') {
       return this.orgUnit;
-    }else if(this.element.name == 'Period'){
+    } else if (this.dataElement.name == 'Period') {
       return this.period;
-    }else if(this.element.name == 'Intervention'){
+    } else if (this.dataElement.name == 'Intervention') {
       return this.dashboard;
-    }else{
-      return this.element.name;
+    } else {
+      return this.dataElement.name;
     }
   }
-
 }

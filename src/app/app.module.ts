@@ -2,7 +2,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
-
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { EffectsModule } from '@ngrx/effects';
@@ -25,9 +24,15 @@ import { AutoFilledInputComponent } from './components/data-item/auto-filled-inp
 import { SelectBoxInputComponent } from './components/data-item/select-box-input/select-box-input.component';
 import { TextAreaInputComponent } from './components/data-item/text-area-input/text-area-input.component';
 import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
-
 @NgModule({
-  declarations: [AppComponent, HomeComponent, BnaWidgetComponent, AutoFilledInputComponent, SelectBoxInputComponent, TextAreaInputComponent],
+  declarations: [
+    AppComponent,
+    HomeComponent,
+    BnaWidgetComponent,
+    AutoFilledInputComponent,
+    SelectBoxInputComponent,
+    TextAreaInputComponent
+  ],
   imports: [
     BrowserModule,
 
@@ -42,7 +47,6 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     ConfirmationPopoverModule.forRoot({
       confirmButtonType: 'danger' // set defaults here
     }),
-
 
     /**
      * Module for registering ngrx store reducers

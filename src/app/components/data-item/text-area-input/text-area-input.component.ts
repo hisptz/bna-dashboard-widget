@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-text-area-input',
@@ -6,10 +6,20 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./text-area-input.component.css']
 })
 export class TextAreaInputComponent implements OnInit {
-  @Input() element: any;
-  constructor() { }
+  @Input()
+  dataElement: any;
+  @Input()
+  dataItemValue: string;
 
-  ngOnInit() {
+  @Output()
+  updateValue: EventEmitter<any> = new EventEmitter<any>();
+
+  constructor() {}
+
+  ngOnInit() {}
+
+  onEditRootCauseAnalysisData(e) {
+    e.stopPropagation();
+    this.updateValue.emit({ [this.dataElement.id]: e.target.value.trim() });
   }
-
 }

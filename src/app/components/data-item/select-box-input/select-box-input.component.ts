@@ -6,10 +6,11 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./select-box-input.component.css']
 })
 export class SelectBoxInputComponent implements OnInit {
-  @Input() element: any;
-  constructor() { }
+  @Input()
+  dataElement: any;
+  @Input()
+  dataItemValue: any;
+  constructor() {}
 
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 }

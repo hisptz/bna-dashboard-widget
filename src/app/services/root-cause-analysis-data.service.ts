@@ -1,16 +1,16 @@
-import { Injectable } from "@angular/core";
-import { NgxDhis2HttpClientService } from "@hisptz/ngx-dhis2-http-client";
-import { RootCauseAnalysisConfigurationsService } from "./root-cause-analysis-configurations.service";
-import { catchError, map, mergeMap, switchMap } from "rxjs/operators";
-import { Observable, throwError, forkJoin, of } from "rxjs";
-import * as helper from "../helpers";
-import { RootCauseAnalysisData } from "../models/root-cause-analysis-data";
-import * as _ from "lodash";
+import { Injectable } from '@angular/core';
+import { NgxDhis2HttpClientService } from '@hisptz/ngx-dhis2-http-client';
+import { RootCauseAnalysisConfigurationsService } from './root-cause-analysis-configurations.service';
+import { catchError, switchMap } from 'rxjs/operators';
+import { throwError, forkJoin, of } from 'rxjs';
+import { RootCauseAnalysisData } from '../store/models/root-cause-analysis-data.model';
+import * as _ from 'lodash';
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root'
 })
 export class RootCauseAnalysisDataService {
   configurationId: string;
+  private _dataStoreUrl = 'dataStore/rca-data';
   constructor(
     private http: NgxDhis2HttpClientService,
     public rcaConfigurationService: RootCauseAnalysisConfigurationsService
@@ -18,35 +18,45 @@ export class RootCauseAnalysisDataService {
     this.configurationId = rcaConfigurationService.getConfigurationId();
   }
 
-  addData(payload) {
+  addRootCauseAnalysisData(rootCauseAnalysisData) {
     return this.http.post(
-      `dataStore/rca-data/${payload.configurationId}_${payload.id}`,
-      payload
+      `${this._dataStoreUrl}/${rootCauseAnalysisData.configurationId}_${
+        rootCauseAnalysisData.id
+      }`,
+      rootCauseAnalysisData
     );
   }
 
-  deleteData(payload) {
+  deleteRootCauseAnalysisData(rootCauseAnalysisData) {
     return this.http.delete(
-      `dataStore/rca-data/${payload.configurationId}_${payload.id}`
+      `${this._dataStoreUrl}/${rootCauseAnalysisData.configurationId}_${
+        rootCauseAnalysisData.id
+      }`
     );
   }
 
-  updateData(payload, editedSnippet) {
+  updateRootCauseAnalysisData(rootCauseAnalysisData: RootCauseAnalysisData) {
     return this.http.put(
-      `dataStore/rca-data/${payload.configurationId}_${payload.id}`,
-      _.omit(payload, ["showDeleteNotification"])
+      `${this._dataStoreUrl}/${rootCauseAnalysisData.configurationId}_${
+        rootCauseAnalysisData.id
+      }`,
+      _.omit(rootCauseAnalysisData, ['showEditNotification', 'isActive'])
     );
   }
 
-  getData() {
-    return this.http.get(`dataStore/rca-data/`).pipe(
-      switchMap((setOfData: string[]) =>
-        forkJoin(
-          _.map(setOfData, (data: string[]) =>
-            this.http.get(`dataStore/rca-data/${data}`)
+  getRootCauseAnalysisData(configurationId: string) {
+    return this.http.get(this._dataStoreUrl).pipe(
+      switchMap((dataIds: string[]) => {
+        const filteredDataIds = _.filter(dataIds, (dataId: string) => {
+          const spliteDataId = dataId.split('_');
+          return configurationId === spliteDataId[0];
+        });
+        return forkJoin(
+          _.map(filteredDataIds, (dataId: string) =>
+            this.http.get(`${this._dataStoreUrl}/${dataId}`)
           )
-        )
-      ),
+        );
+      }),
       catchError((error: any) => {
         if (error.status !== 404) {
           return throwError(error);
@@ -56,31 +66,3 @@ export class RootCauseAnalysisDataService {
     );
   }
 }
-
-// const initialDataObject : any =
-//           {
-//             "orgUnitName": params.orgUnitName,
-//             "orgUnitId": params.orgUnitId,
-//             "periodName": params.periodName,
-//             "periodId": params.periodId,
-//             "interventionName": params.interventionName,
-//             "interventionId": params.interventionId,
-//             "bottleneckName": params.bottleneckName,
-//             "bottleneckId": params.bottleneckId,
-//             "indicatorName": params.indicatorName,
-//             "indicatorId": params.indicatorId,
-//             "rootCause": "",
-//             "solution": ""
-//           }
-
-// const dataObject: RootCauseAnalysisData = {
-//   id: helper.generateUid(),
-//   configurationId: this.configurationId,
-//   isActive: true,
-//   dataValues: initialDataObject,
-//   showDeleteNotification: false
-// };
-
-// return this.http.post('dataStore/rca-data/' + dataObject.configurationId + '_' + dataObject.id , _.omit(dataObject,['showDeleteNotification'])).pipe(map((error) => {
-//   this.http.get('dataStore/rca-config/' + dataObject.configurationId + '_' + dataObject.id)
-// }))
