@@ -1,20 +1,20 @@
-import { Action } from "@ngrx/store";
-import { Update } from "@ngrx/entity";
-import { RootCauseAnalysisWidget } from "../models/root-cause-analysis-widget.model";
+import { Action } from '@ngrx/store';
+import { Update } from '@ngrx/entity';
+import { RootCauseAnalysisWidget } from '../models/root-cause-analysis-widget.model';
 
 export enum RootCauseAnalysisWidgetActionTypes {
-  LoadRootCauseAnalysisWidget = "[RootCauseAnalysisWidget] Load RootCauseAnalysisWidget",
-  LoadRootCauseAnalysisWidgetFail = "[RootCauseAnalysisWidget] Load RootCauseAnalysisWidget Fail",
-  AddRootCauseAnalysisWidget = "[RootCauseAnalysisWidget] Add RootCauseAnalysisWidget",
-  UpsertRootCauseAnalysisWidget = "[RootCauseAnalysisWidget] Upsert RootCauseAnalysisWidget",
-  AddRootCauseAnalysisWidgets = "[RootCauseAnalysisWidget] Add RootCauseAnalysisWidgets",
-  UpsertRootCauseAnalysisWidgets = "[RootCauseAnalysisWidget] Upsert RootCauseAnalysisWidgets",
-  UpdateRootCauseAnalysisWidget = "[RootCauseAnalysisWidget] Update RootCauseAnalysisWidget",
-  UpdateRootCauseAnalysisWidgets = "[RootCauseAnalysisWidget] Update RootCauseAnalysisWidgets",
-  DeleteRootCauseAnalysisWidget = "[RootCauseAnalysisWidget] Delete RootCauseAnalysisWidget",
-  DeleteRootCauseAnalysisWidgets = "[RootCauseAnalysisWidget] Delete RootCauseAnalysisWidgets",
-  ClearRootCauseAnalysisWidgets = "[RootCauseAnalysisWidget] Clear RootCauseAnalysisWidgets",
-  SetCurrentRootCauseAnalysisWidget = "[RootCauseAnalysisWidget] Set current RootCauseAnalysisWidget"
+  LoadRootCauseAnalysisWidget = '[RootCauseAnalysisWidget] Load RootCauseAnalysisWidget',
+  LoadRootCauseAnalysisWidgetFail = '[RootCauseAnalysisWidget] Load RootCauseAnalysisWidget Fail',
+  AddRootCauseAnalysisWidget = '[RootCauseAnalysisWidget] Add RootCauseAnalysisWidget',
+  UpsertRootCauseAnalysisWidget = '[RootCauseAnalysisWidget] Upsert RootCauseAnalysisWidget',
+  AddRootCauseAnalysisWidgets = '[RootCauseAnalysisWidget] Add RootCauseAnalysisWidgets',
+  UpsertRootCauseAnalysisWidgets = '[RootCauseAnalysisWidget] Upsert RootCauseAnalysisWidgets',
+  UpdateRootCauseAnalysisWidget = '[RootCauseAnalysisWidget] Update RootCauseAnalysisWidget',
+  UpdateRootCauseAnalysisWidgets = '[RootCauseAnalysisWidget] Update RootCauseAnalysisWidgets',
+  DeleteRootCauseAnalysisWidget = '[RootCauseAnalysisWidget] Delete RootCauseAnalysisWidget',
+  DeleteRootCauseAnalysisWidgets = '[RootCauseAnalysisWidget] Delete RootCauseAnalysisWidgets',
+  ClearRootCauseAnalysisWidgets = '[RootCauseAnalysisWidget] Clear RootCauseAnalysisWidgets',
+  SetCurrentRootCauseAnalysisWidget = '[RootCauseAnalysisWidget] Set current RootCauseAnalysisWidget'
 }
 
 export class LoadRootCauseAnalysisWidget implements Action {

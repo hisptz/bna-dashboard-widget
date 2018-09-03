@@ -1,13 +1,12 @@
-import { Injectable } from "@angular/core";
-import { Actions, Effect, ofType } from "@ngrx/effects";
-import { Observable, of } from "rxjs";
+import { Injectable } from '@angular/core';
+import { Actions, Effect, ofType } from '@ngrx/effects';
+import { Observable, of } from 'rxjs';
 
-import * as fromRootCauseAnalysisConfigurationActions from "../actions/root-cause-analysis-configuration.actions";
-import * as fromRootCauseAnalysisWidgetActions from "../actions/root-cause-analysis-widget.actions";
-import * as fromRootCauseAnalysisDataActions from "../actions/root-cause-analysis-data.actions";
-import { RootCauseAnalysisConfiguration } from "../models/root-cause-analysis-configuration.model";
-import { RootCauseAnalysisConfigurationsService } from "../../services";
-import { mergeMap, map, catchError, switchMap } from "rxjs/operators";
+import * as fromRootCauseAnalysisConfigurationActions from '../actions/root-cause-analysis-configuration.actions';
+import * as fromRootCauseAnalysisWidgetActions from '../actions/root-cause-analysis-widget.actions';
+import { RootCauseAnalysisConfiguration } from '../models/root-cause-analysis-configuration.model';
+import { RootCauseAnalysisConfigurationsService } from '../../services';
+import { mergeMap, map, catchError, switchMap } from 'rxjs/operators';
 
 @Injectable()
 export class RootCauseAnalysisConfigurationEffects {

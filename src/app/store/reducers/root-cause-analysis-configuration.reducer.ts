@@ -1,9 +1,9 @@
-import { EntityState, EntityAdapter, createEntityAdapter } from "@ngrx/entity";
-import { RootCauseAnalysisConfiguration } from "../models/root-cause-analysis-configuration.model";
+import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
+import { RootCauseAnalysisConfiguration } from '../models/root-cause-analysis-configuration.model';
 import {
   RootCauseAnalysisConfigurationActions,
   RootCauseAnalysisConfigurationActionTypes
-} from "../actions/root-cause-analysis-configuration.actions";
+} from '../actions/root-cause-analysis-configuration.actions';
 
 export interface State extends EntityState<RootCauseAnalysisConfiguration> {
   // additional entities state properties
@@ -11,6 +11,7 @@ export interface State extends EntityState<RootCauseAnalysisConfiguration> {
   loaded: boolean;
   hasError: boolean;
   error: any;
+  notification: any;
 }
 
 export const adapter: EntityAdapter<
@@ -22,7 +23,8 @@ export const initialState: State = adapter.getInitialState({
   loading: false,
   loaded: false,
   hasError: false,
-  error: null
+  error: null,
+  notification: ''
 });
 
 export function reducer(
@@ -44,8 +46,17 @@ export function reducer(
     case RootCauseAnalysisConfigurationActionTypes.AddRootCauseAnalysisConfigurations: {
       return adapter.addMany(action.rootCauseAnalysisConfigurations, {
         ...state,
-        loading: true
+        loading: true,
+        loaded: false
       });
+    }
+
+    case RootCauseAnalysisConfigurationActionTypes.AddRootCauseAnalysisConfigurationsSuccess: {
+      return {
+        ...state,
+        loading: false,
+        loaded: true
+      };
     }
 
     case RootCauseAnalysisConfigurationActionTypes.UpsertRootCauseAnalysisConfigurations: {
@@ -80,7 +91,7 @@ export function reducer(
     case RootCauseAnalysisConfigurationActionTypes.LoadRootCauseAnalysisConfigurationFail: {
       return {
         ...state,
-        loading: false,
+        loading: true,
         loaded: false,
         hasError: true,
         error: action.error
@@ -100,3 +111,10 @@ export function reducer(
 export const {
   selectEntities: getRootCauseAnalysisConfigurationEntitiesState
 } = adapter.getSelectors();
+
+export const getConfigurationLoadingState = (state: State) => state.loading;
+export const getConfigurationLoadedState = (state: State) => state.loaded;
+export const getConfigurationHasErrorState = (state: State) => state.hasError;
+export const getConfigurationErrorState = (state: State) => state.error;
+export const getConfigurationNotificationState = (state: State) =>
+  state.notification;

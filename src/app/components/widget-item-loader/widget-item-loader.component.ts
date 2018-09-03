@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   selector: 'app-widget-item-loader',
@@ -6,10 +6,14 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./widget-item-loader.component.css']
 })
 export class WidgetItemLoaderComponent implements OnInit {
+  @Input()
+  borderRadius: string;
 
-  constructor() { }
-
-  ngOnInit() {
+  @Input()
+  height: string;
+  constructor() {
+    this.height = '100%';
   }
 
+  ngOnInit() {}
 }

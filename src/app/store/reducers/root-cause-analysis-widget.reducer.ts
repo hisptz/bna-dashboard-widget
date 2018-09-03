@@ -1,9 +1,9 @@
-import { EntityState, EntityAdapter, createEntityAdapter } from "@ngrx/entity";
-import { RootCauseAnalysisWidget } from "../models/root-cause-analysis-widget.model";
+import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
+import { RootCauseAnalysisWidget } from '../models/root-cause-analysis-widget.model';
 import {
   RootCauseAnalysisWidgetActions,
   RootCauseAnalysisWidgetActionTypes
-} from "../actions/root-cause-analysis-widget.actions";
+} from '../actions/root-cause-analysis-widget.actions';
 
 export interface State extends EntityState<RootCauseAnalysisWidget> {
   // additional entities state properties
@@ -12,6 +12,7 @@ export interface State extends EntityState<RootCauseAnalysisWidget> {
   hasError: boolean;
   error: any;
   currentWidget: string;
+  notification: string;
 }
 
 export const adapter: EntityAdapter<
@@ -24,7 +25,8 @@ export const initialState: State = adapter.getInitialState({
   loaded: false,
   hasError: false,
   error: null,
-  currentWidget: ""
+  currentWidget: '',
+  notification: ''
 });
 
 export function reducer(
@@ -35,7 +37,8 @@ export function reducer(
     case RootCauseAnalysisWidgetActionTypes.AddRootCauseAnalysisWidget: {
       return adapter.addOne(action.rootCauseAnalysisWidget, {
         ...state,
-        loaded: true
+        loaded: true,
+        notification: 'Widget Successfully Loaded'
       });
     }
 
@@ -68,7 +71,11 @@ export function reducer(
     }
 
     case RootCauseAnalysisWidgetActionTypes.LoadRootCauseAnalysisWidget: {
-      return { ...state, loading: true };
+      return {
+        ...state,
+        loading: true,
+        notification: 'Loading Widget'
+      };
     }
 
     case RootCauseAnalysisWidgetActionTypes.LoadRootCauseAnalysisWidgetFail: {
@@ -77,7 +84,8 @@ export function reducer(
         loading: false,
         loaded: false,
         hasError: true,
-        error: action.error
+        error: action.error,
+        notification: 'Failed to Load Widget'
       };
     }
 
@@ -98,3 +106,9 @@ export function reducer(
 export const {
   selectEntities: getRootCauseAnalysisWidgetEntitiesState
 } = adapter.getSelectors();
+
+export const getWidgetLoadingState = (state: State) => state.loading;
+export const getWidgetLoadedState = (state: State) => state.loaded;
+export const getWidgetHasErrorState = (state: State) => state.hasError;
+export const getWidgetErrorState = (state: State) => state.error;
+export const getWidgetNotificationState = (state: State) => state.notification;

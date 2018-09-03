@@ -1,8 +1,8 @@
-import { createSelector } from "@ngrx/store";
-import * as fromRoot from "../reducers";
-import * as fromRootCauseConfiguration from "../reducers/root-cause-analysis-configuration.reducer";
-import { getCurrentRootCauseAnalysisWidget } from "./root-cause-analysis-widget.selectors";
-import { RootCauseAnalysisWidget } from "../models";
+import { createSelector } from '@ngrx/store';
+import * as fromRoot from '../reducers';
+import * as fromRootCauseConfiguration from '../reducers/root-cause-analysis-configuration.reducer';
+import { getCurrentRootCauseAnalysisWidget } from './root-cause-analysis-widget.selectors';
+import { RootCauseAnalysisWidget } from '../models';
 
 export const getRootCauseAnalysisConfigurationState = createSelector(
   fromRoot.getRootState,
@@ -23,7 +23,32 @@ export const getCurrentRootCauseAnalysisConfiguration = createSelector(
   ) => {
     const configurationId = currentRootCauseAnalysisWidget
       ? currentRootCauseAnalysisWidget.configurationId
-      : "";
+      : '';
     return rootCauseAnalysisConfigurationEntities[configurationId];
   }
+);
+
+export const getConfigurationLoadingState = createSelector(
+  getRootCauseAnalysisConfigurationState,
+  fromRootCauseConfiguration.getConfigurationLoadingState
+);
+
+export const getConfigurationLoadedState = createSelector(
+  getRootCauseAnalysisConfigurationState,
+  fromRootCauseConfiguration.getConfigurationLoadedState
+);
+
+export const getConfigurationHasErrorState = createSelector(
+  getRootCauseAnalysisConfigurationState,
+  fromRootCauseConfiguration.getConfigurationHasErrorState
+);
+
+export const getConfigurationErrorState = createSelector(
+  getRootCauseAnalysisConfigurationState,
+  fromRootCauseConfiguration.getConfigurationErrorState
+);
+
+export const getConfigurationNotificationState = createSelector(
+  getRootCauseAnalysisConfigurationState,
+  fromRootCauseConfiguration.getConfigurationNotificationState
 );

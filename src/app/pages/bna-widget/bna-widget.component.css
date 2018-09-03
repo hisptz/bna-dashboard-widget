@@ -18,14 +18,25 @@ th {
   background: rgb(177, 174, 174);
 }
 
+select,
+select:hover,
+select:active {
+  width: 100%;
+  margin-left: -5%;
+  padding: 10px 20px;
+  background-color: #fff;
+  border: 0px;
+  outline: none;
+}
+
 td {
   padding-left: 1%;
 }
-.edit-button {
+.btn-success {
   background-color: rgba(10, 141, 10, 0.959);
 }
 
-.delete-button {
+.btn-danger {
   background-color: rgb(180, 0, 0);
 }
 
@@ -53,26 +64,4 @@ inActiveItem {
   pointer-events: none;
   border: none;
   outline: none;
-}
-
-@keyframes placeHolderShimmer {
-  0% {
-    background-position: -468px 0;
-  }
-  100% {
-    background-position: 468px 0;
-  }
-}
-
-.animated-background {
-  animation-duration: 1s;
-  animation-fill-mode: forwards;
-  animation-iteration-count: infinite;
-  animation-name: placeHolderShimmer;
-  animation-timing-function: linear;
-  background: #f6f7f8;
-  background: linear-gradient(to right, #eeeeee 8%, #dddddd 18%, #eeeeee 33%);
-  background-size: 800px 104px;
-  height: 100%;
-  position: relative;
 }

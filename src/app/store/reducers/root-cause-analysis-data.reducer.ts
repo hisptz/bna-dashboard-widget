@@ -10,7 +10,6 @@ export interface State extends EntityState<RootCauseAnalysisData> {
   isActive: boolean;
   loading: boolean;
   loaded: boolean;
-  saveEditButtonTitle: string;
   notification: { message: string };
   showEmptyRow: boolean;
   showDeleteConfirmation: boolean;
@@ -27,7 +26,6 @@ export const initialState: State = adapter.getInitialState({
   isActive: false,
   loading: false,
   loaded: false,
-  saveEditButtonTitle: null,
   notification: null,
   showDeleteConfirmation: false,
   showEmptyRow: false,
@@ -41,7 +39,12 @@ export function reducer(
 ): State {
   switch (action.type) {
     case RootCauseAnalysisDataActionTypes.AddRootCauseAnalysisData: {
-      return adapter.addOne(action.rootCauseAnalysisData, state);
+      return adapter.addOne(action.rootCauseAnalysisData, {
+        ...state,
+        notification: {
+          message: 'Loading Root Cause Analysis Data'
+        }
+      });
     }
 
     case RootCauseAnalysisDataActionTypes.UpsertRootCauseAnalysisData: {
@@ -51,8 +54,11 @@ export function reducer(
     case RootCauseAnalysisDataActionTypes.AddRootCauseAnalysisDatas: {
       return adapter.addMany(action.rootCauseAnalysisDatas, {
         ...state,
+        loading: false,
         loaded: true,
-        saveEditButtonTitle: 'Edit'
+        notification: {
+          message: 'Loading Root Cause Analysis Data'
+        }
       });
     }
 
@@ -66,7 +72,12 @@ export function reducer(
           id: action.rootCauseAnalysisData.id,
           changes: action.rootCauseAnalysisData
         },
-        state
+        {
+          ...state,
+          notification: {
+            message: 'Saving Root Cause Analysis Data To Server'
+          }
+        }
       );
     }
 
@@ -83,7 +94,7 @@ export function reducer(
     }
 
     case RootCauseAnalysisDataActionTypes.LoadRootCauseAnalysisDatas: {
-      return { ...state, loading: true };
+      return { ...state, loading: true, loaded: false };
     }
 
     case RootCauseAnalysisDataActionTypes.ClearRootCauseAnalysisDatas: {
@@ -104,7 +115,7 @@ export function reducer(
           ...state,
           isActive: false,
           notification: {
-            message: `Saving analysis data`
+            message: `Saving analysis data in BNA store`
           }
         }
       );
@@ -115,7 +126,7 @@ export function reducer(
         ...state,
         isActive: false,
         notification: {
-          message: `Analysis data successfully updated`
+          message: `Data successfully locally updated`
         }
       };
     }
@@ -125,7 +136,7 @@ export function reducer(
         ...state,
         isActive: true,
         notification: {
-          message: `Could not update data ${action.error.message}`
+          message: `Could not locally update data ${action.error.message}`
         }
       };
     }
@@ -134,7 +145,7 @@ export function reducer(
       return {
         ...state,
         notification: {
-          message: `Saving Analysis Data`
+          message: `Saving Analysis Data `
         }
       };
     }
@@ -142,8 +153,9 @@ export function reducer(
     case RootCauseAnalysisDataActionTypes.CreateRootCauseAnalysisDataSuccess: {
       return adapter.addOne(action.rootCauseAnalysisData, {
         ...state,
-        notification: null,
-        showEmptyRow: false
+        notification: {
+          message: `Data successfully saved`
+        }
       });
     }
 
@@ -166,3 +178,13 @@ export const {
   selectEntities: getRootCauseAnalysisDataEntitiesState,
   selectAll: getAllRootCauseAnalysisDataState
 } = adapter.getSelectors();
+
+export const getRootCauseAnalysisDataLoadingState = (state: State) =>
+  state.loading;
+export const getRootCauseAnalysisDataLoadedState = (state: State) =>
+  state.loaded;
+export const getRootCauseAnalysisDataHasErrorState = (state: State) =>
+  state.hasError;
+export const getRootCauseAnalysisDataErrorState = (state: State) => state.error;
+export const getRootCauseAnalysisDataNotificationState = (state: State) =>
+  state.notification.message;

@@ -19,6 +19,11 @@ export class BnaWidgetComponent implements OnInit {
   configuration$: Observable<fromModels.RootCauseAnalysisConfiguration>;
   widget$: Observable<fromModels.RootCauseAnalysisWidget>;
   data$: Observable<fromModels.RootCauseAnalysisData[]>;
+  configurationLoading$: Observable<boolean>;
+  configurationLoaded$: Observable<boolean>;
+  dataLoading$: Observable<boolean>;
+  dataLoaded$: Observable<boolean>;
+
   saveEditButtonTitle: string = 'Edit';
   newRootCauseAnalysisData: fromModels.RootCauseAnalysisData;
   showEmptyRow: boolean = false;
@@ -33,6 +38,19 @@ export class BnaWidgetComponent implements OnInit {
       fromSelectors.getCurrentRootCauseAnalysisConfiguration
     );
     this.data$ = store.select(fromSelectors.getAllRootCauseAnalysisData);
+    this.configurationLoading$ = store.select(
+      fromSelectors.getConfigurationLoadingState
+    );
+    this.configurationLoaded$ = store.select(
+      fromSelectors.getConfigurationLoadingState
+    );
+    this.dataLoaded$ = store.select(
+      fromSelectors.getRootCauseAnalysisDataLoadedState
+    );
+    this.dataLoading$ = store.select(
+      fromSelectors.getRootCauseAnalysisDataLoadingState
+    );
+
     this.unSavedDataItemValues = {};
   }
 
@@ -85,7 +103,10 @@ export class BnaWidgetComponent implements OnInit {
     return dataValues;
   }
 
-  onToggleEdit(dataItem) {
+  onToggleEdit(e, dataItem) {
+    if (e) {
+      e.stopPropagation();
+    }
     this.store.dispatch(
       new fromRootCauseAnalysisDataActions.UpdateRootCauseAnalysisData({
         ...dataItem,
@@ -98,6 +119,7 @@ export class BnaWidgetComponent implements OnInit {
     if (e) {
       e.stopPropagation();
     }
+    dataItem.isActive = false;
     dataItem.showDeleteConfirmation = false;
   }
 
