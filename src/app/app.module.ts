@@ -24,6 +24,7 @@ import { AutoFilledInputComponent } from './components/data-item/auto-filled-inp
 import { SelectBoxInputComponent } from './components/data-item/select-box-input/select-box-input.component';
 import { TextAreaInputComponent } from './components/data-item/text-area-input/text-area-input.component';
 import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
+import { WidgetItemLoaderComponent } from './components/widget-item-loader/widget-item-loader.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -31,7 +32,8 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     BnaWidgetComponent,
     AutoFilledInputComponent,
     SelectBoxInputComponent,
-    TextAreaInputComponent
+    TextAreaInputComponent,
+    WidgetItemLoaderComponent
   ],
   imports: [
     BrowserModule,

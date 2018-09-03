@@ -24,13 +24,45 @@
       </td>
 
       <td>
-        <button (click)="onToggleEdit(dataItem)" *ngIf="!dataItem.isActive"> Edit </button>
-        <button (click)="onSaveRootCauseAnalysisData(dataItem, $event)" *ngIf="dataItem.isActive"> Save </button>
+        <button (click)="onToggleEdit(dataItem)" class="btn edit-button" *ngIf="!dataItem.isActive && !dataItem.showDeleteConfirmation">
+          <i class="icon-edit">
+          </i> </button>
+        <button class="btn edit-button" (click)="onSaveRootCauseAnalysisData(dataItem, $event)" *ngIf="dataItem.isActive"> <i
+            class="icon-save">
+          </i> </button>
+        <button class="btn delete-button" (click)="onToggleCancelAction($event,dataItem)" *ngIf="dataItem.isActive"> <i class="icon-cancel"></i>
+        </button>
 
-        <button> Delete </button>
+        <button class="btn delete-button" *ngIf="!dataItem.isActive && !dataItem.showDeleteConfirmation" (click)="onToggleDelete($event, dataItem)">
+          <i class="icon-delete"></i>
+        </button>
+        <button class="btn edit-button" *ngIf="!dataItem.isActive && dataItem.showDeleteConfirmation" (click)="onToggleCancelAction($event, dataItem)">
+          <i class="icon-cancel"></i></button>
+        <button class="btn delete-button" *ngIf="!dataItem.isActive && dataItem.showDeleteConfirmation" (click)="onDeleteRootCauseAnalysisData(dataItem)">
+          <i class="icon-ok-circled2"></i></button>
       </td>
     </tr>
+
+    <tr *ngIf="showEmptyRow || !rootCauseAnalysisData">
+      <td [hidden]="dataElement.isHidden" *ngFor="let dataElement of rootCauseAnalysisConfiguration.dataElements; let j = index"
+        [ngClass]="{
+          'auto-filled': dataElement.valueType == 'AUTO_FILLED',
+          'select-box': dataElement.optionSetValue == true}">
+        <app-auto-filled-input *ngIf="!dataElement.optionSetValue && dataElement.valueType == 'AUTO_FILLED'" [dataElement]="dataElement"
+          [orgUnit]="routerParams.orgUnit" [period]="routerParams.period" [dashboard]="routerParams.dashboard"></app-auto-filled-input>
+        <app-select-box-input *ngIf="dataElement.optionSetValue" [dataElement]="dataElement"></app-select-box-input>
+        <textarea *ngIf="!dataElement.optionSetValue && dataElement.valueType == 'TEXT'" placeholder="{{dataElement.name}}" (keyup)="onDataValueEntry($event, dataElement.id, rootCauseAnalysisConfiguration)"
+          autofocus></textarea>
+      </td>
+      <td> <button class="btn edit-button" (click)="onAddRootCauseAnalysisData(newRootCauseAnalysisData)"> <i class="icon-save">
+          </i> </button>
+      </td>
+    </tr>
+
   </tbody>
 </table>
+<div *ngIf="configuration$ | async as dataConfiguration">
+  <button *ngIf="!showEmptyRow" class="pull-right" (click)="onToggleAddNewRootCauseAnalysisData(dataConfiguration)">
+    Add New </button></div>
 
-<button *ngIf="(configuration$ | async)" class="pull-right"> Add New </button>
+<app-widget-item-loader *ngIf="!configuration$ | async"></app-widget-item-loader>

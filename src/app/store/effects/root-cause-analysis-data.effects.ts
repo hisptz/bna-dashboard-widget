@@ -95,6 +95,36 @@ export class RootCauseAnalysisDataEffects {
     )
   );
 
+  @Effect()
+  deleteIntervention$: Observable<any> = this.actions$.pipe(
+    ofType(
+      fromRootCauseAnalysisDataActions.RootCauseAnalysisDataActionTypes
+        .DeleteRootCauseAnalysisData
+    ),
+    mergeMap(
+      (action: fromRootCauseAnalysisDataActions.DeleteRootCauseAnalysisData) =>
+        this.rootCauseAnalysisDataService
+          .deleteRootCauseAnalysisData(action.rootCauseAnalysisData)
+          .pipe(
+            map(
+              () =>
+                new fromRootCauseAnalysisDataActions.DeleteRootCauseAnalysisDataSuccess(
+                  action.rootCauseAnalysisData.id
+                )
+            ),
+            catchError((error: any) =>
+              of(
+                new fromRootCauseAnalysisDataActions.DeleteRootCauseAnalysisDataFail(
+                  action.rootCauseAnalysisData,
+                  error
+                )
+              )
+            )
+          )
+    )
+  );
+  // DeleteRootCauseAnalysisData
+
   constructor(
     private actions$: Actions,
     private rootCauseAnalysisDataService: RootCauseAnalysisDataService

@@ -13,6 +13,8 @@ export enum RootCauseAnalysisDataActionTypes {
   UpdateRootCauseAnalysisData = '[RootCauseAnalysisData] Update RootCauseAnalysisData',
   UpdateRootCauseAnalysisDatas = '[RootCauseAnalysisData] Update RootCauseAnalysisDatas',
   DeleteRootCauseAnalysisData = '[RootCauseAnalysisData] Delete RootCauseAnalysisData',
+  DeleteRootCauseAnalysisDataSuccess = '[RootCauseAnalysisData] Delete RootCauseAnalysisData Success',
+  DeleteRootCauseAnalysisDataFail = '[RootCauseAnalysisData] Delete RootCauseAnalysisData Fail',
   DeleteRootCauseAnalysisDatas = '[RootCauseAnalysisData] Delete RootCauseAnalysisDatas',
   ClearRootCauseAnalysisDatas = '[RootCauseAnalysisData] Clear RootCauseAnalysisDatas',
   CreateRootCauseAnalysisData = '[RootCauseAnalysisData] Create RootCauseAnalysisData',
@@ -127,7 +129,23 @@ export class UpdateRootCauseAnalysisDatas implements Action {
 export class DeleteRootCauseAnalysisData implements Action {
   readonly type = RootCauseAnalysisDataActionTypes.DeleteRootCauseAnalysisData;
 
-  constructor(public payload: { id: string }) {}
+  constructor(public rootCauseAnalysisData: RootCauseAnalysisData) {}
+}
+
+export class DeleteRootCauseAnalysisDataSuccess implements Action {
+  readonly type =
+    RootCauseAnalysisDataActionTypes.DeleteRootCauseAnalysisDataSuccess;
+
+  constructor(public id: string) {}
+}
+
+export class DeleteRootCauseAnalysisDataFail implements Action {
+  readonly type =
+    RootCauseAnalysisDataActionTypes.DeleteRootCauseAnalysisDataFail;
+  constructor(
+    public rootCauseAnalysisData: RootCauseAnalysisData,
+    public error: any
+  ) {}
 }
 
 export class DeleteRootCauseAnalysisDatas implements Action {

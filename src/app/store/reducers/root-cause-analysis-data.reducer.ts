@@ -12,6 +12,8 @@ export interface State extends EntityState<RootCauseAnalysisData> {
   loaded: boolean;
   saveEditButtonTitle: string;
   notification: { message: string };
+  showEmptyRow: boolean;
+  showDeleteConfirmation: boolean;
   hasError: boolean;
   error: any;
 }
@@ -27,6 +29,8 @@ export const initialState: State = adapter.getInitialState({
   loaded: false,
   saveEditButtonTitle: null,
   notification: null,
+  showDeleteConfirmation: false,
+  showEmptyRow: false,
   hasError: false,
   error: null
 });
@@ -71,7 +75,7 @@ export function reducer(
     }
 
     case RootCauseAnalysisDataActionTypes.DeleteRootCauseAnalysisData: {
-      return adapter.removeOne(action.payload.id, state);
+      return adapter.removeOne(action.rootCauseAnalysisData.id, state);
     }
 
     case RootCauseAnalysisDataActionTypes.DeleteRootCauseAnalysisDatas: {
@@ -138,7 +142,8 @@ export function reducer(
     case RootCauseAnalysisDataActionTypes.CreateRootCauseAnalysisDataSuccess: {
       return adapter.addOne(action.rootCauseAnalysisData, {
         ...state,
-        notification: null
+        notification: null,
+        showEmptyRow: false
       });
     }
 

@@ -23,11 +23,12 @@ export class RootCauseAnalysisDataService {
       `${this._dataStoreUrl}/${rootCauseAnalysisData.configurationId}_${
         rootCauseAnalysisData.id
       }`,
-      rootCauseAnalysisData
+      _.omit(rootCauseAnalysisData, ['showEmptyRow'])
     );
   }
 
   deleteRootCauseAnalysisData(rootCauseAnalysisData) {
+    console.log(rootCauseAnalysisData);
     return this.http.delete(
       `${this._dataStoreUrl}/${rootCauseAnalysisData.configurationId}_${
         rootCauseAnalysisData.id
@@ -40,7 +41,11 @@ export class RootCauseAnalysisDataService {
       `${this._dataStoreUrl}/${rootCauseAnalysisData.configurationId}_${
         rootCauseAnalysisData.id
       }`,
-      _.omit(rootCauseAnalysisData, ['showEditNotification', 'isActive'])
+      _.omit(rootCauseAnalysisData, [
+        'showEditNotification',
+        'isActive',
+        'unsaved'
+      ])
     );
   }
 
