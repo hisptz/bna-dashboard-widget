@@ -1,146 +1,48 @@
 import { Injectable } from '@angular/core';
-import { NgxDhis2HttpClientService} from '@hisptz/ngx-dhis2-http-client';
-import { RootCauseAnalysisConfigurations } from '../models/root-cause-analysis-configurations';
-import * as helper from '../helpers/index';
-import {catchError,map} from 'rxjs/operators';
-import {throwError} from 'rxjs';
+import * as _ from 'lodash';
+import { NgxDhis2HttpClientService } from '@hisptz/ngx-dhis2-http-client';
+import { RootCauseAnalysisConfiguration } from '../store/models/root-cause-analysis-configuration.model';
+import { catchError, map, switchMap } from 'rxjs/operators';
+import { throwError, forkJoin, of } from 'rxjs';
+import { defaultDataSetElementDetails } from '../constants/default-configurations';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RootCauseAnalysisConfigurationsService {
-
-  constructor(private http: NgxDhis2HttpClientService) { }
-  getConfigurationId(){
+  private _dataStoreUrl: string;
+  constructor(private http: NgxDhis2HttpClientService) {
+    this._dataStoreUrl = 'dataStore/rca-config';
+  }
+  getConfigurationId() {
     return 'myrcaconfig';
   }
-  getConfiguration(configurationId) {
-    return this.http.get(`dataStore/rca-config/${configurationId}`).pipe(catchError((error: any) => {
-      if (error.status !== 404) {
-              return throwError(error);
-      }
-      const dataSetElementDetails: any = [
-        {
-          name: "OrgUnit",
-          id: helper.generateUid(),
-          valueType: "AUTO_FILLED",
-          optionSetValue: false,
-          categoryCombo: {
-              id: helper.generateUid(),
-              name: "default",
-              categoryOptionCombos: [
-              {
-                id: helper.generateUid(),
-                name: " default"
-              }
-            ]
-          }
-        },
-        {
-          name: "Period",
-          id: helper.generateUid(),
-          valueType: "AUTO_FILLED",
-          optionSetValue: false,
-          categoryCombo: {
-              id: helper.generateUid(),
-              name: "default",
-              categoryOptionCombos: [
-              {
-                id: helper.generateUid(),
-                name: " default"
-              }
-            ]
-          }
-        },
-        {
-          name: "Intervention",
-          id: helper.generateUid(),
-          valueType: "AUTO_FILLED",
-          optionSetValue: false,
-        categoryCombo: {
-            id: helper.generateUid(),
-            name: "default",
-            categoryOptionCombos: [
-            {
-              id: helper.generateUid(),
-              name: " default"
-            }
-          ]
+  getAllConfigurations(configurationId: string) {
+    return this.http.get(this._dataStoreUrl).pipe(
+      switchMap((configurationIds: string[]) =>
+        forkJoin(
+          _.map(configurationIds, (configurationId: string) =>
+            this.http.get(`${this._dataStoreUrl}/${configurationId}`)
+          )
+        )
+      ),
+      catchError((error: any) => {
+        if (error.status !== 404) {
+          return throwError(error);
         }
-      },
-        {
-          name: "Bottleneck",
-          id: helper.generateUid(),
-          valueType: "TEXT",
-          optionSetValue: false,
-        categoryCombo: {
-            id: helper.generateUid(),
-            name: "default",
-            categoryOptionCombos: [
-                {
-                  id: helper.generateUid(),
-                  name: " default"
-                }
-              ]
-            }
-          },
-          {
-            name: "Indicator",
-            id: helper.generateUid(),
-            valueType: "TEXT",
-            optionSetValue: false,
-          categoryCombo: {
-              id: helper.generateUid(),
-              name: "default",
-              categoryOptionCombos: [
-              {
-                id: helper.generateUid(),
-                name: " default"
-              }
-            ]
-          }
-        },
-        {
-          name: "Root cause",
-          id: helper.generateUid(),
-          valueType: "TEXT",
-          optionSetValue: false,
-        categoryCombo: {
-            id: helper.generateUid(),
-            name: "default",
-            categoryOptionCombos: [
-            {
-              id: helper.generateUid(),
-              name: " default"
-            }
-          ]
-        }
-      },
-      {
-        dataElementName: "Solution",
-        dataElementId: helper.generateUid(),
-        valueType: "TEXT",
-        optionSetValue: false,
-      categoryCombo: {
-          id: helper.generateUid(),
-          name: "default",
-          categoryOptionCombos: [
-          {
-            id: helper.generateUid(),
-            name: " default"
-          }
-        ]
-      }
-      }
-      ];
-      const configurationObject: RootCauseAnalysisConfigurations = {id: configurationId, configurationName:"Root Cause Analysis Widget", datasetElements: dataSetElementDetails };
-        return this.http.post('dataStore/rca-config/' + configurationObject.id, configurationObject).pipe(map(() => {
-          this.http.get(`dataStore/rca-config/${configurationId}`)
-        }
-      )
-      );
-  })
-  )
-  }
 
+        const configurationObject: RootCauseAnalysisConfiguration = {
+          id: configurationId,
+          name: 'Root Cause Analysis Widget',
+          dataElements: defaultDataSetElementDetails
+        };
+        return this.http
+          .post(
+            `${this._dataStoreUrl}/${configurationObject.id}`,
+            configurationObject
+          )
+          .pipe(map(() => [configurationObject]));
+      })
+    );
+  }
 }
