@@ -1,0 +1,67 @@
+table {
+  width: 98%;
+  margin: 0 auto;
+  border-spacing: 1px;
+  border-color: darkgrey;
+}
+
+th {
+  /*padding-left: 1%;*/
+  padding: 1% 0% 1% 1%;
+  background-color: #2560a6;
+  color: white;
+  font-weight: bold;
+  width: 12.5%;
+}
+
+.auto-filled {
+  background: rgb(177, 174, 174);
+}
+
+select,
+select:hover,
+select:active {
+  width: 100%;
+  margin-left: -5%;
+  padding: 10px 20px;
+  background-color: #fff;
+  border: 0px;
+  outline: none;
+}
+
+td {
+  padding-left: 1%;
+}
+.btn-success {
+  background-color: rgba(10, 141, 10, 0.959);
+}
+
+.btn-danger {
+  background-color: rgb(180, 0, 0);
+}
+
+.btn {
+  padding: 2% 2%;
+  margin: 5px 5px;
+  width: 25px;
+  height: 25px;
+  font-weight: bold;
+  color: white;
+  border: 0px solid #000000;
+  border-radius: 5px;
+}
+
+.pull-right {
+  float: right;
+  margin: 10px 15px 0px 0px;
+}
+
+.pull-left {
+  margin-right: auto !important;
+}
+
+inActiveItem {
+  pointer-events: none;
+  border: none;
+  outline: none;
+}

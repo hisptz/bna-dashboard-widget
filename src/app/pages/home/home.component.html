@@ -1,4 +1,5 @@
 <div class="home-container">
-  <h1>BNA Widget</h1>
-  {{routerParams$ | async | json}}
+  <h1>Root Cause Analysis Widget</h1>
+  <!--{{routerParams$ | async | json}}-->
+  <app-bna-widget [routerParams] = "(routerParams$ | async)"> </app-bna-widget>
 </div>
