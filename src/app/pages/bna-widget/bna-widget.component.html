@@ -26,21 +26,23 @@
         </td>
 
         <td>
+          <div *ngIf="!dataItem.isActive && dataItem.showDeleteConfirmation"> Are you sure you wish to delete?</div>
           <button (click)="onToggleEdit($event,dataItem)" class="btn btn-success" *ngIf="!dataItem.isActive && !dataItem.showDeleteConfirmation">
             <i class="icon-edit">
-            </i> </button>
+            </i> Edit </button>
           <button class="btn btn-success" (click)="onSaveRootCauseAnalysisData(dataItem, $event)" *ngIf="dataItem.isActive"> <i
               class="icon-save">
-            </i> </button>
+            </i> Save </button>
           <button class="btn btn-danger" (click)="onToggleCancelAction($event,dataItem)" *ngIf="dataItem.isActive"> <i class="icon-cancel"></i>
+            Cancel
           </button>
           <button class="btn btn-danger" *ngIf="!dataItem.isActive && !dataItem.showDeleteConfirmation" (click)="onToggleDelete($event, dataItem)">
-            <i class="icon-delete"></i>
+            <i class="icon-delete"></i> Delete
           </button>
           <button class="btn btn-success" *ngIf="!dataItem.isActive && dataItem.showDeleteConfirmation" (click)="onToggleCancelAction($event, dataItem)">
-            <i class="icon-cancel"></i></button>
+            <i class="icon-cancel"></i> No </button>
           <button class="btn btn-danger" *ngIf="!dataItem.isActive && dataItem.showDeleteConfirmation" (click)="onDeleteRootCauseAnalysisData(dataItem)">
-            <i class="icon-ok-circled2"></i></button>
+            <i class="icon-ok-circled2"></i> Yes </button>
         </td>
       </tr>
 
@@ -56,9 +58,10 @@
             autofocus></textarea>
         </td>
         <td> <button class="btn btn-success" (click)="onAddRootCauseAnalysisData(newRootCauseAnalysisData)"> <i class="icon-save">
-            </i> </button>
-          <button class="btn btn-danger" (click)="onToggleCancelDataEntry($event, newRootCauseAnalysisData)"> <i class="icon-ok-circled2">
-            </i> </button>
+            </i> Save</button>
+          <button title='Cancel' class="btn btn-danger" (click)="onToggleCancelDataEntry($event, newRootCauseAnalysisData)"> <i
+              class="icon-ok-circled2">
+            </i> Cancel </button>
         </td>
       </tr>
 
