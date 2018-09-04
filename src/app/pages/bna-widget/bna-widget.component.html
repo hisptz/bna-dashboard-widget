@@ -34,7 +34,6 @@
             </i> </button>
           <button class="btn btn-danger" (click)="onToggleCancelAction($event,dataItem)" *ngIf="dataItem.isActive"> <i class="icon-cancel"></i>
           </button>
-
           <button class="btn btn-danger" *ngIf="!dataItem.isActive && !dataItem.showDeleteConfirmation" (click)="onToggleDelete($event, dataItem)">
             <i class="icon-delete"></i>
           </button>
@@ -56,7 +55,9 @@
           <textarea *ngIf="!dataElement.optionSetValue && dataElement.valueType == 'TEXT'" placeholder="{{dataElement.name}}" (keyup)="onDataValueEntry($event, dataElement.id, rootCauseAnalysisConfiguration)"
             autofocus></textarea>
         </td>
-        <td> <button class="btn edit-button" (click)="onAddRootCauseAnalysisData(newRootCauseAnalysisData)"> <i class="icon-save">
+        <td> <button class="btn btn-success" (click)="onAddRootCauseAnalysisData(newRootCauseAnalysisData)"> <i class="icon-save">
+            </i> </button>
+          <button class="btn btn-danger" (click)="onToggleCancelDataEntry($event, newRootCauseAnalysisData)"> <i class="icon-ok-circled2">
             </i> </button>
         </td>
       </tr>

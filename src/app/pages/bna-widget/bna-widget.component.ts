@@ -91,7 +91,8 @@ export class BnaWidgetComponent implements OnInit {
     this.newRootCauseAnalysisData = {
       id: fromHelpers.generateUid(),
       configurationId: configuration.id,
-      dataValues: emptyDataValues
+      dataValues: emptyDataValues,
+      isActive: true
     };
   }
 
@@ -121,6 +122,13 @@ export class BnaWidgetComponent implements OnInit {
     }
     dataItem.isActive = false;
     dataItem.showDeleteConfirmation = false;
+  }
+
+  onToggleCancelDataEntry(e, dataItem) {
+    if (e) {
+      e.stopPropagation();
+    }
+    this.showEmptyRow = false;
   }
 
   onToggleDelete(e, dataItem) {
@@ -159,6 +167,7 @@ export class BnaWidgetComponent implements OnInit {
     const newEnteredData = e.target.value.trim();
     if (newEnteredData !== '') {
       const dataValueId = dataElement;
+
       this.newRootCauseAnalysisData.dataValues[dataElement] = newEnteredData;
       const unSavedDataItem = this.newRootCauseAnalysisData;
       this.newRootCauseAnalysisData = unSavedDataItem
@@ -171,14 +180,12 @@ export class BnaWidgetComponent implements OnInit {
           }
         : {
             ...this.newRootCauseAnalysisData,
-            // unsaved: true,
             dataValues: {
               ...this.newRootCauseAnalysisData.dataValues,
               ...{ [dataValueId]: newEnteredData }
             }
           };
     }
-    console.log(this.newRootCauseAnalysisData);
   }
 
   onSaveRootCauseAnalysisData(dataItem, e) {

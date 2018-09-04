@@ -28,7 +28,6 @@ export class RootCauseAnalysisDataService {
   }
 
   deleteRootCauseAnalysisData(rootCauseAnalysisData) {
-    console.log(rootCauseAnalysisData);
     return this.http.delete(
       `${this._dataStoreUrl}/${rootCauseAnalysisData.configurationId}_${
         rootCauseAnalysisData.id
