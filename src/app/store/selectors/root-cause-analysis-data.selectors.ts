@@ -36,6 +36,7 @@ export const getAllRootCauseAnalysisData = createSelector(
     return _.map(
       rootCauseAnalysisDatas,
       (rootCauseAnalysisData: RootCauseAnalysisData) => {
+        console.log(rootCauseAnalysisData.isActive);
         const newDataValues = {};
         _.each(
           currentConfiguration ? currentConfiguration.dataElements : [],

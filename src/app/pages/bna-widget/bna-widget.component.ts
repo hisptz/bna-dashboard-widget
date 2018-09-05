@@ -83,7 +83,6 @@ export class BnaWidgetComponent implements OnInit {
   }
 
   onToggleAddNewRootCauseAnalysisData(configuration) {
-    this.showEmptyRow = true;
     const configurationDataElements = configuration.dataElements;
     const emptyDataValues = this.generateConfigurations(
       configurationDataElements
@@ -122,8 +121,12 @@ export class BnaWidgetComponent implements OnInit {
     if (e) {
       e.stopPropagation();
     }
-    dataItem.isActive = false;
-    dataItem.showDeleteConfirmation = false;
+    this.store.dispatch(
+      new fromRootCauseAnalysisDataActions.UpdateRootCauseAnalysisData({
+        ...dataItem,
+        isActive: false
+      })
+    );
   }
 
   onToggleDelete(e, dataItem) {

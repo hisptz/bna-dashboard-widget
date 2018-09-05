@@ -37,9 +37,7 @@ export class SelectBoxInputComponent implements OnInit {
         : [];
   }
 
-  ngOnInit() {
-    console.log(this.groups);
-  }
+  ngOnInit() {}
 
   onDataValueChange(e) {
     e.stopPropagation();
