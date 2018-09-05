@@ -67,12 +67,7 @@ export function reducer(
           id: action.rootCauseAnalysisData.id,
           changes: action.rootCauseAnalysisData
         },
-        {
-          ...state,
-          notification: {
-            message: 'Saving Root Cause Analysis Data To Server'
-          }
-        }
+        state
       );
     }
 

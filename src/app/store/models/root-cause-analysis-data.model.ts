@@ -4,4 +4,5 @@ export interface RootCauseAnalysisData {
   dataValues: { [id: string]: string };
   showEditNotification?: boolean;
   isActive?: boolean;
+  isNew?: boolean;
 }

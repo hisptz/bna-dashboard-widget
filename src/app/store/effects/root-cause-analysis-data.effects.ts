@@ -46,7 +46,7 @@ export class RootCauseAnalysisDataEffects {
     mergeMap(
       (action: fromRootCauseAnalysisDataActions.SaveRootCauseAnalysisData) =>
         this.rootCauseAnalysisDataService
-          .updateRootCauseAnalysisData(action.rootCauseAnalysisData)
+          .saveRootCauseAnalysisData(action.rootCauseAnalysisData)
           .pipe(
             map(
               () =>
@@ -75,7 +75,7 @@ export class RootCauseAnalysisDataEffects {
     mergeMap(
       (action: fromRootCauseAnalysisDataActions.CreateRootCauseAnalysisData) =>
         this.rootCauseAnalysisDataService
-          .addRootCauseAnalysisData(action.rootCauseAnalysisData)
+          .saveRootCauseAnalysisData(action.rootCauseAnalysisData)
           .pipe(
             map(
               () =>

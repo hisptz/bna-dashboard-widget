@@ -1,57 +1,76 @@
 <div *ngIf="dataLoaded$ | async">
 
-  <table *ngIf="configuration$ | async as rootCauseAnalysisConfiguration;">
+  <table class="table table-bordered" *ngIf="configuration$ | async as rootCauseAnalysisConfiguration;">
     <thead>
       <tr>
-        <th [hidden]="dataElement.isHidden" *ngFor="let dataElement of rootCauseAnalysisConfiguration.dataElements;">
+        <th width="{{(100)/(rootCauseAnalysisConfiguration.dataElements.length + 1)}}%" class="widget-table-header" [hidden]="dataElement.isHidden"
+          *ngFor="let dataElement of rootCauseAnalysisConfiguration.dataElements;">
           {{dataElement.name}}
         </th>
-        <th> Actions </th>
+        <th width="{{(100)/(rootCauseAnalysisConfiguration.dataElements.length + 1)}}%" class="widget-table-header"> Actions
+        </th>
       </tr>
     </thead>
     <tbody *ngIf=" data$ | async as rootCauseAnalysisData;">
       <tr *ngFor="let dataItem of rootCauseAnalysisData ;  let i = index; trackBy:dataItem?.id">
         <td [hidden]="dataElement.isHidden" *ngFor="let dataElement of rootCauseAnalysisConfiguration.dataElements; let j = index"
           [ngClass]="{
-          'auto-filled': dataElement.valueType == 'AUTO_FILLED',
-          'select-box': dataElement.optionSetValue == true}">
-          <span *ngIf="!dataItem.isActive && !dataElement.isHidden">{{dataItem.dataValues[dataElement.id]}}</span>
-          <app-auto-filled-input *ngIf="dataItem.isActive && !dataElement.optionSetValue && dataElement.valueType == 'AUTO_FILLED'"
-            [dataItemValue]="dataItem.dataValues[dataElement.id]" [dataElement]="dataElement" [orgUnit]="routerParams.orgUnit"
-            [period]="routerParams.period" [dashboard]="routerParams.dashboard"></app-auto-filled-input>
+          'auto-filled': dataElement.valueType == 'AUTO_FILLED'}">
+          <div *ngIf="(!dataItem.isActive && !dataItem.isHidden) || (dataItem.isActive && !dataElement.optionSetValue && dataElement.valueType == 'AUTO_FILLED')"
+            class="form-control auto-filled-label">
+            {{dataItem.dataValues[dataElement.id]}}
+          </div>
           <app-select-box-input *ngIf="dataItem.isActive && dataElement.optionSetValue" [dataItemValue]="dataItem.dataValues[dataElement.id]"
             [dataElement]="dataElement" [dataValues]="dataItem.dataValues" (updateDataValues)="onDataValuesUpdate($event, dataItem)"
             [groups]="routerParams?.groups"></app-select-box-input>
-          <textarea *ngIf="dataItem.isActive && !dataElement.optionSetValue && dataElement.valueType == 'TEXT'" placeholder="{{dataElement.name}}"
-            (keyup)="onDataValueUpdate(dataElement.id, dataItem, $event)" autofocus>{{dataItem.dataValues[dataElement.id]}}</textarea>
+          <textarea class="form-control" rows="1" *ngIf="dataItem.isActive && !dataElement.optionSetValue && dataElement.valueType == 'TEXT'"
+            placeholder="{{dataElement.name}}" (keyup)="onDataValueUpdate(dataElement.id, dataItem, $event)" autofocus>{{dataItem.dataValues[dataElement.id]}}</textarea>
         </td>
 
         <td>
           <button (click)="onToggleEdit($event,dataItem)" class="btn btn-success" *ngIf="!dataItem.isActive && !dataItem.showDeleteConfirmation">
-            <i class="icon-edit">
-            </i> </button>
-          <button class="btn btn-success" (click)="onSaveRootCauseAnalysisData(dataItem, $event)" *ngIf="dataItem.isActive"> <i
-              class="icon-save">
-            </i> </button>
-          <button class="btn btn-danger" (click)="onToggleCancelAction($event,dataItem)" *ngIf="dataItem.isActive"> <i class="icon-cancel"></i>
-          </button>
+            <i class="icon-edit"></i> Edit</button>&nbsp;
+          <button class="btn btn-success" (click)="onSaveRootCauseAnalysisData(dataItem,rootCauseAnalysisConfiguration.dataElements, $event)"
+            *ngIf="dataItem.isActive">
+            <i class="icon-save">
+            </i> Save</button>&nbsp;
+          <button class="btn btn-danger" (click)="onToggleCancelAction($event,dataItem)" *ngIf="dataItem.isActive">
+            <i class="icon-cancel"></i> Cancel
+          </button>&nbsp;
 
           <button class="btn btn-danger" *ngIf="!dataItem.isActive && !dataItem.showDeleteConfirmation" (click)="onToggleDelete($event, dataItem)">
-            <i class="icon-delete"></i>
-          </button>
-          <button class="btn btn-success" *ngIf="!dataItem.isActive && dataItem.showDeleteConfirmation" (click)="onToggleCancelAction($event, dataItem)">
-            <i class="icon-cancel"></i></button>
+            <i class="icon-delete"></i> Delete
+          </button>&nbsp;
+          <button class="btn btn-success" *ngIf="!dataItem.isActive && dataItem.showDeleteConfirmation" (click)="onToggleCancelAction($event, dataItem, 'DELETE')">
+            <i class="icon-cancel"></i> No</button>&nbsp;
           <button class="btn btn-danger" *ngIf="!dataItem.isActive && dataItem.showDeleteConfirmation" (click)="onDeleteRootCauseAnalysisData(dataItem)">
-            <i class="icon-ok-circled2"></i></button>
+            <i class="icon-ok-circled2"></i> Yes</button>
         </td>
       </tr>
 
     </tbody>
   </table>
+
+  <div class="d-flex justify-content-end" *ngIf="configuration$ | async as dataConfiguration">
+    <button class="btn btn-primary" *ngIf="(dataLoaded$ | async)" (click)="onToggleAddNewRootCauseAnalysisData(dataConfiguration)">
+      Add New </button>
+  </div>
 </div>
 
-<div *ngIf="configuration$ | async as dataConfiguration">
-  <button *ngIf="(dataLoaded$ | async)" class="pull-right" (click)="onToggleAddNewRootCauseAnalysisData(dataConfiguration)">
-    Add New </button></div>
-
-<app-widget-item-loader *ngIf="(!configurationLoaded$ | async) || !(dataLoaded$ | async)" [height]="'100px'"></app-widget-item-loader>
+<div *ngIf="(!configurationLoaded$ | async) || !(dataLoaded$ | async)">
+  <div class="d-flex my-1">
+    <div class="flex-fill mx-1" *ngFor="let count of [1,2,3,4,5,6,7]">
+      <app-widget-item-loader [height]="'40px'"></app-widget-item-loader>
+    </div>
+  </div>
+  <div class="d-flex my-1">
+    <div class="flex-fill mx-1" *ngFor="let count of [1,2,3,4,5,6,7]">
+      <app-widget-item-loader [height]="'40px'"></app-widget-item-loader>
+    </div>
+  </div>
+  <div class="d-flex justify-content-end my-2 mx-1">
+    <div style="width: 150px;">
+      <app-widget-item-loader [height]="'40px'"></app-widget-item-loader>
+    </div>
+  </div>
+</div>

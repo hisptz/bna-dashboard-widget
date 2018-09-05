@@ -91,6 +91,7 @@ export class BnaWidgetComponent implements OnInit {
       new fromRootCauseAnalysisDataActions.AddRootCauseAnalysisData({
         id: fromHelpers.generateUid(),
         isActive: true,
+        isNew: true,
         configurationId: configuration.id,
         dataValues: emptyDataValues
       })
@@ -117,13 +118,16 @@ export class BnaWidgetComponent implements OnInit {
     );
   }
 
-  onToggleCancelAction(e, dataItem) {
+  onToggleCancelAction(e, dataItem, action?: string) {
     if (e) {
       e.stopPropagation();
     }
+
     this.store.dispatch(
       new fromRootCauseAnalysisDataActions.UpdateRootCauseAnalysisData({
         ...dataItem,
+        showDeleteConfirmation:
+          action === 'DELETE' ? false : dataItem.showDeleteConfirmation,
         isActive: false
       })
     );
@@ -216,16 +220,29 @@ export class BnaWidgetComponent implements OnInit {
             }
           };
     }
-    console.log(this.newRootCauseAnalysisData);
   }
 
-  onSaveRootCauseAnalysisData(dataItem, e) {
+  onSaveRootCauseAnalysisData(dataItem, dataElements, e) {
     e.stopPropagation();
+    const autoFilledDataValues = {};
+    _.each(dataElements, (dataElement: any) => {
+      if (dataElement.valueType === 'AUTO_FILLED') {
+        autoFilledDataValues[dataElement.id] =
+          dataItem.dataValues[dataElement.id];
+      }
+    });
+
     const newDataItem = this.unSavedDataItemValues[dataItem.id];
-    if (newDataItem) {
+    const mergedDataItem = newDataItem
+      ? {
+          ...newDataItem,
+          dataValues: { ...newDataItem.dataValues, ...autoFilledDataValues }
+        }
+      : dataItem;
+    if (mergedDataItem) {
       this.store.dispatch(
         new fromRootCauseAnalysisDataActions.SaveRootCauseAnalysisData({
-          ...newDataItem,
+          ...mergedDataItem,
           isActive: false
         })
       );
