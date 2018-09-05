@@ -1,3 +1,5 @@
-<select>
-    <option *ngFor="let options of dataElement.optionSet?.option" value="options.code">{{ options.name }}</option>
+<select [(ngModel)]="dataItemValue" (change)="onDataValueChange($event)">
+    {{dataItemValue}}
+    <option *ngFor="let option of selectionsOptions">{{ option.name }}
+    </option>
 </select>

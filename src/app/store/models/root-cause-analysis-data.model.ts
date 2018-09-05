@@ -3,4 +3,5 @@ export interface RootCauseAnalysisData {
   configurationId: string;
   dataValues: { [id: string]: string };
   showEditNotification?: boolean;
+  isActive?: boolean;
 }

@@ -20,9 +20,10 @@
             [dataItemValue]="dataItem.dataValues[dataElement.id]" [dataElement]="dataElement" [orgUnit]="routerParams.orgUnit"
             [period]="routerParams.period" [dashboard]="routerParams.dashboard"></app-auto-filled-input>
           <app-select-box-input *ngIf="dataItem.isActive && dataElement.optionSetValue" [dataItemValue]="dataItem.dataValues[dataElement.id]"
-            [dataElement]="dataElement"></app-select-box-input>
+            [dataElement]="dataElement" [dataValues]="dataItem.dataValues" (updateDataValues)="onDataValuesUpdate($event, dataItem)"
+            [groups]="routerParams?.groups"></app-select-box-input>
           <textarea *ngIf="dataItem.isActive && !dataElement.optionSetValue && dataElement.valueType == 'TEXT'" placeholder="{{dataElement.name}}"
-            (keyup)="onDataValueUpdate($event, dataElement.id, dataItem)" autofocus>{{dataItem.dataValues[dataElement.id]}}</textarea>
+            (keyup)="onDataValueUpdate(dataElement.id, dataItem, $event)" autofocus>{{dataItem.dataValues[dataElement.id]}}</textarea>
         </td>
 
         <td>
@@ -45,28 +46,12 @@
         </td>
       </tr>
 
-      <tr *ngIf="showEmptyRow || !rootCauseAnalysisData">
-        <td [hidden]="dataElement.isHidden" *ngFor="let dataElement of rootCauseAnalysisConfiguration.dataElements; let j = index"
-          [ngClass]="{
-          'auto-filled': dataElement.valueType == 'AUTO_FILLED',
-          'select-box': dataElement.optionSetValue == true}">
-          <app-auto-filled-input *ngIf="!dataElement.optionSetValue && dataElement.valueType == 'AUTO_FILLED'" [dataElement]="dataElement"
-            [orgUnit]="routerParams.orgUnit" [period]="routerParams.period" [dashboard]="routerParams.dashboard"></app-auto-filled-input>
-          <app-select-box-input *ngIf="dataElement.optionSetValue" [dataElement]="dataElement"></app-select-box-input>
-          <textarea *ngIf="!dataElement.optionSetValue && dataElement.valueType == 'TEXT'" placeholder="{{dataElement.name}}" (keyup)="onDataValueEntry($event, dataElement.id, rootCauseAnalysisConfiguration)"
-            autofocus></textarea>
-        </td>
-        <td> <button class="btn edit-button" (click)="onAddRootCauseAnalysisData(newRootCauseAnalysisData)"> <i class="icon-save">
-            </i> </button>
-        </td>
-      </tr>
-
     </tbody>
   </table>
 </div>
 
 <div *ngIf="configuration$ | async as dataConfiguration">
-  <button *ngIf="!showEmptyRow && (dataLoaded$ | async)" class="pull-right" (click)="onToggleAddNewRootCauseAnalysisData(dataConfiguration)">
+  <button *ngIf="(dataLoaded$ | async)" class="pull-right" (click)="onToggleAddNewRootCauseAnalysisData(dataConfiguration)">
     Add New </button></div>
 
 <app-widget-item-loader *ngIf="(!configurationLoaded$ | async) || !(dataLoaded$ | async)" [height]="'100px'"></app-widget-item-loader>

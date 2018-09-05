@@ -88,11 +88,14 @@ export class BnaWidgetComponent implements OnInit {
     const emptyDataValues = this.generateConfigurations(
       configurationDataElements
     );
-    this.newRootCauseAnalysisData = {
-      id: fromHelpers.generateUid(),
-      configurationId: configuration.id,
-      dataValues: emptyDataValues
-    };
+    this.store.dispatch(
+      new fromRootCauseAnalysisDataActions.AddRootCauseAnalysisData({
+        id: fromHelpers.generateUid(),
+        isActive: true,
+        configurationId: configuration.id,
+        dataValues: emptyDataValues
+      })
+    );
   }
 
   generateConfigurations(configurationDataElements) {
@@ -130,9 +133,18 @@ export class BnaWidgetComponent implements OnInit {
     dataItem.showDeleteConfirmation = true;
   }
 
-  onDataValueUpdate(e, dataValueId, dataItem) {
-    e.stopPropagation();
-    const dataValue = e.target.value.trim();
+  /**
+   * Update single data value
+   * @param dataValueId
+   * @param dataItem
+   * @param e
+   * @param dataItemValue
+   */
+  onDataValueUpdate(dataValueId, dataItem, e, dataItemValue?) {
+    if (e) {
+      e.stopPropagation();
+    }
+    const dataValue = e ? e.target.value.trim() : dataItemValue;
     if (dataValue !== '') {
       const unSavedDataItem = this.unSavedDataItemValues[dataItem.id];
       this.unSavedDataItemValues[dataItem.id] = unSavedDataItem
@@ -152,6 +164,29 @@ export class BnaWidgetComponent implements OnInit {
             }
           };
     }
+  }
+
+  /**
+   * Update more than one data values especially those coming from selections
+   * @param dataValueObject
+   * @param dataItem
+   */
+  onDataValuesUpdate(dataValueObject: any, dataItem) {
+    _.each(_.keys(dataValueObject), dataValueKey => {
+      this.onDataValueUpdate(
+        dataValueKey,
+        dataItem,
+        null,
+        dataValueObject[dataValueKey]
+      );
+    });
+
+    const newDataItem = this.unSavedDataItemValues[dataItem.id];
+    this.store.dispatch(
+      new fromRootCauseAnalysisDataActions.UpdateRootCauseAnalysisData(
+        newDataItem
+      )
+    );
   }
 
   onDataValueEntry(e, dataElement) {

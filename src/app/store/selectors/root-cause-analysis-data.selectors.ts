@@ -1,6 +1,13 @@
 import { createSelector } from '@ngrx/store';
+import * as _ from 'lodash';
 import * as fromRoot from '../reducers';
 import * as fromRootCauseData from '../reducers/root-cause-analysis-data.reducer';
+import { getRouterParams } from './router.selectors';
+import { getCurrentRootCauseAnalysisConfiguration } from './root-cause-analysis-configuration.selectors';
+import {
+  RootCauseAnalysisConfiguration,
+  RootCauseAnalysisData
+} from '../models';
 
 export const getRootCauseAnalysisDataState = createSelector(
   fromRoot.getRootState,
@@ -12,9 +19,47 @@ export const getRootCauseAnalysisDataEntities = createSelector(
   fromRootCauseData.getRootCauseAnalysisDataEntitiesState
 );
 
-export const getAllRootCauseAnalysisData = createSelector(
+export const getRootCauseAnalysisDatas = createSelector(
   getRootCauseAnalysisDataState,
   fromRootCauseData.getAllRootCauseAnalysisDataState
+);
+
+export const getAllRootCauseAnalysisData = createSelector(
+  getRootCauseAnalysisDatas,
+  getCurrentRootCauseAnalysisConfiguration,
+  getRouterParams,
+  (
+    rootCauseAnalysisDatas,
+    currentConfiguration: RootCauseAnalysisConfiguration,
+    routeParams
+  ) => {
+    return _.map(
+      rootCauseAnalysisDatas,
+      (rootCauseAnalysisData: RootCauseAnalysisData) => {
+        const newDataValues = {};
+        _.each(
+          currentConfiguration ? currentConfiguration.dataElements : [],
+          (dataElement: any) => {
+            newDataValues[dataElement.id] = dataElement.routerParam
+              ? routeParams
+                ? routeParams[dataElement.routerParam.namespace]
+                  ? routeParams[dataElement.routerParam.namespace][
+                      dataElement.routerParam.key
+                    ]
+                  : ''
+                : ''
+              : rootCauseAnalysisData.dataValues[dataElement.id];
+          }
+        );
+        return {
+          ...rootCauseAnalysisData,
+          dataValues: rootCauseAnalysisData.isActive
+            ? newDataValues
+            : rootCauseAnalysisData.dataValues
+        };
+      }
+    );
+  }
 );
 
 export const getRootCauseAnalysisDataLoadingState = createSelector(
