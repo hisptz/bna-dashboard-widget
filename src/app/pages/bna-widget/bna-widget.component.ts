@@ -83,17 +83,19 @@ export class BnaWidgetComponent implements OnInit {
   }
 
   onToggleAddNewRootCauseAnalysisData(configuration) {
-    this.showEmptyRow = true;
     const configurationDataElements = configuration.dataElements;
     const emptyDataValues = this.generateConfigurations(
       configurationDataElements
     );
-    this.newRootCauseAnalysisData = {
-      id: fromHelpers.generateUid(),
-      configurationId: configuration.id,
-      dataValues: emptyDataValues,
-      isActive: true
-    };
+    this.store.dispatch(
+      new fromRootCauseAnalysisDataActions.AddRootCauseAnalysisData({
+        id: fromHelpers.generateUid(),
+        isActive: true,
+        isNew: true,
+        configurationId: configuration.id,
+        dataValues: emptyDataValues
+      })
+    );
   }
 
   generateConfigurations(configurationDataElements) {
@@ -116,12 +118,19 @@ export class BnaWidgetComponent implements OnInit {
     );
   }
 
-  onToggleCancelAction(e, dataItem) {
+  onToggleCancelAction(e, dataItem, action?: string) {
     if (e) {
       e.stopPropagation();
     }
-    dataItem.isActive = false;
-    dataItem.showDeleteConfirmation = false;
+
+    this.store.dispatch(
+      new fromRootCauseAnalysisDataActions.UpdateRootCauseAnalysisData({
+        ...dataItem,
+        showDeleteConfirmation:
+          action === 'DELETE' ? false : dataItem.showDeleteConfirmation,
+        isActive: false
+      })
+    );
   }
 
   onToggleCancelDataEntry(e, dataItem) {
@@ -138,9 +147,18 @@ export class BnaWidgetComponent implements OnInit {
     dataItem.showDeleteConfirmation = true;
   }
 
-  onDataValueUpdate(e, dataValueId, dataItem) {
-    e.stopPropagation();
-    const dataValue = e.target.value.trim();
+  /**
+   * Update single data value
+   * @param dataValueId
+   * @param dataItem
+   * @param e
+   * @param dataItemValue
+   */
+  onDataValueUpdate(dataValueId, dataItem, e, dataItemValue?) {
+    if (e) {
+      e.stopPropagation();
+    }
+    const dataValue = e ? e.target.value.trim() : dataItemValue;
     if (dataValue !== '') {
       const unSavedDataItem = this.unSavedDataItemValues[dataItem.id];
       this.unSavedDataItemValues[dataItem.id] = unSavedDataItem
@@ -160,6 +178,29 @@ export class BnaWidgetComponent implements OnInit {
             }
           };
     }
+  }
+
+  /**
+   * Update more than one data values especially those coming from selections
+   * @param dataValueObject
+   * @param dataItem
+   */
+  onDataValuesUpdate(dataValueObject: any, dataItem) {
+    _.each(_.keys(dataValueObject), dataValueKey => {
+      this.onDataValueUpdate(
+        dataValueKey,
+        dataItem,
+        null,
+        dataValueObject[dataValueKey]
+      );
+    });
+
+    const newDataItem = this.unSavedDataItemValues[dataItem.id];
+    this.store.dispatch(
+      new fromRootCauseAnalysisDataActions.UpdateRootCauseAnalysisData(
+        newDataItem
+      )
+    );
   }
 
   onDataValueEntry(e, dataElement) {
@@ -188,13 +229,27 @@ export class BnaWidgetComponent implements OnInit {
     }
   }
 
-  onSaveRootCauseAnalysisData(dataItem, e) {
+  onSaveRootCauseAnalysisData(dataItem, dataElements, e) {
     e.stopPropagation();
+    const autoFilledDataValues = {};
+    _.each(dataElements, (dataElement: any) => {
+      if (dataElement.valueType === 'AUTO_FILLED') {
+        autoFilledDataValues[dataElement.id] =
+          dataItem.dataValues[dataElement.id];
+      }
+    });
+
     const newDataItem = this.unSavedDataItemValues[dataItem.id];
-    if (newDataItem) {
+    const mergedDataItem = newDataItem
+      ? {
+          ...newDataItem,
+          dataValues: { ...newDataItem.dataValues, ...autoFilledDataValues }
+        }
+      : dataItem;
+    if (mergedDataItem) {
       this.store.dispatch(
         new fromRootCauseAnalysisDataActions.SaveRootCauseAnalysisData({
-          ...newDataItem,
+          ...mergedDataItem,
           isActive: false
         })
       );

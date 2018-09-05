@@ -1,75 +1,33 @@
-table {
-  width: 98%;
-  margin: 0 auto;
-  border-spacing: 1px;
-  border-color: darkgrey;
-}
-
-th {
-  /*padding-left: 1%;*/
-  padding: 1% 0% 1% 1%;
+.widget-table-header {
   background-color: #2560a6;
-  color: white;
-  font-weight: bold;
-  width: 12.5%;
+  color: #ffffff;
 }
 
 .auto-filled {
-  background: rgb(177, 174, 174);
+  background: #e8ebef;
 }
 
-select,
-select:hover,
-select:active {
-  width: 100%;
-  margin-left: -5%;
-  padding: 10px 20px;
-  background-color: #fff;
-  border: 0px;
+.auto-filled-input {
+  background-color: transparent;
+  border: none;
   outline: none;
+  pointer-events: none;
 }
 
-td {
-  padding-left: 1%;
-}
-.btn-success {
-  background-color: rgba(10, 141, 10, 0.959);
-}
-
-.btn-danger {
-  background-color: rgb(180, 0, 0);
-}
-
-.btn {
-  padding: 2% 2%;
-  margin: 5px 5px;
-  min-width: 80px;
-  height: 25px;
-  font-weight: bold;
-  color: white;
-  border: 0px solid #000000;
-  border-radius: 5px;
-}
-
-.btn span {
-  display: none;
-}
-
-.btn span:hover {
-  display: inline;
-}
-
-.pull-right {
-  float: right;
-  margin: 10px 15px 0px 0px;
-}
-
-.pull-left {
-  margin-right: auto !important;
+.auto-filled-label {
+  background-color: transparent;
+  border: none;
 }
 
 inActiveItem {
   pointer-events: none;
   border: none;
   outline: none;
+}
+.progress-block {
+  display: flex;
+  justify-content: space-around;
+}
+.progress-item {
+  width: 100%;
 }

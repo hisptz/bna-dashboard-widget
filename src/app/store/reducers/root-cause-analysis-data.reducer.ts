@@ -39,12 +39,7 @@ export function reducer(
 ): State {
   switch (action.type) {
     case RootCauseAnalysisDataActionTypes.AddRootCauseAnalysisData: {
-      return adapter.addOne(action.rootCauseAnalysisData, {
-        ...state,
-        notification: {
-          message: 'Loading Root Cause Analysis Data'
-        }
-      });
+      return adapter.addOne(action.rootCauseAnalysisData, state);
     }
 
     case RootCauseAnalysisDataActionTypes.UpsertRootCauseAnalysisData: {
@@ -72,12 +67,7 @@ export function reducer(
           id: action.rootCauseAnalysisData.id,
           changes: action.rootCauseAnalysisData
         },
-        {
-          ...state,
-          notification: {
-            message: 'Saving Root Cause Analysis Data To Server'
-          }
-        }
+        state
       );
     }
 

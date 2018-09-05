@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
@@ -41,8 +41,6 @@ import { WidgetItemLoaderComponent } from './components/widget-item-loader/widge
     HttpClientModule,
 
     AppRoutingModule,
-
-    ReactiveFormsModule,
 
     FormsModule,
 

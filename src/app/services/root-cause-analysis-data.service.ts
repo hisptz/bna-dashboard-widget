@@ -23,7 +23,7 @@ export class RootCauseAnalysisDataService {
       `${this._dataStoreUrl}/${rootCauseAnalysisData.configurationId}_${
         rootCauseAnalysisData.id
       }`,
-      _.omit(rootCauseAnalysisData, ['showEmptyRow'])
+      rootCauseAnalysisData
     );
   }
 
@@ -40,12 +40,21 @@ export class RootCauseAnalysisDataService {
       `${this._dataStoreUrl}/${rootCauseAnalysisData.configurationId}_${
         rootCauseAnalysisData.id
       }`,
-      _.omit(rootCauseAnalysisData, [
-        'showEditNotification',
-        'isActive',
-        'unsaved'
-      ])
+      rootCauseAnalysisData
     );
+  }
+
+  saveRootCauseAnalysisData(rootCauseAnalysisData: RootCauseAnalysisData) {
+    const newRootCauseAnalysisData = _.omit(rootCauseAnalysisData, [
+      'showEditNotification',
+      'isActive',
+      'unsaved',
+      'isNew'
+    ]);
+
+    return rootCauseAnalysisData.isNew
+      ? this.addRootCauseAnalysisData(newRootCauseAnalysisData)
+      : this.updateRootCauseAnalysisData(newRootCauseAnalysisData);
   }
 
   getRootCauseAnalysisData(configurationId: string) {
