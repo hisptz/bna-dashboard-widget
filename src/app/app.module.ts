@@ -15,6 +15,7 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { reducers, metaReducers, effects } from './store';
 import { RouteSerializer } from './utils';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -25,6 +26,7 @@ import { SelectBoxInputComponent } from './components/data-item/select-box-input
 import { TextAreaInputComponent } from './components/data-item/text-area-input/text-area-input.component';
 import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
 import { WidgetItemLoaderComponent } from './components/widget-item-loader/widget-item-loader.component';
+import { WidgetNotificationBarComponent } from './components/widget-notification-bar/widget-notification-bar.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -33,11 +35,12 @@ import { WidgetItemLoaderComponent } from './components/widget-item-loader/widge
     AutoFilledInputComponent,
     SelectBoxInputComponent,
     TextAreaInputComponent,
-    WidgetItemLoaderComponent
+    WidgetItemLoaderComponent,
+    WidgetNotificationBarComponent
   ],
   imports: [
     BrowserModule,
-
+    BrowserAnimationsModule,
     HttpClientModule,
 
     AppRoutingModule,

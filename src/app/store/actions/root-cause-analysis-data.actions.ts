@@ -22,7 +22,13 @@ export enum RootCauseAnalysisDataActionTypes {
   CreateRootCauseAnalysisDataFail = '[RootCauseAnalysisData] Create RootCauseAnalysisData Fail',
   SaveRootCauseAnalysisData = '[RootCauseAnalysisData] Save RootCauseAnalysisData',
   SaveRootCauseAnalysisDataSuccess = '[RootCauseAnalysisData] Save RootCauseAnalysisData Success',
-  SaveRootCauseAnalysisDataFail = '[RootCauseAnalysisData] Save RootCauseAnalysisData Fail'
+  SaveRootCauseAnalysisDataFail = '[RootCauseAnalysisData] Save RootCauseAnalysisData Fail',
+  ResetRootCauseAnalysisData = '[RootCauseAnalysisData] Reset RootCauseAnalysisData'
+}
+
+export class ResetRootCauseAnalysisData implements Action {
+  readonly type = RootCauseAnalysisDataActionTypes.ResetRootCauseAnalysisData;
+  constructor(public notification: any) {}
 }
 
 export class LoadRootCauseAnalysisDatas implements Action {
@@ -175,4 +181,5 @@ export type RootCauseAnalysisDataActions =
   | DeleteRootCauseAnalysisData
   | DeleteRootCauseAnalysisDatas
   | ClearRootCauseAnalysisDatas
+  | ResetRootCauseAnalysisData
   | LoadRootCauseAnalysisDatasFail;

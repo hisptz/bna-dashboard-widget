@@ -12,6 +12,7 @@ export interface State extends EntityState<RootCauseAnalysisData> {
   loaded: boolean;
   notification: { message: string };
   showEmptyRow: boolean;
+  showNotification: boolean;
   showDeleteConfirmation: boolean;
   hasError: boolean;
   error: any;
@@ -28,6 +29,7 @@ export const initialState: State = adapter.getInitialState({
   loaded: false,
   notification: null,
   showDeleteConfirmation: false,
+  showNotification: false,
   showEmptyRow: false,
   hasError: false,
   error: null
@@ -51,8 +53,9 @@ export function reducer(
         ...state,
         loading: false,
         loaded: true,
+        showNotification: false,
         notification: {
-          message: 'Loading Root Cause Analysis Data'
+          message: 'Root Cause Analysis Data Loaded'
         }
       });
     }
@@ -75,8 +78,23 @@ export function reducer(
       return adapter.updateMany(action.payload.rootCauseAnalysisDatas, state);
     }
 
+    case RootCauseAnalysisDataActionTypes.ResetRootCauseAnalysisData: {
+      return {
+        ...state,
+        notification: {
+          message: null
+        }
+      };
+    }
+
     case RootCauseAnalysisDataActionTypes.DeleteRootCauseAnalysisData: {
-      return adapter.removeOne(action.rootCauseAnalysisData.id, state);
+      return adapter.removeOne(action.rootCauseAnalysisData.id, {
+        ...state,
+        showNotification: true,
+        notification: {
+          message: 'Deleting This Root Cause Analysis Data'
+        }
+      });
     }
 
     case RootCauseAnalysisDataActionTypes.DeleteRootCauseAnalysisDatas: {
@@ -84,7 +102,15 @@ export function reducer(
     }
 
     case RootCauseAnalysisDataActionTypes.LoadRootCauseAnalysisDatas: {
-      return { ...state, loading: true, loaded: false };
+      return {
+        ...state,
+        loading: true,
+        loaded: false,
+        showNotification: true,
+        notification: {
+          message: 'Loading Root Cause Analysis Data'
+        }
+      };
     }
 
     case RootCauseAnalysisDataActionTypes.ClearRootCauseAnalysisDatas: {
@@ -103,9 +129,10 @@ export function reducer(
         },
         {
           ...state,
-          isActive: false,
+          isActive: true,
+          showNotification: true,
           notification: {
-            message: `Saving analysis data in BNA store`
+            message: `Saving Analysis Data `
           }
         }
       );
@@ -115,8 +142,9 @@ export function reducer(
       return {
         ...state,
         isActive: false,
+        showNotification: false,
         notification: {
-          message: `Data successfully locally updated`
+          message: `Data has been successfully updated`
         }
       };
     }
@@ -125,8 +153,9 @@ export function reducer(
       return {
         ...state,
         isActive: true,
+        showNotification: false,
         notification: {
-          message: `Could not locally update data ${action.error.message}`
+          message: `Could not update data : ${action.error.message}`
         }
       };
     }
@@ -134,6 +163,7 @@ export function reducer(
     case RootCauseAnalysisDataActionTypes.CreateRootCauseAnalysisData: {
       return {
         ...state,
+        showNotification: true,
         notification: {
           message: `Saving Analysis Data `
         }
@@ -143,6 +173,7 @@ export function reducer(
     case RootCauseAnalysisDataActionTypes.CreateRootCauseAnalysisDataSuccess: {
       return adapter.addOne(action.rootCauseAnalysisData, {
         ...state,
+        showNotification: false,
         notification: {
           message: `Data successfully saved`
         }
@@ -152,6 +183,7 @@ export function reducer(
     case RootCauseAnalysisDataActionTypes.CreateRootCauseAnalysisDataFail: {
       return {
         ...state,
+        showNotification: false,
         notification: {
           message: `Could not save data ${action.error.message}`
         }
@@ -177,4 +209,4 @@ export const getRootCauseAnalysisDataHasErrorState = (state: State) =>
   state.hasError;
 export const getRootCauseAnalysisDataErrorState = (state: State) => state.error;
 export const getRootCauseAnalysisDataNotificationState = (state: State) =>
-  state.notification.message;
+  state.notification;

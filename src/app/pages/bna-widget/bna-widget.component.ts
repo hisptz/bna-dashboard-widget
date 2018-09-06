@@ -1,7 +1,15 @@
 import { Component, OnInit, Input } from '@angular/core';
+import {
+  style,
+  state,
+  animate,
+  transition,
+  trigger
+} from '@angular/animations';
 import { Store } from '@ngrx/store';
 import { State } from '../../store';
 import { Observable } from 'rxjs';
+import { filter } from 'rxjs/operators';
 import * as _ from 'lodash';
 import * as fromHelpers from '../../helpers';
 import * as fromModels from '../../store/models';
@@ -11,7 +19,20 @@ import * as fromSelectors from '../../store/selectors';
 @Component({
   selector: 'app-bna-widget',
   templateUrl: './bna-widget.component.html',
-  styleUrls: ['./bna-widget.component.css']
+  styleUrls: ['./bna-widget.component.css'],
+  animations: [
+    trigger('fadeInOut', [
+      transition(':enter', [
+        // :enter is alias to 'void => *'
+        style({ opacity: 0 }),
+        animate(500, style({ opacity: 1 }))
+      ]),
+      transition(':leave', [
+        // :leave is alias to '* => void'
+        animate(500, style({ opacity: 0 }))
+      ])
+    ])
+  ]
 })
 export class BnaWidgetComponent implements OnInit {
   @Input()
@@ -23,8 +44,8 @@ export class BnaWidgetComponent implements OnInit {
   configurationLoaded$: Observable<boolean>;
   dataLoading$: Observable<boolean>;
   dataLoaded$: Observable<boolean>;
+  notification$: Observable<any>;
 
-  saveEditButtonTitle: string = 'Edit';
   newRootCauseAnalysisData: fromModels.RootCauseAnalysisData;
   showEmptyRow: boolean = false;
   confirmDelete: boolean = false;
@@ -50,7 +71,9 @@ export class BnaWidgetComponent implements OnInit {
     this.dataLoading$ = store.select(
       fromSelectors.getRootCauseAnalysisDataLoadingState
     );
-
+    this.notification$ = store.select(
+      fromSelectors.getRootCauseAnalysisDataNotificationState
+    );
     this.unSavedDataItemValues = {};
   }
 
@@ -87,6 +110,22 @@ export class BnaWidgetComponent implements OnInit {
     const emptyDataValues = this.generateConfigurations(
       configurationDataElements
     );
+    if (this.unSavedDataItemValues) {
+      _.each(
+        _.map(
+          _.keys(this.unSavedDataItemValues),
+          (dataItemId: string) => this.unSavedDataItemValues[dataItemId]
+        ),
+        (dataItem: any) => {
+          this.store.dispatch(
+            new fromRootCauseAnalysisDataActions.UpdateRootCauseAnalysisData(
+              dataItem
+            )
+          );
+        }
+      );
+    }
+
     this.store.dispatch(
       new fromRootCauseAnalysisDataActions.AddRootCauseAnalysisData({
         id: fromHelpers.generateUid(),
@@ -178,6 +217,16 @@ export class BnaWidgetComponent implements OnInit {
             }
           };
     }
+  }
+
+  onResetNotification(emptyNotificationMessage) {
+    this.store.dispatch(
+      new fromRootCauseAnalysisDataActions.ResetRootCauseAnalysisData({
+        notification: {
+          message: emptyNotificationMessage.message
+        }
+      })
+    );
   }
 
   /**
