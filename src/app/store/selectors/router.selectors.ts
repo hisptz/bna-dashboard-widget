@@ -27,10 +27,10 @@ export const getRouterParams = createSelector(
     const newRouteParams = {};
 
     _.each(_.keys(routeParams), paramKey => {
-      if (paramKey === 'groups') {
-        newRouteParams[paramKey] = getGroupArray(routeParams[paramKey]);
-      } else {
-        newRouteParams[paramKey] = getRouteParamObject(routeParams[paramKey]);
+      try {
+        newRouteParams[paramKey] = JSON.parse(routeParams[paramKey]);
+      } catch (e) {
+        newRouteParams[paramKey] = { id: routeParams[paramKey] };
       }
     });
 
