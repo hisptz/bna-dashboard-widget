@@ -1,6 +1,6 @@
 {
 	"version": "1.0.0-alpha.1",
-	"name": "BNA widget",
+	"name": "bna widget",
 	"description": "BNA widget",
 	"launch_path": "index.html",
 	"appType": "DASHBOARD_WIDGET",
