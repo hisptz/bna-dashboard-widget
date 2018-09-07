@@ -132,7 +132,10 @@ export class BnaWidgetComponent implements OnInit {
         isActive: true,
         isNew: true,
         configurationId: configuration.id,
-        dataValues: emptyDataValues
+        dataValues: emptyDataValues,
+        user: '',
+        updatedAt: '',
+        createdAt: ''
       })
     );
   }
@@ -170,13 +173,6 @@ export class BnaWidgetComponent implements OnInit {
         isActive: false
       })
     );
-  }
-
-  onToggleCancelDataEntry(e, dataItem) {
-    if (e) {
-      e.stopPropagation();
-    }
-    this.showEmptyRow = false;
   }
 
   onToggleDelete(e, dataItem) {

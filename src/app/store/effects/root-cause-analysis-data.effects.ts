@@ -1,10 +1,19 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable, of } from 'rxjs';
-
+import { Store } from '@ngrx/store';
+import { getRouterParams } from '../selectors/router.selectors';
 import * as fromRootCauseAnalysisDataActions from '../actions/root-cause-analysis-data.actions';
+import * as _ from 'lodash';
+import { State } from '../reducers';
 import { RootCauseAnalysisDataService } from '../../services';
-import { switchMap, map, catchError, mergeMap } from 'rxjs/operators';
+import {
+  switchMap,
+  map,
+  catchError,
+  mergeMap,
+  withLatestFrom
+} from 'rxjs/operators';
 import { RootCauseAnalysisData } from '../models/root-cause-analysis-data.model';
 
 @Injectable()
@@ -15,9 +24,14 @@ export class RootCauseAnalysisDataEffects {
       fromRootCauseAnalysisDataActions.RootCauseAnalysisDataActionTypes
         .LoadRootCauseAnalysisDatas
     ),
+    withLatestFrom(this.store.select(getRouterParams)),
     mergeMap(
-      (action: fromRootCauseAnalysisDataActions.LoadRootCauseAnalysisDatas) =>
-        this.rootCauseAnalysisDataService
+      ([action, routerParams]: [
+        fromRootCauseAnalysisDataActions.LoadRootCauseAnalysisDatas,
+        any
+      ]) => {
+        console.log(_.pick(routerParams, ['orgUnit', 'period', 'dashboard']));
+        return this.rootCauseAnalysisDataService
           .getRootCauseAnalysisData(action.configurationId)
           .pipe(
             map(
@@ -33,7 +47,8 @@ export class RootCauseAnalysisDataEffects {
                 )
               )
             )
-          )
+          );
+      }
     )
   );
 
@@ -127,6 +142,7 @@ export class RootCauseAnalysisDataEffects {
 
   constructor(
     private actions$: Actions,
+    private store: Store<State>,
     private rootCauseAnalysisDataService: RootCauseAnalysisDataService
   ) {}
 }

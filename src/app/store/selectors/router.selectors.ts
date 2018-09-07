@@ -33,7 +33,6 @@ export const getRouterParams = createSelector(
         newRouteParams[paramKey] = getRouteParamObject(routeParams[paramKey]);
       }
     });
-
     return newRouteParams;
   }
 );

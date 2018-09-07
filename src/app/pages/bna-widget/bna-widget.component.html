@@ -1,7 +1,7 @@
 <div *ngIf="dataLoaded$ | async">
 
   <table class="table table-bordered custom-table-padding" *ngIf="configuration$ | async as rootCauseAnalysisConfiguration;">
-    <thead>
+    <thead class="table-header-cell">
       <tr>
         <th width="{{(100)/(rootCauseAnalysisConfiguration.dataElements.length + 1)}}%" class="widget-table-header" [hidden]="dataElement.isHidden"
           *ngFor="let dataElement of rootCauseAnalysisConfiguration.dataElements;">
@@ -14,31 +14,29 @@
     <tbody *ngIf=" data$ | async as rootCauseAnalysisData;">
       <tr *ngFor="let dataItem of rootCauseAnalysisData ;  let i = index; trackBy:dataItem?.id">
         <td [hidden]="dataElement.isHidden" *ngFor="let dataElement of rootCauseAnalysisConfiguration.dataElements; let j = index"
-          [ngClass]="{
-          'auto-filled': dataElement.valueType == 'AUTO_FILLED'}">
+          [ngClass]="{'auto-filled': dataElement.valueType == 'AUTO_FILLED'}">
           <div *ngIf="(!dataItem.isActive && !dataItem.isHidden) || (dataItem.isActive && !dataElement.optionSetValue && dataElement.valueType == 'AUTO_FILLED')"
-            class="form-control auto-filled-label">
+            class="form-control auto-filled-label table-cell-data">
             {{dataItem.dataValues[dataElement.id]}}
           </div>
           <app-select-box-input *ngIf="dataItem.isActive && dataElement.optionSetValue" [dataItemValue]="dataItem.dataValues[dataElement.id]"
             [dataElement]="dataElement" [dataValues]="dataItem.dataValues" (updateDataValues)="onDataValuesUpdate($event, dataItem)"
             [groups]="routerParams?.groups"></app-select-box-input>
-          <textarea class="form-control" rows="1" cols="1" *ngIf="dataItem.isActive && !dataElement.optionSetValue && dataElement.valueType == 'TEXT'"
-            placeholder="{{dataElement.name}}" (keyup)="onDataValueUpdate(dataElement.id, dataItem, $event)" autofocus>{{dataItem.dataValues[dataElement.id]}}</textarea>
+          <textarea class="form-control" rows="1" *ngIf="dataItem.isActive && !dataElement.optionSetValue && dataElement.valueType == 'TEXT'"
+            placeholder="{{dataElement.name}}" (keyup)="onDataValueUpdate(dataElement.id, dataItem, $event)" class="table-cell-data"
+            autofocus>{{dataItem.dataValues[dataElement.id]}}</textarea>
         </td>
 
-        <td class="cell-data-padding">
+        <td class="table-cell-data">
           <div *ngIf="!dataItem.isActive && dataItem.showDeleteConfirmation"> Are you sure you wish to delete?</div>
           <button (click)="onToggleEdit($event,dataItem)" class="btn btn-sm btn-success" *ngIf="!dataItem.isActive && !dataItem.showDeleteConfirmation">
             <i class="icon-edit"></i> Edit</button>&nbsp;
           <button class="btn btn-sm btn-success" (click)="onSaveRootCauseAnalysisData(dataItem,rootCauseAnalysisConfiguration.dataElements, $event)"
             *ngIf="dataItem.isActive">
-            <i class="icon-save">
-            </i> Save</button>&nbsp;
+            <i class="icon-save"></i> Save</button>&nbsp;
           <button class="btn btn-sm btn-danger" (click)="onToggleCancelAction($event,dataItem)" *ngIf="dataItem.isActive">
             <i class="icon-cancel"></i> Cancel
           </button>&nbsp;
-
           <button class="btn btn-sm btn-danger" *ngIf="!dataItem.isActive && !dataItem.showDeleteConfirmation" (click)="onToggleDelete($event, dataItem)">
             <i class="icon-delete"></i> Delete
           </button>&nbsp;
