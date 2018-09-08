@@ -1,12 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Observable, of } from 'rxjs';
 import { Store } from '@ngrx/store';
-import { getRouterParams } from '../selectors/router.selectors';
-import * as fromRootCauseAnalysisDataActions from '../actions/root-cause-analysis-data.actions';
-import * as _ from 'lodash';
-import { State } from '../reducers';
-import { RootCauseAnalysisDataService } from '../../services';
+import { Observable, of } from 'rxjs';
 import {
   switchMap,
   map,
@@ -14,6 +9,13 @@ import {
   mergeMap,
   withLatestFrom
 } from 'rxjs/operators';
+import * as _ from 'lodash';
+import { State } from '../reducers';
+import * as fromRouterSelectors from '../selectors/router.selectors';
+import * as fromRootCauseAnalysisDataActions from '../actions/root-cause-analysis-data.actions';
+import * as _ from 'lodash';
+import { State } from '../reducers';
+import { RootCauseAnalysisDataService } from '../../services';
 import { RootCauseAnalysisData } from '../models/root-cause-analysis-data.model';
 
 @Injectable()
@@ -24,15 +26,24 @@ export class RootCauseAnalysisDataEffects {
       fromRootCauseAnalysisDataActions.RootCauseAnalysisDataActionTypes
         .LoadRootCauseAnalysisDatas
     ),
-    withLatestFrom(this.store.select(getRouterParams)),
+    withLatestFrom(this.store.select(fromRouterSelectors.getRouterParams)),
     mergeMap(
       ([action, routerParams]: [
         fromRootCauseAnalysisDataActions.LoadRootCauseAnalysisDatas,
         any
       ]) => {
-        console.log(_.pick(routerParams, ['orgUnit', 'period', 'dashboard']));
+        const namespaceParams = _.pick(routerParams, [
+          'orgUnit',
+          'period',
+          'dashboard'
+        ]);
         return this.rootCauseAnalysisDataService
-          .getRootCauseAnalysisData(action.configurationId)
+          .getRootCauseAnalysisData(
+            action.configurationId,
+            namespaceParams.orgUnit.id,
+            namespaceParams.period.id,
+            namespaceParams.dashboard.id
+          )
           .pipe(
             map(
               (rootCauseAnalysisData: RootCauseAnalysisData[]) =>
@@ -58,10 +69,24 @@ export class RootCauseAnalysisDataEffects {
       fromRootCauseAnalysisDataActions.RootCauseAnalysisDataActionTypes
         .SaveRootCauseAnalysisData
     ),
+    withLatestFrom(this.store.select(fromRouterSelectors.getRouterParams)),
     mergeMap(
-      (action: fromRootCauseAnalysisDataActions.SaveRootCauseAnalysisData) =>
-        this.rootCauseAnalysisDataService
-          .saveRootCauseAnalysisData(action.rootCauseAnalysisData)
+      ([action, routerParams]: [
+        fromRootCauseAnalysisDataActions.SaveRootCauseAnalysisData,
+        any
+      ]) => {
+        const namespaceParams = _.pick(routerParams, [
+          'orgUnit',
+          'period',
+          'dashboard'
+        ]);
+        return this.rootCauseAnalysisDataService
+          .saveRootCauseAnalysisData(
+            action.rootCauseAnalysisData,
+            namespaceParams.orgUnit.id,
+            namespaceParams.period.id,
+            namespaceParams.dashboard.id
+          )
           .pipe(
             map(
               () =>
@@ -77,7 +102,8 @@ export class RootCauseAnalysisDataEffects {
                 )
               )
             )
-          )
+          );
+      }
     )
   );
 
@@ -87,10 +113,24 @@ export class RootCauseAnalysisDataEffects {
       fromRootCauseAnalysisDataActions.RootCauseAnalysisDataActionTypes
         .CreateRootCauseAnalysisData
     ),
+    withLatestFrom(this.store.select(fromRouterSelectors.getRouterParams)),
     mergeMap(
-      (action: fromRootCauseAnalysisDataActions.CreateRootCauseAnalysisData) =>
-        this.rootCauseAnalysisDataService
-          .saveRootCauseAnalysisData(action.rootCauseAnalysisData)
+      ([action, routerParams]: [
+        fromRootCauseAnalysisDataActions.CreateRootCauseAnalysisData,
+        any
+      ]) => {
+        const namespaceParams = _.pick(routerParams, [
+          'orgUnit',
+          'period',
+          'dashboard'
+        ]);
+        return this.rootCauseAnalysisDataService
+          .saveRootCauseAnalysisData(
+            action.rootCauseAnalysisData,
+            namespaceParams.orgUnit.id,
+            namespaceParams.period.id,
+            namespaceParams.dashboard.id
+          )
           .pipe(
             map(
               () =>
@@ -106,7 +146,8 @@ export class RootCauseAnalysisDataEffects {
                 )
               )
             )
-          )
+          );
+      }
     )
   );
 
@@ -116,10 +157,24 @@ export class RootCauseAnalysisDataEffects {
       fromRootCauseAnalysisDataActions.RootCauseAnalysisDataActionTypes
         .DeleteRootCauseAnalysisData
     ),
+    withLatestFrom(this.store.select(fromRouterSelectors.getRouterParams)),
     mergeMap(
-      (action: fromRootCauseAnalysisDataActions.DeleteRootCauseAnalysisData) =>
-        this.rootCauseAnalysisDataService
-          .deleteRootCauseAnalysisData(action.rootCauseAnalysisData)
+      ([action, routerParams]: [
+        fromRootCauseAnalysisDataActions.DeleteRootCauseAnalysisData,
+        any
+      ]) => {
+        const namespaceParams = _.pick(routerParams, [
+          'orgUnit',
+          'period',
+          'dashboard'
+        ]);
+        return this.rootCauseAnalysisDataService
+          .deleteRootCauseAnalysisData(
+            action.rootCauseAnalysisData,
+            namespaceParams.orgUnit.id,
+            namespaceParams.period.id,
+            namespaceParams.dashboard.id
+          )
           .pipe(
             map(
               () =>
@@ -135,14 +190,15 @@ export class RootCauseAnalysisDataEffects {
                 )
               )
             )
-          )
+          );
+      }
     )
   );
   // DeleteRootCauseAnalysisData
 
   constructor(
     private actions$: Actions,
-    private store: Store<State>,
-    private rootCauseAnalysisDataService: RootCauseAnalysisDataService
+    private rootCauseAnalysisDataService: RootCauseAnalysisDataService,
+    private store: Store<State>
   ) {}
 }
