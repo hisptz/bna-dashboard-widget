@@ -1,4 +1,5 @@
 .widget-notification-alert {
+  font-size: 13px;
   position: absolute;
   z-index: 101;
   top: -20px;

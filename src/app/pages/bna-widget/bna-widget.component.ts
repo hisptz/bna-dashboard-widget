@@ -6,21 +6,26 @@ import {
   transition,
   trigger
 } from '@angular/animations';
+
+import { listEnterAnimation } from '../../animations/list-enter-animation';
+
 import { Store } from '@ngrx/store';
 import { State } from '../../store';
 import { Observable } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { filter, map, switchMap } from 'rxjs/operators';
 import * as _ from 'lodash';
 import * as fromHelpers from '../../helpers';
 import * as fromModels from '../../store/models';
 import * as fromRootCauseAnalysisDataActions from '../../store/actions/root-cause-analysis-data.actions';
 import * as fromSelectors from '../../store/selectors';
+import { RootCauseAnalysisData } from '../../store/models';
 
 @Component({
   selector: 'app-bna-widget',
   templateUrl: './bna-widget.component.html',
   styleUrls: ['./bna-widget.component.css'],
   animations: [
+    listEnterAnimation,
     trigger('fadeInOut', [
       transition(':enter', [
         // :enter is alias to 'void => *'
@@ -47,7 +52,10 @@ export class BnaWidgetComponent implements OnInit {
   notification$: Observable<any>;
 
   newRootCauseAnalysisData: fromModels.RootCauseAnalysisData;
-  showEmptyRow: boolean = false;
+  showContextMenu: boolean = false;
+  contextmenuDataItem: RootCauseAnalysisData;
+  contextmenuX: any;
+  contextmenuY: any;
   confirmDelete: boolean = false;
   unSavedDataItemValues: any;
 
@@ -75,6 +83,20 @@ export class BnaWidgetComponent implements OnInit {
       fromSelectors.getRootCauseAnalysisDataNotificationState
     );
     this.unSavedDataItemValues = {};
+
+    this.data$
+      .pipe(
+        switchMap((data: any) =>
+          this.configuration$.pipe(
+            map((config: any) => {
+              return { config, lastData: _.last(data) };
+            })
+          )
+        )
+      )
+      .subscribe((dataDetails: any) => {
+        console.log(dataDetails);
+      });
   }
 
   ngOnInit() {}
@@ -94,7 +116,7 @@ export class BnaWidgetComponent implements OnInit {
         rootCauseAnalysisData
       )
     );
-    this.showEmptyRow = false;
+    // this.showEmptyRow = false;
   }
 
   onDeleteRootCauseAnalysisData(rootCauseAnalysisData: any) {
@@ -148,12 +170,14 @@ export class BnaWidgetComponent implements OnInit {
     return dataValues;
   }
 
-  onToggleEdit(e, dataItem) {
-    if (e) {
-      e.stopPropagation();
-    }
+  onToggleEdit(dataItemObject, dataItem?) {
+    // if (e) {
+    //   e.stopPropagation();
+    // }
+    console.log(dataItemObject);
     this.store.dispatch(
       new fromRootCauseAnalysisDataActions.UpdateRootCauseAnalysisData({
+        ...dataItemObject,
         ...dataItem,
         isActive: true
       })
@@ -175,6 +199,20 @@ export class BnaWidgetComponent implements OnInit {
     );
   }
 
+  onEnableContextMenu(e, dataItem) {
+    if (e) {
+      e.stopPropagation();
+    }
+    e.cancelBubble = true;
+    this.contextmenuX = e.clientX;
+    this.contextmenuY = e.clientY - 20;
+    this.contextmenuDataItem = dataItem;
+    this.showContextMenu = !this.showContextMenu;
+    return false;
+  }
+  onDisableContextMenu() {
+    this.showContextMenu = false;
+  }
   onToggleDelete(e, dataItem) {
     if (e) {
       e.stopPropagation();

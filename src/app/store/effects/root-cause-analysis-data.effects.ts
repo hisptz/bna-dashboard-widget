@@ -13,8 +13,6 @@ import * as _ from 'lodash';
 import { State } from '../reducers';
 import * as fromRouterSelectors from '../selectors/router.selectors';
 import * as fromRootCauseAnalysisDataActions from '../actions/root-cause-analysis-data.actions';
-import * as _ from 'lodash';
-import { State } from '../reducers';
 import { RootCauseAnalysisDataService } from '../../services';
 import { RootCauseAnalysisData } from '../models/root-cause-analysis-data.model';
 
