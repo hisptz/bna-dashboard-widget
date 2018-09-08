@@ -18,33 +18,53 @@ export class RootCauseAnalysisDataService {
     this.configurationId = rcaConfigurationService.getConfigurationId();
   }
 
-  addRootCauseAnalysisData(rootCauseAnalysisData) {
+  addRootCauseAnalysisData(
+    rootCauseAnalysisData,
+    orgUnitId,
+    periodId,
+    dashBoardId
+  ) {
     return this.http.post(
-      `${this._dataStoreUrl}/${rootCauseAnalysisData.configurationId}_${
-        rootCauseAnalysisData.id
-      }`,
+      `${this._dataStoreUrl}/${
+        rootCauseAnalysisData.configurationId
+      }_${orgUnitId}_${periodId}_${dashBoardId}_${rootCauseAnalysisData.id}`,
       rootCauseAnalysisData
     );
   }
 
-  deleteRootCauseAnalysisData(rootCauseAnalysisData) {
+  deleteRootCauseAnalysisData(
+    rootCauseAnalysisData,
+    orgUnitId,
+    periodId,
+    dashBoardId
+  ) {
     return this.http.delete(
-      `${this._dataStoreUrl}/${rootCauseAnalysisData.configurationId}_${
-        rootCauseAnalysisData.id
-      }`
+      `${this._dataStoreUrl}/${
+        rootCauseAnalysisData.configurationId
+      }_${orgUnitId}_${periodId}_${dashBoardId}_${rootCauseAnalysisData.id}`
     );
   }
 
-  updateRootCauseAnalysisData(rootCauseAnalysisData: RootCauseAnalysisData) {
+  updateRootCauseAnalysisData(
+    rootCauseAnalysisData: RootCauseAnalysisData,
+    orgUnitId,
+    periodId,
+    dashBoardId
+  ) {
     return this.http.put(
-      `${this._dataStoreUrl}/${rootCauseAnalysisData.configurationId}_${
-        rootCauseAnalysisData.id
-      }`,
+      `${this._dataStoreUrl}/${
+        rootCauseAnalysisData.configurationId
+      }_${orgUnitId}_${periodId}_${dashBoardId}_${rootCauseAnalysisData.id}`,
       rootCauseAnalysisData
     );
   }
 
-  saveRootCauseAnalysisData(rootCauseAnalysisData: RootCauseAnalysisData) {
+  saveRootCauseAnalysisData(
+    rootCauseAnalysisData: RootCauseAnalysisData,
+    orgUnitId,
+    periodId,
+    dashBoardId
+  ) {
     const newRootCauseAnalysisData = _.omit(rootCauseAnalysisData, [
       'showEditNotification',
       'isActive',
@@ -53,22 +73,46 @@ export class RootCauseAnalysisDataService {
     ]);
 
     return rootCauseAnalysisData.isNew
-      ? this.addRootCauseAnalysisData(newRootCauseAnalysisData)
-      : this.updateRootCauseAnalysisData(newRootCauseAnalysisData);
+      ? this.addRootCauseAnalysisData(
+          newRootCauseAnalysisData,
+          orgUnitId,
+          periodId,
+          dashBoardId
+        )
+      : this.updateRootCauseAnalysisData(
+          newRootCauseAnalysisData,
+          orgUnitId,
+          periodId,
+          dashBoardId
+        );
   }
 
-  getRootCauseAnalysisData(configurationId: string) {
+  getRootCauseAnalysisData(
+    configurationId: string,
+    orgUnitId,
+    periodId,
+    dashBoardId
+  ) {
     return this.http.get(this._dataStoreUrl).pipe(
       switchMap((dataIds: string[]) => {
         const filteredDataIds = _.filter(dataIds, (dataId: string) => {
           const spliteDataId = dataId.split('_');
-          return configurationId === spliteDataId[0];
+          return (
+            configurationId === spliteDataId[0] &&
+            orgUnitId === spliteDataId[1] &&
+            periodId === spliteDataId[2] &&
+            dashBoardId === spliteDataId[3]
+          );
         });
-        return forkJoin(
-          _.map(filteredDataIds, (dataId: string) =>
-            this.http.get(`${this._dataStoreUrl}/${dataId}`)
-          )
-        );
+        if (filteredDataIds.length > 0) {
+          return forkJoin(
+            _.map(filteredDataIds, (dataId: string) => {
+              return this.http.get(`${this._dataStoreUrl}/${dataId}`);
+            })
+          );
+        } else {
+          return of([]);
+        }
       }),
       catchError((error: any) => {
         if (error.status !== 404) {

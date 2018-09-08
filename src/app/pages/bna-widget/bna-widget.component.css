@@ -18,9 +18,13 @@
   background-color: transparent;
   border: none;
 }
-.custom-table-padding,
-.cell-data-padding {
+.table-cell-data {
+  font-size: 13px !important;
   padding: 0.2rem !important;
+}
+
+.table-header-cell {
+  font-size: 13px;
 }
 inActiveItem {
   pointer-events: none;
