@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { RootCauseAnalysisData } from '../../store/models/root-cause-analysis-data.model'
 
 @Component({
   selector: 'app-widget-context-menu',
@@ -11,20 +12,32 @@ export class WidgetContextMenuComponent implements OnInit {
   @Input()
   y;
   @Input()
-  dataItem;
+  dataItem : RootCauseAnalysisData;
 
   @Output()
   openEditForm: EventEmitter<any> = new EventEmitter<any>();
+
+  @Output()
+  openDeleteForm: EventEmitter<any> = new EventEmitter<any>();
 
   constructor() {}
 
   ngOnInit() {}
 
-  onToggleEdit(e, dataItem) {
-    // console.log(dataItem);
+  onToggleEdit(dataItem) {
+    //console.log(dataItem);
+    const data : RootCauseAnalysisData = dataItem
     this.openEditForm.emit({
-      [dataItem]: this.dataItem,
-      [this.dataItem.isActive]: true
+      ...data,
+      isActive : true
     });
+  }
+
+  onToggleDelete(){
+    const data : RootCauseAnalysisData = this.dataItem;
+    this.openDeleteForm.emit({
+      ...data,
+      isActive : true
+    })
   }
 }

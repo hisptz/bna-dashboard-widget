@@ -174,12 +174,12 @@ export class BnaWidgetComponent implements OnInit {
     // if (e) {
     //   e.stopPropagation();
     // }
-    console.log(dataItemObject);
+    this.showContextMenu = false;
     this.store.dispatch(
       new fromRootCauseAnalysisDataActions.UpdateRootCauseAnalysisData({
         ...dataItemObject,
         ...dataItem,
-        isActive: true
+        isActive : true
       })
     );
   }
@@ -227,7 +227,7 @@ export class BnaWidgetComponent implements OnInit {
    * @param e
    * @param dataItemValue
    */
-  onDataValueUpdate(dataValueId, dataItem, e, dataItemValue?) {
+   onDataValueUpdate(dataValueId, dataItem, e, dataElements, dataItemValue?) {
     if (e) {
       e.stopPropagation();
     }
@@ -251,6 +251,17 @@ export class BnaWidgetComponent implements OnInit {
             }
           };
     }
+    
+    this.onSaveRootCauseAnalysisData(dataItem, dataElements)
+
+    const newDataItem = this.unSavedDataItemValues[dataItem.id];
+    this.store.dispatch(
+      new fromRootCauseAnalysisDataActions.UpdateRootCauseAnalysisData(
+        newDataItem
+         // {...newDataItem, isActive : false }
+      )
+    );
+
   }
 
   onResetNotification(emptyNotificationMessage) {
@@ -268,23 +279,54 @@ export class BnaWidgetComponent implements OnInit {
    * @param dataValueObject
    * @param dataItem
    */
-  onDataValuesUpdate(dataValueObject: any, dataItem) {
+  onDataValuesUpdate(dataValueObject: any, dataItem, dataElements) {
     _.each(_.keys(dataValueObject), dataValueKey => {
       this.onDataValueUpdate(
         dataValueKey,
         dataItem,
         null,
+        dataElements,
         dataValueObject[dataValueKey]
       );
     });
+
+    this.onSaveRootCauseAnalysisData(dataItem, dataElements);
 
     const newDataItem = this.unSavedDataItemValues[dataItem.id];
     this.store.dispatch(
       new fromRootCauseAnalysisDataActions.UpdateRootCauseAnalysisData(
         newDataItem
+        // {...newDataItem, isActive : false }
       )
     );
   }
+
+  onSaveRootCauseAnalysisData(dataItem, dataElements) {
+      //e.stopPropagation();
+      const autoFilledDataValues = {};
+      _.each(dataElements, (dataElement: any) => {
+        if (dataElement.valueType === 'AUTO_FILLED') {
+          autoFilledDataValues[dataElement.id] =
+          dataItem.dataValues[dataElement.id];
+        }
+      });
+  
+      const newDataItem = this.unSavedDataItemValues[dataItem.id];
+      const mergedDataItem = newDataItem
+        ? {
+            ...newDataItem,
+            dataValues: { ...newDataItem.dataValues, ...autoFilledDataValues }
+          }
+        : dataItem;
+      if (mergedDataItem) {
+        this.store.dispatch(
+          new fromRootCauseAnalysisDataActions.SaveRootCauseAnalysisData({
+            ...mergedDataItem,
+            isActive: false
+          })
+        );
+      }
+    }
 
   onDataValueEntry(e, dataElement) {
     e.stopPropagation();
@@ -312,30 +354,13 @@ export class BnaWidgetComponent implements OnInit {
     }
   }
 
-  onSaveRootCauseAnalysisData(dataItem, dataElements, e) {
-    e.stopPropagation();
-    const autoFilledDataValues = {};
-    _.each(dataElements, (dataElement: any) => {
-      if (dataElement.valueType === 'AUTO_FILLED') {
-        autoFilledDataValues[dataElement.id] =
-          dataItem.dataValues[dataElement.id];
-      }
-    });
+  // activateRow(dataItem){
+  //   this.store.dispatch(new fromRootCauseAnalysisDataActions.UpdateRootCauseAnalysisData({...dataItem, isActive : true}))
+  // }
 
-    const newDataItem = this.unSavedDataItemValues[dataItem.id];
-    const mergedDataItem = newDataItem
-      ? {
-          ...newDataItem,
-          dataValues: { ...newDataItem.dataValues, ...autoFilledDataValues }
-        }
-      : dataItem;
-    if (mergedDataItem) {
-      this.store.dispatch(
-        new fromRootCauseAnalysisDataActions.SaveRootCauseAnalysisData({
-          ...mergedDataItem,
-          isActive: false
-        })
-      );
-    }
-  }
+  // deActivateRow(dataItem){
+  //   this.store.dispatch(new fromRootCauseAnalysisDataActions.UpdateRootCauseAnalysisData({...dataItem, isActive : false}))
+  // }
+
+    
 }
