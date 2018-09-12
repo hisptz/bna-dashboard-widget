@@ -47,7 +47,7 @@ export class SelectBoxInputComponent implements OnInit {
     ]);
     this.updateDataValues.emit({
       [this.dataElement.id]: this.dataItemValue,
-      [this.dataElement.associatedId]: dataItemObject.id
+      [this.dataElement.associatedId]: dataItemObject ? dataItemObject.id : null
     });
   }
 }

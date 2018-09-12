@@ -67,7 +67,9 @@ export function reducer(
     case RootCauseAnalysisDataActionTypes.UpdateRootCauseAnalysisData: {
       return adapter.updateOne(
         {
-          id: action.rootCauseAnalysisData.id,
+          id: action.rootCauseAnalysisData
+            ? action.rootCauseAnalysisData.id
+            : null,
           changes: action.rootCauseAnalysisData
         },
         state
@@ -139,14 +141,17 @@ export function reducer(
     }
 
     case RootCauseAnalysisDataActionTypes.SaveRootCauseAnalysisDataSuccess: {
-      return {
-        ...state,
-        isActive: false,
-        showNotification: false,
-        notification: {
-          message: `Data has been successfully updated`
+      return adapter.updateOne(
+        { id: action.rootCauseAnalysisData.id, changes: { isNew: false } },
+        {
+          ...state,
+          isActive: false,
+          showNotification: false,
+          notification: {
+            message: `Data has been successfully updated`
+          }
         }
-      };
+      );
     }
 
     case RootCauseAnalysisDataActionTypes.SaveRootCauseAnalysisDataFail: {
@@ -161,6 +166,8 @@ export function reducer(
     }
 
     case RootCauseAnalysisDataActionTypes.CreateRootCauseAnalysisData: {
+      console.log(action.rootCauseAnalysisData);
+
       return {
         ...state,
         showNotification: true,

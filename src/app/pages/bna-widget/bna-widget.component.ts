@@ -138,21 +138,22 @@ export class BnaWidgetComponent implements OnInit {
     const emptyDataValues = this.generateConfigurations(
       configurationDataElements
     );
-    if (this.unSavedDataItemValues) {
-      _.each(
-        _.map(
-          _.keys(this.unSavedDataItemValues),
-          (dataItemId: string) => this.unSavedDataItemValues[dataItemId]
-        ),
-        (dataItem: any) => {
-          this.store.dispatch(
-            new fromRootCauseAnalysisDataActions.UpdateRootCauseAnalysisData(
-              dataItem
-            )
-          );
-        }
-      );
-    }
+    // TO DO: Get rid of this because we are saving on fly
+    // if (this.unSavedDataItemValues) {
+    //   _.each(
+    //     _.map(
+    //       _.keys(this.unSavedDataItemValues),
+    //       (dataItemId: string) => this.unSavedDataItemValues[dataItemId]
+    //     ),
+    //     (dataItem: any) => {
+    //       this.store.dispatch(
+    //         new fromRootCauseAnalysisDataActions.UpdateRootCauseAnalysisData(
+    //           dataItem
+    //         )
+    //       );
+    //     }
+    //   );
+    // }
 
     this.store.dispatch(
       new fromRootCauseAnalysisDataActions.AddRootCauseAnalysisData({
@@ -262,12 +263,6 @@ export class BnaWidgetComponent implements OnInit {
     this.onSaveRootCauseAnalysisData(dataItem, dataElements);
 
     const newDataItem = this.unSavedDataItemValues[dataItem.id];
-    this.store.dispatch(
-      new fromRootCauseAnalysisDataActions.UpdateRootCauseAnalysisData(
-        newDataItem
-        // {...newDataItem, isActive : false }
-      )
-    );
   }
 
   onResetNotification(emptyNotificationMessage) {
@@ -327,8 +322,7 @@ export class BnaWidgetComponent implements OnInit {
     if (mergedDataItem) {
       this.store.dispatch(
         new fromRootCauseAnalysisDataActions.SaveRootCauseAnalysisData({
-          ...mergedDataItem,
-          isActive: false
+          ...mergedDataItem
         })
       );
     }

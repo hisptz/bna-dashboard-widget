@@ -19,9 +19,9 @@
                         {{dataItem.dataValues[dataElement.id]}}
                     </div>
                     <app-select-box-input *ngIf="dataItem.isActive && dataElement.optionSetValue" [dataItemValue]="dataItem.dataValues[dataElement.id]"
-                        [dataElement]="dataElement" [dataValues]="dataItem.dataValues" (updateDataValues)="onDataValuesUpdate($event, dataItem, rootCauseAnalysisConfiguration.dataElements)"
+                        [dataElement]="dataElement" [dataValues]="dataItem.dataValues" (updateDataValues)="onDataValuesUpdate($event, dataItem, rootCauseAnalysisConfiguration.dataElement)"
                         [groups]="routerParams?.groups"></app-select-box-input>
-                    <textarea class="form-control table-cell-data custom-text-area" rows="1" (blur)="onDataValueUpdate(dataElement.id, dataItem, $event, rootCauseAnalysisConfiguration.dataElements)"
+                    <textarea class="form-control table-cell-data custom-text-area" rows="1" (blur)="onDataValueUpdate(dataElement.id, dataItem, $event, rootCauseAnalysisConfiguration.dataElement)"
                         *ngIf="dataItem.isActive && !dataElement.optionSetValue && dataElement.valueType == 'TEXT'" placeholder="{{dataElement.name}}"
                         autofocus>{{dataItem.dataValues[dataElement.id]}}</textarea>
                 </td>
