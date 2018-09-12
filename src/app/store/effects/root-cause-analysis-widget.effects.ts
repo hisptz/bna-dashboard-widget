@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable, of } from 'rxjs';
 
+import * as fromRouterSelector from '../selectors';
 import * as fromRootCauseAnalysisWidgetActions from '../actions/root-cause-analysis-widget.actions';
 import { RootCauseAnalysisWidget } from '../models/root-cause-analysis-widget.model';
 import { RootCauseAnalysisWidgetService } from '../../services';

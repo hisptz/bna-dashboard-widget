@@ -27,6 +27,8 @@ import { TextAreaInputComponent } from './components/data-item/text-area-input/t
 import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
 import { WidgetItemLoaderComponent } from './components/widget-item-loader/widget-item-loader.component';
 import { WidgetNotificationBarComponent } from './components/widget-notification-bar/widget-notification-bar.component';
+import { WidgetContextMenuComponent } from './components/widget-context-menu/widget-context-menu.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -36,7 +38,8 @@ import { WidgetNotificationBarComponent } from './components/widget-notification
     SelectBoxInputComponent,
     TextAreaInputComponent,
     WidgetItemLoaderComponent,
-    WidgetNotificationBarComponent
+    WidgetNotificationBarComponent,
+    WidgetContextMenuComponent
   ],
   imports: [
     BrowserModule,

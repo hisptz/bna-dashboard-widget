@@ -1,4 +1,4 @@
-<select class="form-control" [(ngModel)]="dataItemValue" (change)="onDataValueChange($event)">
+<select class="form-control table-cell-data" [(ngModel)]="dataItemValue" (change)="onDataValueChange($event)">
     {{dataItemValue}}
     <option *ngFor="let option of selectionsOptions">{{ option.name }}
     </option>

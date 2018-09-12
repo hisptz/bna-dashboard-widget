@@ -1,10 +1,19 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
+import { Store } from '@ngrx/store';
 import { Observable, of } from 'rxjs';
-
+import {
+  switchMap,
+  map,
+  catchError,
+  mergeMap,
+  withLatestFrom
+} from 'rxjs/operators';
+import * as _ from 'lodash';
+import { State } from '../reducers';
+import * as fromRouterSelectors from '../selectors/router.selectors';
 import * as fromRootCauseAnalysisDataActions from '../actions/root-cause-analysis-data.actions';
 import { RootCauseAnalysisDataService } from '../../services';
-import { switchMap, map, catchError, mergeMap } from 'rxjs/operators';
 import { RootCauseAnalysisData } from '../models/root-cause-analysis-data.model';
 
 @Injectable()
@@ -15,10 +24,24 @@ export class RootCauseAnalysisDataEffects {
       fromRootCauseAnalysisDataActions.RootCauseAnalysisDataActionTypes
         .LoadRootCauseAnalysisDatas
     ),
+    withLatestFrom(this.store.select(fromRouterSelectors.getRouterParams)),
     mergeMap(
-      (action: fromRootCauseAnalysisDataActions.LoadRootCauseAnalysisDatas) =>
-        this.rootCauseAnalysisDataService
-          .getRootCauseAnalysisData(action.configurationId)
+      ([action, routerParams]: [
+        fromRootCauseAnalysisDataActions.LoadRootCauseAnalysisDatas,
+        any
+      ]) => {
+        const namespaceParams = _.pick(routerParams, [
+          'orgUnit',
+          'period',
+          'dashboard'
+        ]);
+        return this.rootCauseAnalysisDataService
+          .getRootCauseAnalysisData(
+            action.configurationId,
+            namespaceParams.orgUnit.id,
+            namespaceParams.period.id,
+            namespaceParams.dashboard.id
+          )
           .pipe(
             map(
               (rootCauseAnalysisData: RootCauseAnalysisData[]) =>
@@ -33,7 +56,8 @@ export class RootCauseAnalysisDataEffects {
                 )
               )
             )
-          )
+          );
+      }
     )
   );
 
@@ -43,10 +67,24 @@ export class RootCauseAnalysisDataEffects {
       fromRootCauseAnalysisDataActions.RootCauseAnalysisDataActionTypes
         .SaveRootCauseAnalysisData
     ),
+    withLatestFrom(this.store.select(fromRouterSelectors.getRouterParams)),
     mergeMap(
-      (action: fromRootCauseAnalysisDataActions.SaveRootCauseAnalysisData) =>
-        this.rootCauseAnalysisDataService
-          .saveRootCauseAnalysisData(action.rootCauseAnalysisData)
+      ([action, routerParams]: [
+        fromRootCauseAnalysisDataActions.SaveRootCauseAnalysisData,
+        any
+      ]) => {
+        const namespaceParams = _.pick(routerParams, [
+          'orgUnit',
+          'period',
+          'dashboard'
+        ]);
+        return this.rootCauseAnalysisDataService
+          .saveRootCauseAnalysisData(
+            action.rootCauseAnalysisData,
+            namespaceParams.orgUnit.id,
+            namespaceParams.period.id,
+            namespaceParams.dashboard.id
+          )
           .pipe(
             map(
               () =>
@@ -62,7 +100,8 @@ export class RootCauseAnalysisDataEffects {
                 )
               )
             )
-          )
+          );
+      }
     )
   );
 
@@ -72,10 +111,24 @@ export class RootCauseAnalysisDataEffects {
       fromRootCauseAnalysisDataActions.RootCauseAnalysisDataActionTypes
         .CreateRootCauseAnalysisData
     ),
+    withLatestFrom(this.store.select(fromRouterSelectors.getRouterParams)),
     mergeMap(
-      (action: fromRootCauseAnalysisDataActions.CreateRootCauseAnalysisData) =>
-        this.rootCauseAnalysisDataService
-          .saveRootCauseAnalysisData(action.rootCauseAnalysisData)
+      ([action, routerParams]: [
+        fromRootCauseAnalysisDataActions.CreateRootCauseAnalysisData,
+        any
+      ]) => {
+        const namespaceParams = _.pick(routerParams, [
+          'orgUnit',
+          'period',
+          'dashboard'
+        ]);
+        return this.rootCauseAnalysisDataService
+          .saveRootCauseAnalysisData(
+            action.rootCauseAnalysisData,
+            namespaceParams.orgUnit.id,
+            namespaceParams.period.id,
+            namespaceParams.dashboard.id
+          )
           .pipe(
             map(
               () =>
@@ -91,7 +144,8 @@ export class RootCauseAnalysisDataEffects {
                 )
               )
             )
-          )
+          );
+      }
     )
   );
 
@@ -101,10 +155,24 @@ export class RootCauseAnalysisDataEffects {
       fromRootCauseAnalysisDataActions.RootCauseAnalysisDataActionTypes
         .DeleteRootCauseAnalysisData
     ),
+    withLatestFrom(this.store.select(fromRouterSelectors.getRouterParams)),
     mergeMap(
-      (action: fromRootCauseAnalysisDataActions.DeleteRootCauseAnalysisData) =>
-        this.rootCauseAnalysisDataService
-          .deleteRootCauseAnalysisData(action.rootCauseAnalysisData)
+      ([action, routerParams]: [
+        fromRootCauseAnalysisDataActions.DeleteRootCauseAnalysisData,
+        any
+      ]) => {
+        const namespaceParams = _.pick(routerParams, [
+          'orgUnit',
+          'period',
+          'dashboard'
+        ]);
+        return this.rootCauseAnalysisDataService
+          .deleteRootCauseAnalysisData(
+            action.rootCauseAnalysisData,
+            namespaceParams.orgUnit.id,
+            namespaceParams.period.id,
+            namespaceParams.dashboard.id
+          )
           .pipe(
             map(
               () =>
@@ -120,13 +188,15 @@ export class RootCauseAnalysisDataEffects {
                 )
               )
             )
-          )
+          );
+      }
     )
   );
   // DeleteRootCauseAnalysisData
 
   constructor(
     private actions$: Actions,
-    private rootCauseAnalysisDataService: RootCauseAnalysisDataService
+    private rootCauseAnalysisDataService: RootCauseAnalysisDataService,
+    private store: Store<State>
   ) {}
 }

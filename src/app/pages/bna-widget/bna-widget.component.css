@@ -1,65 +1,83 @@
 .widget-table-header {
-  background-color: #2560a6;
-  color: #ffffff;
+    background-color: #2560a6;
+    color: #ffffff;
 }
 
 .auto-filled {
-  background: #e8ebef;
+    background: #e8ebef;
 }
 
 .auto-filled-input {
-  background-color: transparent;
-  border: none;
-  outline: none;
-  pointer-events: none;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    pointer-events: none;
 }
 
 .auto-filled-label {
-  background-color: transparent;
-  border: none;
+    background-color: transparent;
+    border: none;
 }
-.custom-table-padding,
-.cell-data-padding {
-  padding: 0.2rem !important;
+
+.table-cell-data {
+    font-size: 13px !important;
+    padding: 0.2rem !important;
+    height: auto !important;
 }
+
+.table-header-cell {
+    font-size: 13px;
+}
+
+.custom-text-area {
+    width: 100% !important;
+    padding: 8px 5px !important;
+}
+
+.delete-message {
+    text-align: center;
+}
+
 inActiveItem {
-  pointer-events: none;
-  border: none;
-  outline: none;
+    pointer-events: none;
+    border: none;
+    outline: none;
 }
+
 .progress-block {
-  display: flex;
-  justify-content: space-around;
+    display: flex;
+    justify-content: space-around;
 }
+
 .progress-item {
-  width: 100%;
+    width: 100%;
 }
 
 .widget-notification {
-  -webkit-animation: fadeOut 2s forwards;
-  animation: fadeOut 2s forwards;
-  -webkit-animation-delay: 5s;
-  animation-delay: 5s;
-  background: red;
-  color: white;
-  padding: 10px;
-  text-align: center;
+    -webkit-animation: fadeOut 2s forwards;
+    animation: fadeOut 2s forwards;
+    -webkit-animation-delay: 5s;
+    animation-delay: 5s;
+    background: red;
+    color: white;
+    padding: 10px;
+    text-align: center;
 }
 
 @-webkit-keyframes fadeOut {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-  }
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
 }
 
 @keyframes fadeOut {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-  }
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
 }

@@ -1,81 +1,71 @@
 <div *ngIf="dataLoaded$ | async">
 
-  <table class="table table-bordered custom-table-padding" *ngIf="configuration$ | async as rootCauseAnalysisConfiguration;">
-    <thead>
-      <tr>
-        <th width="{{(100)/(rootCauseAnalysisConfiguration.dataElements.length + 1)}}%" class="widget-table-header" [hidden]="dataElement.isHidden"
-          *ngFor="let dataElement of rootCauseAnalysisConfiguration.dataElements;">
-          {{dataElement.name}}
-        </th>
-        <th width="{{(100)/(rootCauseAnalysisConfiguration.dataElements.length + 1)}}%" class="widget-table-header"> Actions
-        </th>
-      </tr>
-    </thead>
-    <tbody *ngIf=" data$ | async as rootCauseAnalysisData;">
-      <tr *ngFor="let dataItem of rootCauseAnalysisData ;  let i = index; trackBy:dataItem?.id">
-        <td [hidden]="dataElement.isHidden" *ngFor="let dataElement of rootCauseAnalysisConfiguration.dataElements; let j = index"
-          [ngClass]="{
-          'auto-filled': dataElement.valueType == 'AUTO_FILLED'}">
-          <div *ngIf="(!dataItem.isActive && !dataItem.isHidden) || (dataItem.isActive && !dataElement.optionSetValue && dataElement.valueType == 'AUTO_FILLED')"
-            class="form-control auto-filled-label">
-            {{dataItem.dataValues[dataElement.id]}}
-          </div>
-          <app-select-box-input *ngIf="dataItem.isActive && dataElement.optionSetValue" [dataItemValue]="dataItem.dataValues[dataElement.id]"
-            [dataElement]="dataElement" [dataValues]="dataItem.dataValues" (updateDataValues)="onDataValuesUpdate($event, dataItem)"
-            [groups]="routerParams?.groups"></app-select-box-input>
-          <textarea class="form-control" rows="1" cols="1" *ngIf="dataItem.isActive && !dataElement.optionSetValue && dataElement.valueType == 'TEXT'"
-            placeholder="{{dataElement.name}}" (keyup)="onDataValueUpdate(dataElement.id, dataItem, $event)" autofocus>{{dataItem.dataValues[dataElement.id]}}</textarea>
-        </td>
+    <table class="table table-bordered custom-table-padding" *ngIf="configuration$ | async as rootCauseAnalysisConfiguration;">
+        <thead class="table-header-cell">
+            <tr>
+                <th width="{{(100)/(rootCauseAnalysisConfiguration.dataElements.length + 1)}}%" class="widget-table-header" [hidden]="dataElement.isHidden"
+                    *ngFor="let dataElement of rootCauseAnalysisConfiguration.dataElements;">
+                    {{dataElement.name}}
+                </th>
+            </tr>
+        </thead>
+        <tbody *ngIf=" data$ | async as rootCauseAnalysisData;" [@listEnter]>
+            <tr *ngFor="let dataItem of rootCauseAnalysisData ;  let i = index; trackBy:dataItem?.id">
+                <td [hidden]="dataElement.isHidden || (toBeDeleted[dataItem.id])" *ngFor="let dataElement of rootCauseAnalysisConfiguration.dataElements; let j = index"
+                    [ngClass]="{'auto-filled': dataElement.valueType == 'AUTO_FILLED'}" (dblclick)="onToggleEdit($event,dataItem)"
+                    (contextmenu)="onEnableContextMenu($event, dataItem)">
+                    <div *ngIf="(!dataItem.isActive && !dataItem.isHidden) || (dataItem.isActive && !dataElement.optionSetValue && dataElement.valueType == 'AUTO_FILLED')"
+                        class="form-control auto-filled-label table-cell-data">
+                        {{dataItem.dataValues[dataElement.id]}}
+                    </div>
+                    <app-select-box-input *ngIf="dataItem.isActive && dataElement.optionSetValue" [dataItemValue]="dataItem.dataValues[dataElement.id]"
+                        [dataElement]="dataElement" [dataValues]="dataItem.dataValues" (updateDataValues)="onDataValuesUpdate($event, dataItem, rootCauseAnalysisConfiguration.dataElements)"
+                        [groups]="routerParams?.groups"></app-select-box-input>
+                    <textarea class="form-control table-cell-data custom-text-area" rows="1" (blur)="onDataValueUpdate(dataElement.id, dataItem, $event, rootCauseAnalysisConfiguration.dataElements)"
+                        *ngIf="dataItem.isActive && !dataElement.optionSetValue && dataElement.valueType == 'TEXT'" placeholder="{{dataElement.name}}"
+                        autofocus>{{dataItem.dataValues[dataElement.id]}}</textarea>
+                </td>
+                <td class="delete-message" [hidden]="!(toBeDeleted[dataItem.id])" colspan="100%">
+                    Are you sure wish to delete this data? <br>
+                    <button class="btn btn-sm btn-success" (click)="onToggleCancelAction($event, dataItem, 'DELETE')">
+                        <i class="icon-cancel"></i> No</button>&nbsp;
+                    <button class="btn btn-sm btn-danger" (click)="onDeleteRootCauseAnalysisData(dataItem)">
+                        <i class="icon-ok-circled2"></i> Yes</button>
+                </td>
+            </tr>
 
-        <td class="cell-data-padding">
-          <div *ngIf="!dataItem.isActive && dataItem.showDeleteConfirmation"> Are you sure you wish to delete?</div>
-          <button (click)="onToggleEdit($event,dataItem)" class="btn btn-sm btn-success" *ngIf="!dataItem.isActive && !dataItem.showDeleteConfirmation">
-            <i class="icon-edit"></i> Edit</button>&nbsp;
-          <button class="btn btn-sm btn-success" (click)="onSaveRootCauseAnalysisData(dataItem,rootCauseAnalysisConfiguration.dataElements, $event)"
-            *ngIf="dataItem.isActive">
-            <i class="icon-save">
-            </i> Save</button>&nbsp;
-          <button class="btn btn-sm btn-danger" (click)="onToggleCancelAction($event,dataItem)" *ngIf="dataItem.isActive">
-            <i class="icon-cancel"></i> Cancel
-          </button>&nbsp;
+        </tbody>
+    </table>
 
-          <button class="btn btn-sm btn-danger" *ngIf="!dataItem.isActive && !dataItem.showDeleteConfirmation" (click)="onToggleDelete($event, dataItem)">
-            <i class="icon-delete"></i> Delete
-          </button>&nbsp;
-          <button class="btn btn-sm btn-success" *ngIf="!dataItem.isActive && dataItem.showDeleteConfirmation" (click)="onToggleCancelAction($event, dataItem, 'DELETE')">
-            <i class="icon-cancel"></i> No</button>&nbsp;
-          <button class="btn btn-sm btn-danger" *ngIf="!dataItem.isActive && dataItem.showDeleteConfirmation" (click)="onDeleteRootCauseAnalysisData(dataItem)">
-            <i class="icon-ok-circled2"></i> Yes</button>
-        </td>
-      </tr>
+    <div class="d-flex justify-content-end" *ngIf="configuration$ | async as dataConfiguration">
+        <button class="btn btn-sm btn-primary" *ngIf="(dataLoaded$ | async)" (click)="onToggleAddNewRootCauseAnalysisData(dataConfiguration)">
+            Add New </button>
+    </div>
+</div>
 
-    </tbody>
-  </table>
-
-  <div class="d-flex justify-content-end" *ngIf="configuration$ | async as dataConfiguration">
-    <button class="btn btn-sm btn-primary" *ngIf="(dataLoaded$ | async)" (click)="onToggleAddNewRootCauseAnalysisData(dataConfiguration)">
-      Add New </button>
-  </div>
+<div *ngIf="showContextMenu===true">
+    <app-widget-context-menu [dataItem]="contextmenuDataItem" (openEditForm)="onToggleEdit($event)" (openDeleteForm)="onToggleDelete($event)"
+        [x]="contextmenuX" [y]="contextmenuY">{{contextmenuX}}</app-widget-context-menu>
 </div>
 
 <div [@fadeInOut] *ngIf="((notification$ | async)?.message) as notificationMessage">
-  <app-widget-notification-bar (resetNotification)="onResetNotification($event)" [notification]="notificationMessage"></app-widget-notification-bar>
+    <app-widget-notification-bar (resetNotification)="onResetNotification($event)" [notification]="notificationMessage"></app-widget-notification-bar>
 </div>
 
 <div *ngIf="(!configurationLoaded$ | async) || !(dataLoaded$ | async)">
-  <div class="d-flex my-1">
-    <div class="flex-fill mx-1" *ngFor="let count of [1,2,3,4,5,6,7]">
-      <app-widget-item-loader [height]="'40px'"></app-widget-item-loader>
+    <div class="d-flex my-1">
+        <div class="flex-fill mx-1" *ngFor="let count of [1,2,3,4,5,6,7]">
+            <app-widget-item-loader [height]="'40px'"></app-widget-item-loader>
+        </div>
     </div>
-  </div>
-  <div class="d-flex my-1">
-    <div class="flex-fill mx-1" *ngFor="let count of [1,2,3,4,5,6,7]">
-      <app-widget-item-loader [height]="'40px'"></app-widget-item-loader>
+    <div class="d-flex my-1">
+        <div class="flex-fill mx-1" *ngFor="let count of [1,2,3,4,5,6,7]">
+            <app-widget-item-loader [height]="'40px'"></app-widget-item-loader>
+        </div>
     </div>
-  </div>
-  <div class="d-flex justify-content-end my-2 mx-1">
-    <div style="width: 150px;">
-      <app-widget-item-loader [height]="'40px'"></app-widget-item-loader>
+    <div class="d-flex justify-content-end my-2 mx-1">
+        <div style="width: 150px;">
+            <app-widget-item-loader [height]="'40px'"></app-widget-item-loader>
+        </div>
     </div>
-  </div>
 </div>
