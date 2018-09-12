@@ -28,7 +28,8 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
 import { WidgetItemLoaderComponent } from './components/widget-item-loader/widget-item-loader.component';
 import { WidgetNotificationBarComponent } from './components/widget-notification-bar/widget-notification-bar.component';
 import { WidgetContextMenuComponent } from './components/widget-context-menu/widget-context-menu.component';
-import { WidgetDeleteNotificationComponent } from './components/widget-delete-notification/widget-delete-notification.component';
+import { DataItemDeleteComponent } from './components/data-item-delete/data-item-delete.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -40,7 +41,7 @@ import { WidgetDeleteNotificationComponent } from './components/widget-delete-no
     WidgetItemLoaderComponent,
     WidgetNotificationBarComponent,
     WidgetContextMenuComponent,
-    WidgetDeleteNotificationComponent
+    DataItemDeleteComponent
   ],
   imports: [
     BrowserModule,

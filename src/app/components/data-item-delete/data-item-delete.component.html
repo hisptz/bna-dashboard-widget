@@ -1,0 +1,6 @@
+<div *ngIf="!dataItem.showDeleteConfirmation">
+    <button class="btn btn-sm btn-success" *ngIf="!dataItem.isActive">
+      <i class="icon-cancel"></i> No</button>&nbsp;
+    <button class="btn btn-sm btn-danger" *ngIf="!dataItem.isActive">
+      <i class="icon-ok-circled2"></i> Yes</button>
+</div>

@@ -59,6 +59,11 @@ export class BnaWidgetComponent implements OnInit {
   confirmDelete: boolean = false;
   unSavedDataItemValues: any;
 
+  /**
+   * key value pair object for each row to show/hide duting deletion
+   */
+  toBeDeleted = {};
+
   constructor(private store: Store<State>) {
     this.widget$ = store.select(
       fromSelectors.getCurrentRootCauseAnalysisWidget
@@ -125,6 +130,7 @@ export class BnaWidgetComponent implements OnInit {
         rootCauseAnalysisData
       )
     );
+    this.toBeDeleted[rootCauseAnalysisData] = true;
   }
 
   onToggleAddNewRootCauseAnalysisData(configuration) {
@@ -210,14 +216,17 @@ export class BnaWidgetComponent implements OnInit {
     this.showContextMenu = !this.showContextMenu;
     return false;
   }
+  
   onDisableContextMenu() {
     this.showContextMenu = false;
   }
+
   onToggleDelete(e, dataItem) {
     if (e) {
       e.stopPropagation();
     }
     dataItem.showDeleteConfirmation = true;
+    this.toBeDeleted[dataItem] = true;
   }
 
   /**
