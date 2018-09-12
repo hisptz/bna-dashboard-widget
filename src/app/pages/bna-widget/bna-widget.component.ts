@@ -11,7 +11,7 @@ import { listEnterAnimation } from '../../animations/list-enter-animation';
 
 import { Store } from '@ngrx/store';
 import { State } from '../../store';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
 import * as _ from 'lodash';
 import * as fromHelpers from '../../helpers';
@@ -100,7 +100,7 @@ export class BnaWidgetComponent implements OnInit {
         )
       )
       .subscribe((dataDetails: any) => {
-        console.log(dataDetails);
+        of(dataDetails);
       });
   }
 
@@ -185,7 +185,7 @@ export class BnaWidgetComponent implements OnInit {
       new fromRootCauseAnalysisDataActions.UpdateRootCauseAnalysisData({
         ...dataItemObject,
         ...dataItem,
-        isActive : true
+        isActive: true
       })
     );
   }
@@ -216,7 +216,7 @@ export class BnaWidgetComponent implements OnInit {
     this.showContextMenu = !this.showContextMenu;
     return false;
   }
-  
+
   onDisableContextMenu() {
     this.showContextMenu = false;
   }
@@ -234,7 +234,7 @@ export class BnaWidgetComponent implements OnInit {
    * @param e
    * @param dataItemValue
    */
-   onDataValueUpdate(dataValueId, dataItem, e, dataElements, dataItemValue?) {
+  onDataValueUpdate(dataValueId, dataItem, e, dataElements, dataItemValue?) {
     if (e) {
       e.stopPropagation();
     }
@@ -258,17 +258,16 @@ export class BnaWidgetComponent implements OnInit {
             }
           };
     }
-    
-    this.onSaveRootCauseAnalysisData(dataItem, dataElements)
+
+    this.onSaveRootCauseAnalysisData(dataItem, dataElements);
 
     const newDataItem = this.unSavedDataItemValues[dataItem.id];
     this.store.dispatch(
       new fromRootCauseAnalysisDataActions.UpdateRootCauseAnalysisData(
         newDataItem
-         // {...newDataItem, isActive : false }
+        // {...newDataItem, isActive : false }
       )
     );
-
   }
 
   onResetNotification(emptyNotificationMessage) {
@@ -309,31 +308,31 @@ export class BnaWidgetComponent implements OnInit {
   }
 
   onSaveRootCauseAnalysisData(dataItem, dataElements) {
-      //e.stopPropagation();
-      const autoFilledDataValues = {};
-      _.each(dataElements, (dataElement: any) => {
-        if (dataElement.valueType === 'AUTO_FILLED') {
-          autoFilledDataValues[dataElement.id] =
+    //e.stopPropagation();
+    const autoFilledDataValues = {};
+    _.each(dataElements, (dataElement: any) => {
+      if (dataElement.valueType === 'AUTO_FILLED') {
+        autoFilledDataValues[dataElement.id] =
           dataItem.dataValues[dataElement.id];
-        }
-      });
-  
-      const newDataItem = this.unSavedDataItemValues[dataItem.id];
-      const mergedDataItem = newDataItem
-        ? {
-            ...newDataItem,
-            dataValues: { ...newDataItem.dataValues, ...autoFilledDataValues }
-          }
-        : dataItem;
-      if (mergedDataItem) {
-        this.store.dispatch(
-          new fromRootCauseAnalysisDataActions.SaveRootCauseAnalysisData({
-            ...mergedDataItem,
-            isActive: false
-          })
-        );
       }
+    });
+
+    const newDataItem = this.unSavedDataItemValues[dataItem.id];
+    const mergedDataItem = newDataItem
+      ? {
+          ...newDataItem,
+          dataValues: { ...newDataItem.dataValues, ...autoFilledDataValues }
+        }
+      : dataItem;
+    if (mergedDataItem) {
+      this.store.dispatch(
+        new fromRootCauseAnalysisDataActions.SaveRootCauseAnalysisData({
+          ...mergedDataItem,
+          isActive: false
+        })
+      );
     }
+  }
 
   onDataValueEntry(e, dataElement) {
     e.stopPropagation();
@@ -368,6 +367,4 @@ export class BnaWidgetComponent implements OnInit {
   // deActivateRow(dataItem){
   //   this.store.dispatch(new fromRootCauseAnalysisDataActions.UpdateRootCauseAnalysisData({...dataItem, isActive : false}))
   // }
-
-    
 }
