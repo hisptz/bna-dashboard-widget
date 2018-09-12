@@ -291,8 +291,6 @@ export class BnaWidgetComponent implements OnInit {
       );
     });
 
-    this.onSaveRootCauseAnalysisData(dataItem, dataElements);
-
     const newDataItem = this.unSavedDataItemValues[dataItem.id];
     this.store.dispatch(
       new fromRootCauseAnalysisDataActions.UpdateRootCauseAnalysisData(
