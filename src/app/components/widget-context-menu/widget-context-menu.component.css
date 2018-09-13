@@ -9,4 +9,5 @@
 
 .custom-list-group-item {
   cursor: pointer;
+  padding: 3px 10px;
 }

@@ -121,7 +121,6 @@ export class BnaWidgetComponent implements OnInit {
         rootCauseAnalysisData
       )
     );
-    // this.showEmptyRow = false;
   }
 
   onDeleteRootCauseAnalysisData(rootCauseAnalysisData: any) {
@@ -130,7 +129,6 @@ export class BnaWidgetComponent implements OnInit {
         rootCauseAnalysisData
       )
     );
-    //this.toBeDeleted[rootCauseAnalysisData.id] = true;
   }
 
   onToggleAddNewRootCauseAnalysisData(configuration) {
@@ -138,22 +136,6 @@ export class BnaWidgetComponent implements OnInit {
     const emptyDataValues = this.generateConfigurations(
       configurationDataElements
     );
-    // TO DO: Get rid of this because we are saving on fly
-    // if (this.unSavedDataItemValues) {
-    //   _.each(
-    //     _.map(
-    //       _.keys(this.unSavedDataItemValues),
-    //       (dataItemId: string) => this.unSavedDataItemValues[dataItemId]
-    //     ),
-    //     (dataItem: any) => {
-    //       this.store.dispatch(
-    //         new fromRootCauseAnalysisDataActions.UpdateRootCauseAnalysisData(
-    //           dataItem
-    //         )
-    //       );
-    //     }
-    //   );
-    // }
 
     this.store.dispatch(
       new fromRootCauseAnalysisDataActions.AddRootCauseAnalysisData({
@@ -161,10 +143,7 @@ export class BnaWidgetComponent implements OnInit {
         isActive: true,
         isNew: true,
         configurationId: configuration.id,
-        dataValues: emptyDataValues,
-        user: '',
-        updatedAt: '',
-        createdAt: ''
+        dataValues: emptyDataValues
       })
     );
   }
@@ -259,10 +238,24 @@ export class BnaWidgetComponent implements OnInit {
             }
           };
     }
-
-    this.onSaveRootCauseAnalysisData(dataItem, dataElements);
-
+    const unsavedDataItemObject = this.unSavedDataItemValues[dataItem.id];
+    const dataValues = _.forEach(_.values(unsavedDataItemObject['dataValues']));
+    const dataIsIncomplete = _.includes(dataValues, '');
     const newDataItem = this.unSavedDataItemValues[dataItem.id];
+    this.store.dispatch(
+      new fromRootCauseAnalysisDataActions.UpdateRootCauseAnalysisData(
+        newDataItem
+      )
+    );
+    if (dataIsIncomplete == false) {
+      unsavedDataItemObject.isNew
+        ? this.onSaveRootCauseAnalysisData(dataItem, dataElements)
+        : this.store.dispatch(
+            new fromRootCauseAnalysisDataActions.UpdateRootCauseAnalysisData(
+              newDataItem
+            )
+          );
+    }
   }
 
   onResetNotification(emptyNotificationMessage) {
@@ -290,7 +283,6 @@ export class BnaWidgetComponent implements OnInit {
         dataValueObject[dataValueKey]
       );
     });
-
     const newDataItem = this.unSavedDataItemValues[dataItem.id];
     this.store.dispatch(
       new fromRootCauseAnalysisDataActions.UpdateRootCauseAnalysisData(

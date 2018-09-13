@@ -76,6 +76,24 @@ export function reducer(
       );
     }
 
+    case RootCauseAnalysisDataActionTypes.UpdateRootCauseAnalysisDataSuccess: {
+      return adapter.updateOne(
+        { id: action.rootCauseAnalysisData.id, changes: { isNew: false } },
+        {
+          ...state,
+          isActive: false,
+          showNotification: false,
+          notification: {
+            message: `Data has been successfully updated`
+          }
+        }
+      );
+    }
+
+    case RootCauseAnalysisDataActionTypes.UpdateRootCauseAnalysisDataFail: {
+      return { ...state, loading: false, hasError: true, error: action.error };
+    }
+
     case RootCauseAnalysisDataActionTypes.UpdateRootCauseAnalysisDatas: {
       return adapter.updateMany(action.payload.rootCauseAnalysisDatas, state);
     }
@@ -148,7 +166,7 @@ export function reducer(
           isActive: false,
           showNotification: false,
           notification: {
-            message: `Data has been successfully updated`
+            message: `Data has been successfully saved`
           }
         }
       );

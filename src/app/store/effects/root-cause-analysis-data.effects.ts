@@ -65,10 +65,10 @@ export class RootCauseAnalysisDataEffects {
   saveRootCauseAnalysisData$: Observable<any> = this.actions$.pipe(
     ofType(
       fromRootCauseAnalysisDataActions.RootCauseAnalysisDataActionTypes
-        .SaveRootCauseAnalysisData
+        .UpdateRootCauseAnalysisData
     ),
     withLatestFrom(this.store.select(fromRouterSelectors.getRouterParams)),
-    mergeMap(
+    switchMap(
       ([action, routerParams]: [
         fromRootCauseAnalysisDataActions.SaveRootCauseAnalysisData,
         any
@@ -79,7 +79,7 @@ export class RootCauseAnalysisDataEffects {
           'dashboard'
         ]);
         return this.rootCauseAnalysisDataService
-          .saveRootCauseAnalysisData(
+          .updateRootCauseAnalysisData(
             action.rootCauseAnalysisData,
             namespaceParams.orgUnit.id,
             namespaceParams.period.id,
@@ -88,14 +88,13 @@ export class RootCauseAnalysisDataEffects {
           .pipe(
             map(
               () =>
-                new fromRootCauseAnalysisDataActions.SaveRootCauseAnalysisDataSuccess(
+                new fromRootCauseAnalysisDataActions.UpdateRootCauseAnalysisDataSuccess(
                   action.rootCauseAnalysisData
                 )
             ),
             catchError((error: any) =>
               of(
-                new fromRootCauseAnalysisDataActions.SaveRootCauseAnalysisDataFail(
-                  action.rootCauseAnalysisData,
+                new fromRootCauseAnalysisDataActions.UpdateRootCauseAnalysisDataFail(
                   error
                 )
               )

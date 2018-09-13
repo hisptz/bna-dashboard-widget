@@ -11,6 +11,8 @@ export enum RootCauseAnalysisDataActionTypes {
   AddRootCauseAnalysisDatas = '[RootCauseAnalysisData] Add RootCauseAnalysisDatas',
   UpsertRootCauseAnalysisDatas = '[RootCauseAnalysisData] Upsert RootCauseAnalysisDatas',
   UpdateRootCauseAnalysisData = '[RootCauseAnalysisData] Update RootCauseAnalysisData',
+  UpdateRootCauseAnalysisDataFail = '[RootCauseAnalysisData] Update RootCauseAnalysisDataFail',
+  UpdateRootCauseAnalysisDataSuccess = '[RootCauseAnalysisData] Update RootCauseAnalysisDataSuccess',
   UpdateRootCauseAnalysisDatas = '[RootCauseAnalysisData] Update RootCauseAnalysisDatas',
   DeleteRootCauseAnalysisData = '[RootCauseAnalysisData] Delete RootCauseAnalysisData',
   DeleteRootCauseAnalysisDataSuccess = '[RootCauseAnalysisData] Delete RootCauseAnalysisData Success',
@@ -118,10 +120,24 @@ export class UpsertRootCauseAnalysisDatas implements Action {
   ) {}
 }
 
+export class UpdateRootCauseAnalysisDataSuccess implements Action {
+  readonly type =
+    RootCauseAnalysisDataActionTypes.UpdateRootCauseAnalysisDataSuccess;
+
+  constructor(public rootCauseAnalysisData: RootCauseAnalysisData) {}
+}
+
 export class UpdateRootCauseAnalysisData implements Action {
   readonly type = RootCauseAnalysisDataActionTypes.UpdateRootCauseAnalysisData;
 
   constructor(public rootCauseAnalysisData: RootCauseAnalysisData) {}
+}
+
+export class UpdateRootCauseAnalysisDataFail implements Action {
+  readonly type =
+    RootCauseAnalysisDataActionTypes.UpdateRootCauseAnalysisDataFail;
+
+  constructor(public error) {}
 }
 
 export class UpdateRootCauseAnalysisDatas implements Action {
@@ -177,6 +193,8 @@ export type RootCauseAnalysisDataActions =
   | CreateRootCauseAnalysisDataSuccess
   | UpsertRootCauseAnalysisDatas
   | UpdateRootCauseAnalysisData
+  | UpdateRootCauseAnalysisDataSuccess
+  | UpdateRootCauseAnalysisDataFail
   | UpdateRootCauseAnalysisDatas
   | DeleteRootCauseAnalysisData
   | DeleteRootCauseAnalysisDatas
