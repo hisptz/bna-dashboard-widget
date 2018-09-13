@@ -1,7 +1,7 @@
 <div>
     <div class="card custom-card" [ngStyle]="{'left.px': x, 'top.px': y}">
         <ul class="list-group list-group-flush">
-            <li class="list-group-item custom-list-group-item" (click)="onToggleEdit(dataItem)">
+            <li class="list-group-item custom-list-group-item" (click)="onToggleEdit($event,dataItem)">
                 <div class="row justify-content-between">
                     <div class="col-8">
                         Edit
@@ -11,7 +11,7 @@
                     </div>
                 </div>
             </li>
-            <li class="list-group-item custom-list-group-item" (click)="onToggleDelete()">
+            <li class="list-group-item custom-list-group-item" (click)="onToggleDelete($event,dataItem)">
                 <div class="row justify-content-between">
                     <div class="col-8">
                         Delete

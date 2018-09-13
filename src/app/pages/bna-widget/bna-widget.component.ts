@@ -157,9 +157,6 @@ export class BnaWidgetComponent implements OnInit {
   }
 
   onToggleEdit(dataItemObject, dataItem?) {
-    // if (e) {
-    //   e.stopPropagation();
-    // }
     this.showContextMenu = false;
     this.store.dispatch(
       new fromRootCauseAnalysisDataActions.UpdateRootCauseAnalysisData({
@@ -238,23 +235,31 @@ export class BnaWidgetComponent implements OnInit {
             }
           };
     }
-    const unsavedDataItemObject = this.unSavedDataItemValues[dataItem.id];
-    const dataValues = _.forEach(_.values(unsavedDataItemObject['dataValues']));
-    const dataIsIncomplete = _.includes(dataValues, '');
-    const newDataItem = this.unSavedDataItemValues[dataItem.id];
-    this.store.dispatch(
-      new fromRootCauseAnalysisDataActions.UpdateRootCauseAnalysisData(
-        newDataItem
-      )
-    );
-    if (dataIsIncomplete == false) {
-      unsavedDataItemObject.isNew
-        ? this.onSaveRootCauseAnalysisData(dataItem, dataElements)
-        : this.store.dispatch(
-            new fromRootCauseAnalysisDataActions.UpdateRootCauseAnalysisData(
-              newDataItem
-            )
-          );
+    const unsavedDataItemObject = this.unSavedDataItemValues
+      ? this.unSavedDataItemValues[dataItem.id]
+      : null;
+    if (unsavedDataItemObject) {
+      const dataValues = _.forEach(
+        _.values(unsavedDataItemObject['dataValues'] || {})
+      );
+      const dataIsIncomplete = _.includes(dataValues, '');
+      const newDataItem = this.unSavedDataItemValues[dataItem.id];
+
+      this.store.dispatch(
+        new fromRootCauseAnalysisDataActions.UpdateRootCauseAnalysisData(
+          newDataItem
+        )
+      );
+
+      if (!dataIsIncomplete) {
+        unsavedDataItemObject.isNew
+          ? this.onSaveRootCauseAnalysisData(dataItem, dataElements)
+          : this.store.dispatch(
+              new fromRootCauseAnalysisDataActions.SaveRootCauseAnalysisData(
+                newDataItem
+              )
+            );
+      }
     }
   }
 
@@ -287,13 +292,11 @@ export class BnaWidgetComponent implements OnInit {
     this.store.dispatch(
       new fromRootCauseAnalysisDataActions.UpdateRootCauseAnalysisData(
         newDataItem
-        // {...newDataItem, isActive : false }
       )
     );
   }
 
   onSaveRootCauseAnalysisData(dataItem, dataElements) {
-    //e.stopPropagation();
     const autoFilledDataValues = {};
     _.each(dataElements, (dataElement: any) => {
       if (dataElement.valueType === 'AUTO_FILLED') {
@@ -311,7 +314,7 @@ export class BnaWidgetComponent implements OnInit {
       : dataItem;
     if (mergedDataItem) {
       this.store.dispatch(
-        new fromRootCauseAnalysisDataActions.SaveRootCauseAnalysisData({
+        new fromRootCauseAnalysisDataActions.CreateRootCauseAnalysisData({
           ...mergedDataItem
         })
       );
@@ -319,7 +322,9 @@ export class BnaWidgetComponent implements OnInit {
   }
 
   onDataValueEntry(e, dataElement) {
-    e.stopPropagation();
+    if (e) {
+      e.stopPropagation();
+    }
     const newEnteredData = e.target.value.trim();
     if (newEnteredData !== '') {
       const dataValueId = dataElement;
@@ -343,12 +348,4 @@ export class BnaWidgetComponent implements OnInit {
           };
     }
   }
-
-  // activateRow(dataItem){
-  //   this.store.dispatch(new fromRootCauseAnalysisDataActions.UpdateRootCauseAnalysisData({...dataItem, isActive : true}))
-  // }
-
-  // deActivateRow(dataItem){
-  //   this.store.dispatch(new fromRootCauseAnalysisDataActions.UpdateRootCauseAnalysisData({...dataItem, isActive : false}))
-  // }
 }

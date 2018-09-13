@@ -65,7 +65,7 @@ export class RootCauseAnalysisDataEffects {
   saveRootCauseAnalysisData$: Observable<any> = this.actions$.pipe(
     ofType(
       fromRootCauseAnalysisDataActions.RootCauseAnalysisDataActionTypes
-        .UpdateRootCauseAnalysisData
+        .SaveRootCauseAnalysisData
     ),
     withLatestFrom(this.store.select(fromRouterSelectors.getRouterParams)),
     switchMap(
@@ -88,16 +88,9 @@ export class RootCauseAnalysisDataEffects {
           .pipe(
             map(
               () =>
-                new fromRootCauseAnalysisDataActions.UpdateRootCauseAnalysisDataSuccess(
+                new fromRootCauseAnalysisDataActions.SaveRootCauseAnalysisDataSuccess(
                   action.rootCauseAnalysisData
                 )
-            ),
-            catchError((error: any) =>
-              of(
-                new fromRootCauseAnalysisDataActions.UpdateRootCauseAnalysisDataFail(
-                  error
-                )
-              )
             )
           );
       }

@@ -24,7 +24,10 @@ export class WidgetContextMenuComponent implements OnInit {
 
   ngOnInit() {}
 
-  onToggleEdit(dataItem) {
+  onToggleEdit(e, dataItem) {
+    if (e) {
+      e.stopPropagation();
+    }
     const data: RootCauseAnalysisData = dataItem;
     this.openEditForm.emit({
       ...data,
@@ -32,7 +35,10 @@ export class WidgetContextMenuComponent implements OnInit {
     });
   }
 
-  onToggleDelete() {
+  onToggleDelete(e) {
+    if (e) {
+      e.stopPropagation();
+    }
     const data: RootCauseAnalysisData = this.dataItem;
     this.openDeleteForm.emit({
       ...data,
