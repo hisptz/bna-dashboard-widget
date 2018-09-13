@@ -35,11 +35,11 @@ export class WidgetContextMenuComponent implements OnInit {
     });
   }
 
-  onToggleDelete(e) {
+  onToggleDelete(e, dataItem) {
     if (e) {
       e.stopPropagation();
     }
-    const data: RootCauseAnalysisData = this.dataItem;
+    const data: RootCauseAnalysisData = dataItem;
     this.openDeleteForm.emit({
       ...data,
       isActive: true

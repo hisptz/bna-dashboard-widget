@@ -18,6 +18,9 @@ export class SelectBoxInputComponent implements OnInit {
   @Input()
   groups: any[];
 
+  @Input()
+  backgroundColor: string;
+
   @Output()
   updateDataValues: EventEmitter<any> = new EventEmitter<any>();
   constructor() {}
@@ -37,7 +40,9 @@ export class SelectBoxInputComponent implements OnInit {
         : [];
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    console.log(this.backgroundColor);
+  }
 
   onDataValueChange(e) {
     e.stopPropagation();

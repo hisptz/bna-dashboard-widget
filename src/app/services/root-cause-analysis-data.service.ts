@@ -98,7 +98,7 @@ export class RootCauseAnalysisDataService {
           return (
             configurationId === spliteDataId[0] &&
             orgUnitId === spliteDataId[1] &&
-            periodId === spliteDataId[2] &&
+            periodId.toString() === spliteDataId[2] &&
             dashBoardId === spliteDataId[3]
           );
         });

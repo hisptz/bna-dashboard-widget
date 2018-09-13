@@ -11,7 +11,7 @@ export interface State extends EntityState<RootCauseAnalysisData> {
   loading: boolean;
   loaded: boolean;
   notification: { message: string };
-  showEmptyRow: boolean;
+  savingColor: string;
   showNotification: boolean;
   showDeleteConfirmation: boolean;
   hasError: boolean;
@@ -30,7 +30,7 @@ export const initialState: State = adapter.getInitialState({
   notification: null,
   showDeleteConfirmation: false,
   showNotification: false,
-  showEmptyRow: false,
+  savingColor: 'transparent',
   hasError: false,
   error: null
 });
@@ -72,7 +72,10 @@ export function reducer(
             : null,
           changes: action.rootCauseAnalysisData
         },
-        state
+        {
+          ...state,
+          savingColor: '#F7F49A'
+        }
       );
     }
 
@@ -167,7 +170,8 @@ export function reducer(
           showNotification: false,
           notification: {
             message: `Data has been successfully saved`
-          }
+          },
+          savingColor: 'green'
         }
       );
     }
@@ -179,29 +183,33 @@ export function reducer(
         showNotification: false,
         notification: {
           message: `Could not update data : ${action.error.message}`
-        }
+        },
+        savingColor: 'red'
       };
     }
 
     case RootCauseAnalysisDataActionTypes.CreateRootCauseAnalysisData: {
-      console.log(action.rootCauseAnalysisData);
-
-      return {
-        ...state,
-        showNotification: true,
-        notification: {
-          message: `Saving Analysis Data `
+      return adapter.updateOne(
+        { id: action.rootCauseAnalysisData.id, changes: { isNew: false } },
+        {
+          ...state,
+          showNotification: true,
+          notification: {
+            message: `Saving Analysis Data `
+          }
         }
-      };
+      );
     }
 
     case RootCauseAnalysisDataActionTypes.CreateRootCauseAnalysisDataSuccess: {
       return adapter.addOne(action.rootCauseAnalysisData, {
         ...state,
+        isActive: false,
         showNotification: false,
         notification: {
           message: `Data successfully saved`
-        }
+        },
+        savingColor: 'green'
       });
     }
 
@@ -211,7 +219,8 @@ export function reducer(
         showNotification: false,
         notification: {
           message: `Could not save data ${action.error.message}`
-        }
+        },
+        savingColor: 'red'
       };
     }
 
@@ -232,6 +241,8 @@ export const getRootCauseAnalysisDataLoadedState = (state: State) =>
   state.loaded;
 export const getRootCauseAnalysisDataHasErrorState = (state: State) =>
   state.hasError;
+export const getRootCauseAnalysisDataSavingColorState = (state: State) =>
+  state.savingColor;
 export const getRootCauseAnalysisDataErrorState = (state: State) => state.error;
 export const getRootCauseAnalysisDataNotificationState = (state: State) =>
   state.notification;

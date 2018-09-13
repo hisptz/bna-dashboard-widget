@@ -18,7 +18,7 @@
                         class="form-control auto-filled-label table-cell-data">
                         {{dataItem.dataValues[dataElement.id]}}
                     </div>
-                    <app-select-box-input *ngIf="dataItem.isActive && dataElement.optionSetValue" [dataItemValue]="dataItem.dataValues[dataElement.id]"
+                    <app-select-box-input [backgroundColor]="savingColor$ | async" *ngIf="dataItem.isActive && dataElement.optionSetValue" [dataItemValue]="dataItem.dataValues[dataElement.id]"
                         [dataElement]="dataElement" [dataValues]="dataItem.dataValues" (updateDataValues)="onDataValuesUpdate($event, dataItem, rootCauseAnalysisConfiguration.dataElement)"
                         [groups]="routerParams?.groups"></app-select-box-input>
                     <textarea class="form-control table-cell-data custom-text-area" rows="1" (blur)="onDataValueUpdate(dataElement.id, dataItem, $event, rootCauseAnalysisConfiguration.dataElement)"

@@ -50,6 +50,7 @@ export class BnaWidgetComponent implements OnInit {
   dataLoading$: Observable<boolean>;
   dataLoaded$: Observable<boolean>;
   notification$: Observable<any>;
+  savingColor$: Observable<string>;
 
   newRootCauseAnalysisData: fromModels.RootCauseAnalysisData;
   showContextMenu: boolean = false;
@@ -87,6 +88,11 @@ export class BnaWidgetComponent implements OnInit {
     this.notification$ = store.select(
       fromSelectors.getRootCauseAnalysisDataNotificationState
     );
+
+    this.savingColor$ = store.select(
+      fromSelectors.getRootCauseAnalysisDataSavingColorState
+    );
+
     this.unSavedDataItemValues = {};
 
     this.data$
@@ -253,7 +259,7 @@ export class BnaWidgetComponent implements OnInit {
 
       if (!dataIsIncomplete) {
         unsavedDataItemObject.isNew
-          ? this.onSaveRootCauseAnalysisData(dataItem, dataElements)
+          ? this.saveNewData(unsavedDataItemObject)
           : this.store.dispatch(
               new fromRootCauseAnalysisDataActions.SaveRootCauseAnalysisData(
                 newDataItem
@@ -263,6 +269,16 @@ export class BnaWidgetComponent implements OnInit {
     }
   }
 
+  saveNewData(unsavedDataItemObject) {
+    console.log(unsavedDataItemObject);
+    this.store.dispatch(
+      new fromRootCauseAnalysisDataActions.CreateRootCauseAnalysisData({
+        ...unsavedDataItemObject,
+        isActive: false
+      })
+    );
+    this.unSavedDataItemValues = {};
+  }
   onResetNotification(emptyNotificationMessage) {
     this.store.dispatch(
       new fromRootCauseAnalysisDataActions.ResetRootCauseAnalysisData({
@@ -294,31 +310,6 @@ export class BnaWidgetComponent implements OnInit {
         newDataItem
       )
     );
-  }
-
-  onSaveRootCauseAnalysisData(dataItem, dataElements) {
-    const autoFilledDataValues = {};
-    _.each(dataElements, (dataElement: any) => {
-      if (dataElement.valueType === 'AUTO_FILLED') {
-        autoFilledDataValues[dataElement.id] =
-          dataItem.dataValues[dataElement.id];
-      }
-    });
-
-    const newDataItem = this.unSavedDataItemValues[dataItem.id];
-    const mergedDataItem = newDataItem
-      ? {
-          ...newDataItem,
-          dataValues: { ...newDataItem.dataValues, ...autoFilledDataValues }
-        }
-      : dataItem;
-    if (mergedDataItem) {
-      this.store.dispatch(
-        new fromRootCauseAnalysisDataActions.CreateRootCauseAnalysisData({
-          ...mergedDataItem
-        })
-      );
-    }
   }
 
   onDataValueEntry(e, dataElement) {
