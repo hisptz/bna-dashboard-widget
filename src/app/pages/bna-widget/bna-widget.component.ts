@@ -50,7 +50,7 @@ export class BnaWidgetComponent implements OnInit {
   dataLoading$: Observable<boolean>;
   dataLoaded$: Observable<boolean>;
   notification$: Observable<any>;
-  savingColor$: Observable<string>;
+  // savingColor$: Observable<string>;
 
   newRootCauseAnalysisData: fromModels.RootCauseAnalysisData;
   showContextMenu: boolean = false;
@@ -89,9 +89,9 @@ export class BnaWidgetComponent implements OnInit {
       fromSelectors.getRootCauseAnalysisDataNotificationState
     );
 
-    this.savingColor$ = store.select(
-      fromSelectors.getRootCauseAnalysisDataSavingColorState
-    );
+    // this.savingColor$ = store.select(
+    //   fromSelectors.getRootCauseAnalysisDataSavingColorState
+    // );
 
     this.unSavedDataItemValues = {};
 
@@ -270,7 +270,6 @@ export class BnaWidgetComponent implements OnInit {
   }
 
   saveNewData(unsavedDataItemObject) {
-    console.log(unsavedDataItemObject);
     this.store.dispatch(
       new fromRootCauseAnalysisDataActions.CreateRootCauseAnalysisData({
         ...unsavedDataItemObject,

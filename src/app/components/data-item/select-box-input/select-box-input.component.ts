@@ -40,9 +40,7 @@ export class SelectBoxInputComponent implements OnInit {
         : [];
   }
 
-  ngOnInit() {
-    console.log(this.backgroundColor);
-  }
+  ngOnInit() {}
 
   onDataValueChange(e) {
     e.stopPropagation();

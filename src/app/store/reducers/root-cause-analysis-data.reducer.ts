@@ -163,15 +163,17 @@ export function reducer(
 
     case RootCauseAnalysisDataActionTypes.SaveRootCauseAnalysisDataSuccess: {
       return adapter.updateOne(
-        { id: action.rootCauseAnalysisData.id, changes: { isNew: false } },
+        {
+          id: action.rootCauseAnalysisData.id,
+          changes: { isNew: false, savingColor: 'green' }
+        },
         {
           ...state,
           isActive: false,
           showNotification: false,
           notification: {
             message: `Data has been successfully saved`
-          },
-          savingColor: 'green'
+          }
         }
       );
     }

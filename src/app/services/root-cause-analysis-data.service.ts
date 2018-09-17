@@ -59,6 +59,7 @@ export class RootCauseAnalysisDataService {
         'showEditNotification',
         'isActive',
         'unsaved',
+        'savingColor',
         'isNew'
       ])
     );
@@ -74,6 +75,7 @@ export class RootCauseAnalysisDataService {
       'showEditNotification',
       'isActive',
       'unsaved',
+      'savingColor',
       'isNew'
     ]);
 

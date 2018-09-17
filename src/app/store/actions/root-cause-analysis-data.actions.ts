@@ -62,7 +62,7 @@ export class CreateRootCauseAnalysisDataSuccess implements Action {
   readonly type =
     RootCauseAnalysisDataActionTypes.CreateRootCauseAnalysisDataSuccess;
 
-  constructor(public rootCauseAnalysisData: RootCauseAnalysisData) {}
+  constructor(public rootCauseAnalysisData: RootCauseAnalysisData, state) {}
 }
 
 export class CreateRootCauseAnalysisDataFail implements Action {
@@ -85,7 +85,7 @@ export class SaveRootCauseAnalysisDataSuccess implements Action {
   readonly type =
     RootCauseAnalysisDataActionTypes.SaveRootCauseAnalysisDataSuccess;
 
-  constructor(public rootCauseAnalysisData: RootCauseAnalysisData) {}
+  constructor(public rootCauseAnalysisData: RootCauseAnalysisData, state) {}
 }
 
 export class SaveRootCauseAnalysisDataFail implements Action {

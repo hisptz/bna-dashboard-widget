@@ -89,7 +89,8 @@ export class RootCauseAnalysisDataEffects {
             map(
               () =>
                 new fromRootCauseAnalysisDataActions.SaveRootCauseAnalysisDataSuccess(
-                  action.rootCauseAnalysisData
+                  action.rootCauseAnalysisData,
+                  { [action.rootCauseAnalysisData.savingColor]: 'green' }
                 )
             )
           );
@@ -125,7 +126,8 @@ export class RootCauseAnalysisDataEffects {
             map(
               () =>
                 new fromRootCauseAnalysisDataActions.CreateRootCauseAnalysisDataSuccess(
-                  action.rootCauseAnalysisData
+                  action.rootCauseAnalysisData,
+                  { [action.rootCauseAnalysisData.savingColor]: 'green' }
                 )
             ),
             catchError((error: any) =>
