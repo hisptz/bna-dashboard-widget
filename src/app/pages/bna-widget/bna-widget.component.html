@@ -11,7 +11,7 @@
             </tr>
         </thead>
         <tbody *ngIf=" data$ | async as rootCauseAnalysisData;" [@listEnter]>
-            <tr *ngFor="let dataItem of rootCauseAnalysisData ;  let i = index; trackBy:dataItem?.id">
+            <tr title="Right click for edit/delete options" *ngFor="let dataItem of rootCauseAnalysisData ;  let i = index; trackBy:dataItem?.id">
                 <td> {{i+1}} </td>
                 <td [hidden]="dataElement.isHidden || (toBeDeleted[dataItem.id])" *ngFor="let dataElement of rootCauseAnalysisConfiguration.dataElements; let j = index"
                     [ngClass]="{'auto-filled': dataElement.valueType == 'AUTO_FILLED'}" (dblclick)="onToggleEdit($event,dataItem)"
@@ -40,6 +40,9 @@
     </table>
 
     <div class="d-flex justify-content-end" *ngIf="configuration$ | async as dataConfiguration">
+        <div class="mr-3 text-secondary">
+            <i style="font-size:11px"> Fill all fields and click elsewhere for autosave </i>
+        </div>
         <button class="btn btn-sm btn-primary" *ngIf="(dataLoaded$ | async)" (click)="onToggleAddNewRootCauseAnalysisData(dataConfiguration)">
             Add New </button>
     </div>
