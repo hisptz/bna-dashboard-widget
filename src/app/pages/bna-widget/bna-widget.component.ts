@@ -193,15 +193,17 @@ export class BnaWidgetComponent implements OnInit {
   }
 
   onEnableContextMenu(e, dataItem) {
-    if (e) {
-      e.stopPropagation();
+    if (dataItem.isActive !== true) {
+      if (e) {
+        e.stopPropagation();
+      }
+      e.cancelBubble = true;
+      this.contextmenuX = e.clientX;
+      this.contextmenuY = e.clientY - 20;
+      this.contextmenuDataItem = dataItem;
+      this.showContextMenu = !this.showContextMenu;
+      return false;
     }
-    e.cancelBubble = true;
-    this.contextmenuX = e.clientX;
-    this.contextmenuY = e.clientY - 20;
-    this.contextmenuDataItem = dataItem;
-    this.showContextMenu = !this.showContextMenu;
-    return false;
   }
 
   onDisableContextMenu() {
