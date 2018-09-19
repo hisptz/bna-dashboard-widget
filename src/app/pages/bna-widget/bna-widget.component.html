@@ -58,8 +58,8 @@
 </div>
 
 <div *ngIf="showContextMenu===true">
-    <app-widget-context-menu [dataItem]="contextmenuDataItem" (openEditForm)="onToggleEdit($event)" (openDeleteForm)="onToggleDelete($event)"
-        [x]="contextmenuX" [y]="contextmenuY">{{contextmenuX}}</app-widget-context-menu>
+    <app-widget-context-menu [dataItem]="contextmenuDataItem" appClickOutside (clickOutside)="showContextMenu=false" (openEditForm)="onToggleEdit($event)"
+        (openDeleteForm)="onToggleDelete($event)" [x]="contextmenuX" [y]="contextmenuY">{{contextmenuX}}</app-widget-context-menu>
 </div>
 
 <div [@fadeInOut] *ngIf="((notification$ | async)?.message) as notificationMessage">

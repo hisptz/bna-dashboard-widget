@@ -15,7 +15,6 @@ export class HomeComponent implements OnInit {
 
   constructor(private store: Store<State>) {
     this.routerParams$ = store.select(getRouterParams);
-    store.select(getRouterParams).subscribe(data => console.log(data));
   }
 
   ngOnInit() {}
