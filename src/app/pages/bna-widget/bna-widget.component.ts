@@ -42,6 +42,10 @@ import { RootCauseAnalysisData } from '../../store/models';
 export class BnaWidgetComponent implements OnInit {
   @Input()
   routerParams;
+  @Input()
+  selectedOrgUnit;
+  @Input()
+  selectedPeriod;
   configuration$: Observable<fromModels.RootCauseAnalysisConfiguration>;
   widget$: Observable<fromModels.RootCauseAnalysisWidget>;
   data$: Observable<fromModels.RootCauseAnalysisData[]>;

@@ -7,7 +7,8 @@ import {
   map,
   catchError,
   mergeMap,
-  withLatestFrom
+  withLatestFrom,
+  tap
 } from 'rxjs/operators';
 import * as _ from 'lodash';
 import { State } from '../reducers';
@@ -15,9 +16,31 @@ import * as fromRouterSelectors from '../selectors/router.selectors';
 import * as fromRootCauseAnalysisDataActions from '../actions/root-cause-analysis-data.actions';
 import { RootCauseAnalysisDataService } from '../../services';
 import { RootCauseAnalysisData } from '../models/root-cause-analysis-data.model';
+import { ROUTER_NAVIGATION, RouterNavigationAction } from '@ngrx/router-store';
+import { getCurrentRootCauseAnalysisConfiguration } from '../selectors';
+import { RootCauseAnalysisConfiguration } from '../models';
 
 @Injectable()
 export class RootCauseAnalysisDataEffects {
+  @Effect({ dispatch: false })
+  routerChanged$: Observable<any> = this.actions$.pipe(
+    ofType(ROUTER_NAVIGATION),
+    withLatestFrom(this.store.select(getCurrentRootCauseAnalysisConfiguration)),
+    tap(
+      ([action, currentConfiguration]: [
+        RouterNavigationAction,
+        RootCauseAnalysisConfiguration
+      ]) => {
+        if (currentConfiguration) {
+          this.store.dispatch(
+            new fromRootCauseAnalysisDataActions.LoadRootCauseAnalysisDatas(
+              currentConfiguration.id
+            )
+          );
+        }
+      }
+    )
+  );
   @Effect()
   loadRootCauseAnalysisDatas$: Observable<any> = this.actions$.pipe(
     ofType(

@@ -35,13 +35,22 @@
                         <i class="icon-ok-circled2"></i> Yes</button>
                 </td>
             </tr>
-
+            <tr *ngIf="!rootCauseAnalysisData.length">
+                <td colspan="100%" class="text-sm text-secondary">
+                    <p class="text-center mb-0">
+                        <i>
+                            No registered rootcauses for {{selectedOrgUnit}} in {{selectedPeriod}}
+                        </i>
+                    </p>
+                </td>
+            </tr>
         </tbody>
     </table>
 
     <div class="d-flex justify-content-end" *ngIf="configuration$ | async as dataConfiguration">
         <div class="mr-3 text-secondary">
-            <i style="font-size:11px"> Fill all fields and click elsewhere for autosave </i>
+            <i style="font-size:11px"> Fill all fields of the new row and click elsewhere for autosave
+            </i>
         </div>
         <button class="btn btn-sm btn-primary" *ngIf="(dataLoaded$ | async)" (click)="onToggleAddNewRootCauseAnalysisData(dataConfiguration)">
             Add New </button>

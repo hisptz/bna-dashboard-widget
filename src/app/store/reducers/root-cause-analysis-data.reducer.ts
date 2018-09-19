@@ -49,7 +49,7 @@ export function reducer(
     }
 
     case RootCauseAnalysisDataActionTypes.AddRootCauseAnalysisDatas: {
-      return adapter.addMany(action.rootCauseAnalysisDatas, {
+      return adapter.addAll(action.rootCauseAnalysisDatas, {
         ...state,
         loading: false,
         loaded: true,
