@@ -22,7 +22,7 @@
 .table-cell-data {
   font-size: 13px !important;
   padding: 0.2rem !important;
-  height: auto !important;
+  height: auto;
 }
 
 .table-header-cell {
@@ -30,9 +30,10 @@
 }
 
 .custom-text-area {
-  width: 100% !important;
+  /* width: 100% !important; */
   padding: 8px 5px !important;
   display: inline !important;
+  resize: vertical;
 }
 
 .delete-message {

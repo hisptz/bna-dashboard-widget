@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import {
   style,
   state,
@@ -8,6 +8,7 @@ import {
 } from '@angular/animations';
 
 import { listEnterAnimation } from '../../animations/list-enter-animation';
+import { ContextMenuComponent, ContextMenuService } from 'ngx-contextmenu';
 
 import { Store } from '@ngrx/store';
 import { State } from '../../store';
@@ -46,6 +47,10 @@ export class BnaWidgetComponent implements OnInit {
   selectedOrgUnit;
   @Input()
   selectedPeriod;
+
+  @ViewChild('itemMenu')
+  public itemMenu: ContextMenuComponent;
+
   configuration$: Observable<fromModels.RootCauseAnalysisConfiguration>;
   widget$: Observable<fromModels.RootCauseAnalysisWidget>;
   data$: Observable<fromModels.RootCauseAnalysisData[]>;
@@ -226,7 +231,6 @@ export class BnaWidgetComponent implements OnInit {
         isActive: false
       })
     );
-    console.log(dataItem.isActive);
   }
 
   /**
