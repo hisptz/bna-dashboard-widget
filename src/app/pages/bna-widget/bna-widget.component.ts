@@ -216,6 +216,19 @@ export class BnaWidgetComponent implements OnInit {
     this.toBeDeleted[dataItem.id] = true;
   }
 
+  onDoneEditing(e, dataItem) {
+    if (e) {
+      e.stopPropagation();
+    }
+    this.store.dispatch(
+      new fromRootCauseAnalysisDataActions.UpdateRootCauseAnalysisData({
+        ...dataItem,
+        isActive: false
+      })
+    );
+    console.log(dataItem.isActive);
+  }
+
   /**
    * Update single data value
    * @param dataValueId

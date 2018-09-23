@@ -23,9 +23,11 @@
                     <app-select-box-input [backgroundColor]="savingColor" *ngIf="dataItem.isActive && dataElement.optionSetValue" [dataItemValue]="dataItem.dataValues[dataElement.id]"
                         [dataElement]="dataElement" [dataValues]="dataItem.dataValues" (updateDataValues)="onDataValuesUpdate($event, dataItem, rootCauseAnalysisConfiguration.dataElement)"
                         [groups]="routerParams?.groups"></app-select-box-input>
-                    <textarea class="form-control table-cell-data custom-text-area" rows="1" (blur)="onDataValueUpdate(dataElement.id, dataItem, $event, rootCauseAnalysisConfiguration.dataElement)"
+                    <textarea class="form-control table-cell-data custom-text-area" (blur)="onDataValueUpdate(dataElement.id, dataItem, $event, rootCauseAnalysisConfiguration.dataElement)"
                         *ngIf="dataItem.isActive && !dataElement.optionSetValue && dataElement.valueType == 'TEXT'" placeholder="{{dataElement.name}}"
-                        [ngStyle]="{'background-color': savingColor}" tabindex="j-9" autofocus> {{dataItem.dataValues[dataElement.id]}}</textarea>
+                        tabindex="j-9" autofocus> {{dataItem.dataValues[dataElement.id]}}</textarea>
+                    <a class="text-secondary custom-done-icon" (click)="onDoneEditing($event, dataItem)" *ngIf="(j == (rootCauseAnalysisConfiguration.dataElements.length - 1)) && dataItem.isActive">
+                        <i class="icon-ok-circled2"></i></a>
                 </td>
                 <td class="delete-message" [hidden]="!(toBeDeleted[dataItem.id])" colspan="100%">
                     Are you sure wish to delete this data? <br>
@@ -39,7 +41,7 @@
                 <td colspan="100%" class="text-sm text-secondary">
                     <p class="text-center mb-0">
                         <i>
-                            No registered rootcauses for {{selectedOrgUnit}} in {{selectedPeriod}}
+                            No registered root causes for {{selectedOrgUnit}} in {{selectedPeriod}}
                         </i>
                     </p>
                 </td>
@@ -49,7 +51,7 @@
 
     <div class="d-flex justify-content-end" *ngIf="configuration$ | async as dataConfiguration">
         <div class="mr-3 text-secondary">
-            <i style="font-size:11px"> Fill all fields of the new row and click elsewhere for autosave
+            <i style="font-size:11px"> Autosave is on, leave a cell to save
             </i>
         </div>
         <button class="btn btn-sm btn-primary" *ngIf="(dataLoaded$ | async)" (click)="onToggleAddNewRootCauseAnalysisData(dataConfiguration)">
