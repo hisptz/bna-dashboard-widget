@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
 import {
   style,
   state,
@@ -20,6 +20,9 @@ import * as fromModels from '../../store/models';
 import * as fromRootCauseAnalysisDataActions from '../../store/actions/root-cause-analysis-data.actions';
 import * as fromSelectors from '../../store/selectors';
 import { RootCauseAnalysisData } from '../../store/models';
+
+import { DownloadWidgetService } from '../../services/downloadWidgetService.service'
+import {timestamp} from "rxjs/internal/operators";
 
 @Component({
   selector: 'app-bna-widget',
@@ -48,8 +51,8 @@ export class BnaWidgetComponent implements OnInit {
   @Input()
   selectedPeriod;
 
-  @ViewChild('itemMenu')
-  public itemMenu: ContextMenuComponent;
+  @ViewChild('rootCauseAnalysisTable')
+  table: ElementRef;
 
   configuration$: Observable<fromModels.RootCauseAnalysisConfiguration>;
   widget$: Observable<fromModels.RootCauseAnalysisWidget>;
@@ -74,7 +77,7 @@ export class BnaWidgetComponent implements OnInit {
    */
   toBeDeleted = {};
 
-  constructor(private store: Store<State>) {
+  constructor(private store: Store<State>, private  downloadWidgetService: DownloadWidgetService) {
     this.widget$ = store.select(
       fromSelectors.getCurrentRootCauseAnalysisWidget
     );
@@ -136,6 +139,27 @@ export class BnaWidgetComponent implements OnInit {
         rootCauseAnalysisData
       )
     );
+  }
+
+  downloadTable(downloadFormat) {
+    if (this.table) {
+      const dateTime = new Date();
+      const el = this.table.nativeElement;
+      const filename = 'Root causes - ' + this.routerParams.dashboard.name  + ' - ' + this.selectedOrgUnit + ' - ' + this.selectedPeriod +
+          ' gen. on ' + dateTime.getFullYear() +
+          ((dateTime.getMonth() + 1) < 10 ? '-0' : '-') + (dateTime.getMonth() + 1) +
+          ((dateTime.getDay() < 10) ? '-0' : '-') + dateTime.getDay() + ' ' +
+          ((dateTime.getHours() < 10) ? ':0' : ':' ) + dateTime.getHours()  +
+          ((dateTime.getMinutes() < 10) ? ':0' : ':' ) + dateTime.getMinutes() + 'hrs';
+      if (downloadFormat === 'XLSX') {
+        if (el) {
+          this.downloadWidgetService.exportXLS(
+            filename,
+            el.outerHTML
+          );
+        }
+      }
+    }
   }
 
   onDeleteRootCauseAnalysisData(rootCauseAnalysisData: any) {

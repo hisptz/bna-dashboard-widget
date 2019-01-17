@@ -10,6 +10,8 @@ import {
   StoreRouterConnectingModule
 } from '@ngrx/router-store';
 
+import { NgPipesModule } from 'ngx-pipes';
+
 import { environment } from '../environments/environment';
 import { HttpClientModule } from '@angular/common/http';
 
@@ -47,6 +49,7 @@ import { directives } from './directives';
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
+    NgPipesModule,
 
     AppRoutingModule,
 
