@@ -8,7 +8,6 @@ import {
 } from '@angular/animations';
 
 import { listEnterAnimation } from '../../animations/list-enter-animation';
-import { ContextMenuComponent, ContextMenuService } from 'ngx-contextmenu';
 
 import { Store } from '@ngrx/store';
 import { State } from '../../store';
@@ -21,8 +20,7 @@ import * as fromRootCauseAnalysisDataActions from '../../store/actions/root-caus
 import * as fromSelectors from '../../store/selectors';
 import { RootCauseAnalysisData } from '../../store/models';
 
-import { DownloadWidgetService } from '../../services/downloadWidgetService.service'
-import {timestamp} from "rxjs/internal/operators";
+import { DownloadWidgetService } from '../../services/downloadWidgetService.service';
 
 @Component({
   selector: 'app-bna-widget',
@@ -77,7 +75,10 @@ export class BnaWidgetComponent implements OnInit {
    */
   toBeDeleted = {};
 
-  constructor(private store: Store<State>, private  downloadWidgetService: DownloadWidgetService) {
+  constructor(
+    private store: Store<State>,
+    private downloadWidgetService: DownloadWidgetService
+  ) {
     this.widget$ = store.select(
       fromSelectors.getCurrentRootCauseAnalysisWidget
     );
@@ -145,18 +146,28 @@ export class BnaWidgetComponent implements OnInit {
     if (this.table) {
       const dateTime = new Date();
       const el = this.table.nativeElement;
-      const filename = 'Root causes - ' + this.routerParams.dashboard.name  + ' - ' + this.selectedOrgUnit + ' - ' + this.selectedPeriod +
-          ' gen. on ' + dateTime.getFullYear() +
-          ((dateTime.getMonth() + 1) < 10 ? '-0' : '-') + (dateTime.getMonth() + 1) +
-          ((dateTime.getDay() < 10) ? '-0' : '-') + dateTime.getDay() + ' ' +
-          ((dateTime.getHours() < 10) ? ':0' : ':' ) + dateTime.getHours()  +
-          ((dateTime.getMinutes() < 10) ? ':0' : ':' ) + dateTime.getMinutes() + 'hrs';
+      const filename =
+        'Root causes - ' +
+        this.routerParams.dashboard.name +
+        ' - ' +
+        this.selectedOrgUnit +
+        ' - ' +
+        this.selectedPeriod +
+        ' gen. on ' +
+        dateTime.getFullYear() +
+        (dateTime.getMonth() + 1 < 10 ? '-0' : '-') +
+        (dateTime.getMonth() + 1) +
+        (dateTime.getDay() < 10 ? '-0' : '-') +
+        dateTime.getDay() +
+        ' ' +
+        (dateTime.getHours() < 10 ? ':0' : ':') +
+        dateTime.getHours() +
+        (dateTime.getMinutes() < 10 ? ':0' : ':') +
+        dateTime.getMinutes() +
+        'hrs';
       if (downloadFormat === 'XLSX') {
         if (el) {
-          this.downloadWidgetService.exportXLS(
-            filename,
-            el.outerHTML
-          );
+          this.downloadWidgetService.exportXLS(filename, el.outerHTML);
         }
       }
     }
