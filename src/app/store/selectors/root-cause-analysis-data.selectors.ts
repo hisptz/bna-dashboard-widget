@@ -77,6 +77,11 @@ export const getRootCauseAnalysisDataHasErrorState = createSelector(
   fromRootCauseData.getRootCauseAnalysisDataHasErrorState
 );
 
+export const getRootCauseAnalysisDataSavingColorState = createSelector(
+  getRootCauseAnalysisDataState,
+  fromRootCauseData.getRootCauseAnalysisDataSavingColorState
+);
+
 export const getRootCauseAnalysisDataErrorState = createSelector(
   getRootCauseAnalysisDataState,
   fromRootCauseData.getRootCauseAnalysisDataErrorState

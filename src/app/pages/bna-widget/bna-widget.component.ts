@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
 import {
   style,
   state,
@@ -19,6 +19,8 @@ import * as fromModels from '../../store/models';
 import * as fromRootCauseAnalysisDataActions from '../../store/actions/root-cause-analysis-data.actions';
 import * as fromSelectors from '../../store/selectors';
 import { RootCauseAnalysisData } from '../../store/models';
+
+import { DownloadWidgetService } from '../../services/downloadWidgetService.service';
 
 @Component({
   selector: 'app-bna-widget',
@@ -42,6 +44,14 @@ import { RootCauseAnalysisData } from '../../store/models';
 export class BnaWidgetComponent implements OnInit {
   @Input()
   routerParams;
+  @Input()
+  selectedOrgUnit;
+  @Input()
+  selectedPeriod;
+
+  @ViewChild('rootCauseAnalysisTable')
+  table: ElementRef;
+
   configuration$: Observable<fromModels.RootCauseAnalysisConfiguration>;
   widget$: Observable<fromModels.RootCauseAnalysisWidget>;
   data$: Observable<fromModels.RootCauseAnalysisData[]>;
@@ -50,6 +60,7 @@ export class BnaWidgetComponent implements OnInit {
   dataLoading$: Observable<boolean>;
   dataLoaded$: Observable<boolean>;
   notification$: Observable<any>;
+  // savingColor$: Observable<string>;
 
   newRootCauseAnalysisData: fromModels.RootCauseAnalysisData;
   showContextMenu: boolean = false;
@@ -64,7 +75,10 @@ export class BnaWidgetComponent implements OnInit {
    */
   toBeDeleted = {};
 
-  constructor(private store: Store<State>) {
+  constructor(
+    private store: Store<State>,
+    private downloadWidgetService: DownloadWidgetService
+  ) {
     this.widget$ = store.select(
       fromSelectors.getCurrentRootCauseAnalysisWidget
     );
@@ -87,6 +101,11 @@ export class BnaWidgetComponent implements OnInit {
     this.notification$ = store.select(
       fromSelectors.getRootCauseAnalysisDataNotificationState
     );
+
+    // this.savingColor$ = store.select(
+    //   fromSelectors.getRootCauseAnalysisDataSavingColorState
+    // );
+
     this.unSavedDataItemValues = {};
 
     this.data$
@@ -121,7 +140,37 @@ export class BnaWidgetComponent implements OnInit {
         rootCauseAnalysisData
       )
     );
-    // this.showEmptyRow = false;
+  }
+
+  downloadTable(downloadFormat) {
+    if (this.table) {
+      const dateTime = new Date();
+      const el = this.table.nativeElement;
+      const filename =
+        'Root causes - ' +
+        this.routerParams.dashboard.name +
+        ' - ' +
+        this.selectedOrgUnit +
+        ' - ' +
+        this.selectedPeriod +
+        ' gen. on ' +
+        dateTime.getFullYear() +
+        (dateTime.getMonth() + 1 < 10 ? '-0' : '-') +
+        (dateTime.getMonth() + 1) +
+        (dateTime.getDay() < 10 ? '-0' : '-') +
+        dateTime.getDay() +
+        ' ' +
+        (dateTime.getHours() < 10 ? ':0' : ':') +
+        dateTime.getHours() +
+        (dateTime.getMinutes() < 10 ? ':0' : ':') +
+        dateTime.getMinutes() +
+        'hrs';
+      if (downloadFormat === 'XLSX') {
+        if (el) {
+          this.downloadWidgetService.exportXLS(filename, el.outerHTML);
+        }
+      }
+    }
   }
 
   onDeleteRootCauseAnalysisData(rootCauseAnalysisData: any) {
@@ -130,7 +179,6 @@ export class BnaWidgetComponent implements OnInit {
         rootCauseAnalysisData
       )
     );
-    //this.toBeDeleted[rootCauseAnalysisData.id] = true;
   }
 
   onToggleAddNewRootCauseAnalysisData(configuration) {
@@ -138,21 +186,6 @@ export class BnaWidgetComponent implements OnInit {
     const emptyDataValues = this.generateConfigurations(
       configurationDataElements
     );
-    if (this.unSavedDataItemValues) {
-      _.each(
-        _.map(
-          _.keys(this.unSavedDataItemValues),
-          (dataItemId: string) => this.unSavedDataItemValues[dataItemId]
-        ),
-        (dataItem: any) => {
-          this.store.dispatch(
-            new fromRootCauseAnalysisDataActions.UpdateRootCauseAnalysisData(
-              dataItem
-            )
-          );
-        }
-      );
-    }
 
     this.store.dispatch(
       new fromRootCauseAnalysisDataActions.AddRootCauseAnalysisData({
@@ -160,10 +193,7 @@ export class BnaWidgetComponent implements OnInit {
         isActive: true,
         isNew: true,
         configurationId: configuration.id,
-        dataValues: emptyDataValues,
-        user: '',
-        updatedAt: '',
-        createdAt: ''
+        dataValues: emptyDataValues
       })
     );
   }
@@ -177,9 +207,6 @@ export class BnaWidgetComponent implements OnInit {
   }
 
   onToggleEdit(dataItemObject, dataItem?) {
-    // if (e) {
-    //   e.stopPropagation();
-    // }
     this.showContextMenu = false;
     this.store.dispatch(
       new fromRootCauseAnalysisDataActions.UpdateRootCauseAnalysisData({
@@ -206,15 +233,17 @@ export class BnaWidgetComponent implements OnInit {
   }
 
   onEnableContextMenu(e, dataItem) {
-    if (e) {
-      e.stopPropagation();
+    if (dataItem.isActive !== true) {
+      if (e) {
+        e.stopPropagation();
+      }
+      e.cancelBubble = true;
+      this.contextmenuX = e.clientX;
+      this.contextmenuY = e.clientY - 20;
+      this.contextmenuDataItem = dataItem;
+      this.showContextMenu = !this.showContextMenu;
+      return false;
     }
-    e.cancelBubble = true;
-    this.contextmenuX = e.clientX;
-    this.contextmenuY = e.clientY - 20;
-    this.contextmenuDataItem = dataItem;
-    this.showContextMenu = !this.showContextMenu;
-    return false;
   }
 
   onDisableContextMenu() {
@@ -225,6 +254,18 @@ export class BnaWidgetComponent implements OnInit {
     dataItem.showDeleteConfirmation = true;
     this.showContextMenu = false;
     this.toBeDeleted[dataItem.id] = true;
+  }
+
+  onDoneEditing(e, dataItem) {
+    if (e) {
+      e.stopPropagation();
+    }
+    this.store.dispatch(
+      new fromRootCauseAnalysisDataActions.UpdateRootCauseAnalysisData({
+        ...dataItem,
+        isActive: false
+      })
+    );
   }
 
   /**
@@ -258,18 +299,43 @@ export class BnaWidgetComponent implements OnInit {
             }
           };
     }
+    const unsavedDataItemObject = this.unSavedDataItemValues
+      ? this.unSavedDataItemValues[dataItem.id]
+      : null;
+    if (unsavedDataItemObject) {
+      const dataValues = _.forEach(
+        _.values(unsavedDataItemObject['dataValues'] || {})
+      );
+      const dataIsIncomplete = _.includes(dataValues, '');
+      const newDataItem = this.unSavedDataItemValues[dataItem.id];
 
-    this.onSaveRootCauseAnalysisData(dataItem, dataElements);
+      this.store.dispatch(
+        new fromRootCauseAnalysisDataActions.UpdateRootCauseAnalysisData(
+          newDataItem
+        )
+      );
 
-    const newDataItem = this.unSavedDataItemValues[dataItem.id];
-    this.store.dispatch(
-      new fromRootCauseAnalysisDataActions.UpdateRootCauseAnalysisData(
-        newDataItem
-        // {...newDataItem, isActive : false }
-      )
-    );
+      if (!dataIsIncomplete) {
+        unsavedDataItemObject.isNew
+          ? this.saveNewData(unsavedDataItemObject)
+          : this.store.dispatch(
+              new fromRootCauseAnalysisDataActions.SaveRootCauseAnalysisData(
+                newDataItem
+              )
+            );
+      }
+    }
   }
 
+  saveNewData(unsavedDataItemObject) {
+    this.store.dispatch(
+      new fromRootCauseAnalysisDataActions.CreateRootCauseAnalysisData({
+        ...unsavedDataItemObject,
+        isActive: false
+      })
+    );
+    this.unSavedDataItemValues = {};
+  }
   onResetNotification(emptyNotificationMessage) {
     this.store.dispatch(
       new fromRootCauseAnalysisDataActions.ResetRootCauseAnalysisData({
@@ -295,47 +361,18 @@ export class BnaWidgetComponent implements OnInit {
         dataValueObject[dataValueKey]
       );
     });
-
-    this.onSaveRootCauseAnalysisData(dataItem, dataElements);
-
     const newDataItem = this.unSavedDataItemValues[dataItem.id];
     this.store.dispatch(
       new fromRootCauseAnalysisDataActions.UpdateRootCauseAnalysisData(
         newDataItem
-        // {...newDataItem, isActive : false }
       )
     );
   }
 
-  onSaveRootCauseAnalysisData(dataItem, dataElements) {
-    //e.stopPropagation();
-    const autoFilledDataValues = {};
-    _.each(dataElements, (dataElement: any) => {
-      if (dataElement.valueType === 'AUTO_FILLED') {
-        autoFilledDataValues[dataElement.id] =
-          dataItem.dataValues[dataElement.id];
-      }
-    });
-
-    const newDataItem = this.unSavedDataItemValues[dataItem.id];
-    const mergedDataItem = newDataItem
-      ? {
-          ...newDataItem,
-          dataValues: { ...newDataItem.dataValues, ...autoFilledDataValues }
-        }
-      : dataItem;
-    if (mergedDataItem) {
-      this.store.dispatch(
-        new fromRootCauseAnalysisDataActions.SaveRootCauseAnalysisData({
-          ...mergedDataItem,
-          isActive: false
-        })
-      );
-    }
-  }
-
   onDataValueEntry(e, dataElement) {
-    e.stopPropagation();
+    if (e) {
+      e.stopPropagation();
+    }
     const newEnteredData = e.target.value.trim();
     if (newEnteredData !== '') {
       const dataValueId = dataElement;
@@ -359,12 +396,4 @@ export class BnaWidgetComponent implements OnInit {
           };
     }
   }
-
-  // activateRow(dataItem){
-  //   this.store.dispatch(new fromRootCauseAnalysisDataActions.UpdateRootCauseAnalysisData({...dataItem, isActive : true}))
-  // }
-
-  // deActivateRow(dataItem){
-  //   this.store.dispatch(new fromRootCauseAnalysisDataActions.UpdateRootCauseAnalysisData({...dataItem, isActive : false}))
-  // }
 }

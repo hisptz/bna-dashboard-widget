@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import * as _ from 'lodash';
-
+import { OrderByPipe } from 'ngx-pipes';
 @Component({
   selector: 'app-select-box-input',
   templateUrl: './select-box-input.component.html',
@@ -18,6 +18,9 @@ export class SelectBoxInputComponent implements OnInit {
   @Input()
   groups: any[];
 
+  @Input()
+  backgroundColor: string;
+
   @Output()
   updateDataValues: EventEmitter<any> = new EventEmitter<any>();
   constructor() {}
@@ -30,11 +33,13 @@ export class SelectBoxInputComponent implements OnInit {
       'id',
       this.dataValues[this.dataElement.parentId]
     ]);
-    return !this.dataElement.parentId
+
+    const selectedOptions =  !this.dataElement.parentId
       ? this.groups
       : currentGroup && currentGroup.members
         ? currentGroup.members
         : [];
+    return [{id: '', name: '-- Select/None --' , isDisabled: true}, ...selectedOptions];
   }
 
   ngOnInit() {}
@@ -47,7 +52,7 @@ export class SelectBoxInputComponent implements OnInit {
     ]);
     this.updateDataValues.emit({
       [this.dataElement.id]: this.dataItemValue,
-      [this.dataElement.associatedId]: dataItemObject.id
+      [this.dataElement.associatedId]: dataItemObject ? dataItemObject.id : null
     });
   }
 }

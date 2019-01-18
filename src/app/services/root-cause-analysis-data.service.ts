@@ -55,7 +55,13 @@ export class RootCauseAnalysisDataService {
       `${this._dataStoreUrl}/${
         rootCauseAnalysisData.configurationId
       }_${orgUnitId}_${periodId}_${dashBoardId}_${rootCauseAnalysisData.id}`,
-      rootCauseAnalysisData
+      _.omit(rootCauseAnalysisData, [
+        'showEditNotification',
+        'isActive',
+        'unsaved',
+        'savingColor',
+        'isNew'
+      ])
     );
   }
 
@@ -69,22 +75,16 @@ export class RootCauseAnalysisDataService {
       'showEditNotification',
       'isActive',
       'unsaved',
+      'savingColor',
       'isNew'
     ]);
 
-    return rootCauseAnalysisData.isNew
-      ? this.addRootCauseAnalysisData(
-          newRootCauseAnalysisData,
-          orgUnitId,
-          periodId,
-          dashBoardId
-        )
-      : this.updateRootCauseAnalysisData(
-          newRootCauseAnalysisData,
-          orgUnitId,
-          periodId,
-          dashBoardId
-        );
+    return this.addRootCauseAnalysisData(
+      newRootCauseAnalysisData,
+      orgUnitId,
+      periodId,
+      dashBoardId
+    );
   }
 
   getRootCauseAnalysisData(
@@ -100,7 +100,7 @@ export class RootCauseAnalysisDataService {
           return (
             configurationId === spliteDataId[0] &&
             orgUnitId === spliteDataId[1] &&
-            periodId === spliteDataId[2] &&
+            periodId.toString() === spliteDataId[2] &&
             dashBoardId === spliteDataId[3]
           );
         });

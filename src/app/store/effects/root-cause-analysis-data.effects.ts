@@ -7,7 +7,8 @@ import {
   map,
   catchError,
   mergeMap,
-  withLatestFrom
+  withLatestFrom,
+  tap
 } from 'rxjs/operators';
 import * as _ from 'lodash';
 import { State } from '../reducers';
@@ -15,9 +16,31 @@ import * as fromRouterSelectors from '../selectors/router.selectors';
 import * as fromRootCauseAnalysisDataActions from '../actions/root-cause-analysis-data.actions';
 import { RootCauseAnalysisDataService } from '../../services';
 import { RootCauseAnalysisData } from '../models/root-cause-analysis-data.model';
+import { ROUTER_NAVIGATION, RouterNavigationAction } from '@ngrx/router-store';
+import { getCurrentRootCauseAnalysisConfiguration } from '../selectors';
+import { RootCauseAnalysisConfiguration } from '../models';
 
 @Injectable()
 export class RootCauseAnalysisDataEffects {
+  @Effect({ dispatch: false })
+  routerChanged$: Observable<any> = this.actions$.pipe(
+    ofType(ROUTER_NAVIGATION),
+    withLatestFrom(this.store.select(getCurrentRootCauseAnalysisConfiguration)),
+    tap(
+      ([action, currentConfiguration]: [
+        RouterNavigationAction,
+        RootCauseAnalysisConfiguration
+      ]) => {
+        if (currentConfiguration) {
+          this.store.dispatch(
+            new fromRootCauseAnalysisDataActions.LoadRootCauseAnalysisDatas(
+              currentConfiguration.id
+            )
+          );
+        }
+      }
+    )
+  );
   @Effect()
   loadRootCauseAnalysisDatas$: Observable<any> = this.actions$.pipe(
     ofType(
@@ -68,7 +91,7 @@ export class RootCauseAnalysisDataEffects {
         .SaveRootCauseAnalysisData
     ),
     withLatestFrom(this.store.select(fromRouterSelectors.getRouterParams)),
-    mergeMap(
+    switchMap(
       ([action, routerParams]: [
         fromRootCauseAnalysisDataActions.SaveRootCauseAnalysisData,
         any
@@ -79,7 +102,7 @@ export class RootCauseAnalysisDataEffects {
           'dashboard'
         ]);
         return this.rootCauseAnalysisDataService
-          .saveRootCauseAnalysisData(
+          .updateRootCauseAnalysisData(
             action.rootCauseAnalysisData,
             namespaceParams.orgUnit.id,
             namespaceParams.period.id,
@@ -89,16 +112,9 @@ export class RootCauseAnalysisDataEffects {
             map(
               () =>
                 new fromRootCauseAnalysisDataActions.SaveRootCauseAnalysisDataSuccess(
-                  action.rootCauseAnalysisData
-                )
-            ),
-            catchError((error: any) =>
-              of(
-                new fromRootCauseAnalysisDataActions.SaveRootCauseAnalysisDataFail(
                   action.rootCauseAnalysisData,
-                  error
+                  { [action.rootCauseAnalysisData.savingColor]: 'green' }
                 )
-              )
             )
           );
       }
@@ -133,7 +149,8 @@ export class RootCauseAnalysisDataEffects {
             map(
               () =>
                 new fromRootCauseAnalysisDataActions.CreateRootCauseAnalysisDataSuccess(
-                  action.rootCauseAnalysisData
+                  action.rootCauseAnalysisData,
+                  { [action.rootCauseAnalysisData.savingColor]: 'green' }
                 )
             ),
             catchError((error: any) =>

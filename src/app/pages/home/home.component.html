@@ -1,8 +1,22 @@
 <div class="container-fluid home-container">
   <div class="row">
     <div class="col-12">
-      <h2 class="widget-heading">Root Cause Analysis Widget</h2>
-      <app-bna-widget [routerParams]="(routerParams$ | async)"> </app-bna-widget>
+
+      <div class="row mx-1 justify content-between">
+        <h2 class="widget-heading"> Root Cause Analysis:
+          <span class="text-secondary">
+            {{(routerParams$ | async).orgUnit.name}} - {{(routerParams$ | async).period.name}}
+          </span>
+        </h2>
+
+        <span class="ml-auto text-secondary">
+          <i style="font-size:11px"> Right click row to edit/delete
+          </i>
+        </span>
+      </div>
+
+      <app-bna-widget [routerParams]="(routerParams$ | async)" [selectedOrgUnit]="(routerParams$ | async).orgUnit.name" [selectedPeriod]="(routerParams$ | async).period.name">
+      </app-bna-widget>
     </div>
   </div>
 </div>

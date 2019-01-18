@@ -1,4 +1,8 @@
 textarea {
-    margin-left: -5%;
-    width: 100%;
+  margin-left: -5%;
+  width: 100%;
+}
+
+.custom-text-area {
+  display: inline;
 }

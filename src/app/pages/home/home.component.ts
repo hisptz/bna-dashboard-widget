@@ -10,6 +10,9 @@ import { Observable } from 'rxjs';
 })
 export class HomeComponent implements OnInit {
   routerParams$: Observable<any>;
+  selectedOrgUnit$: Observable<string>;
+  selectedPeriod$: Observable<string>;
+
   constructor(private store: Store<State>) {
     this.routerParams$ = store.select(getRouterParams);
   }

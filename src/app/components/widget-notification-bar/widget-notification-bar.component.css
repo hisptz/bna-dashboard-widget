@@ -3,10 +3,12 @@
   position: absolute;
   z-index: 101;
   top: -20px;
-  left: 40%;
-  right: 40%;
+  left: 25%;
+  right: 25%;
   text-align: center;
   overflow: hidden;
+  color: #000;
+  background-color: #fbf5ca;
 }
 
 @-webkit-keyframes slideDown {
