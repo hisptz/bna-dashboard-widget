@@ -25,10 +25,9 @@ export const getRouterParams = createSelector(
     }
 
     const newRouteParams = {};
-
     _.each(_.keys(routeParams), paramKey => {
       try {
-        newRouteParams[paramKey] = JSON.parse(routeParams[paramKey]);
+          newRouteParams[paramKey] = JSON.parse(routeParams[paramKey]);
       } catch (e) {
         newRouteParams[paramKey] = { id: routeParams[paramKey] };
       }

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
 import {
   style,
   state,
@@ -19,6 +19,8 @@ import * as fromModels from '../../store/models';
 import * as fromRootCauseAnalysisDataActions from '../../store/actions/root-cause-analysis-data.actions';
 import * as fromSelectors from '../../store/selectors';
 import { RootCauseAnalysisData } from '../../store/models';
+
+import { DownloadWidgetService } from '../../services/downloadWidgetService.service';
 
 @Component({
   selector: 'app-bna-widget',
@@ -42,6 +44,14 @@ import { RootCauseAnalysisData } from '../../store/models';
 export class BnaWidgetComponent implements OnInit {
   @Input()
   routerParams;
+  @Input()
+  selectedOrgUnit;
+  @Input()
+  selectedPeriod;
+
+  @ViewChild('rootCauseAnalysisTable')
+  table: ElementRef;
+
   configuration$: Observable<fromModels.RootCauseAnalysisConfiguration>;
   widget$: Observable<fromModels.RootCauseAnalysisWidget>;
   data$: Observable<fromModels.RootCauseAnalysisData[]>;
@@ -50,7 +60,7 @@ export class BnaWidgetComponent implements OnInit {
   dataLoading$: Observable<boolean>;
   dataLoaded$: Observable<boolean>;
   notification$: Observable<any>;
-  savingColor$: Observable<string>;
+  // savingColor$: Observable<string>;
 
   newRootCauseAnalysisData: fromModels.RootCauseAnalysisData;
   showContextMenu: boolean = false;
@@ -65,7 +75,10 @@ export class BnaWidgetComponent implements OnInit {
    */
   toBeDeleted = {};
 
-  constructor(private store: Store<State>) {
+  constructor(
+    private store: Store<State>,
+    private downloadWidgetService: DownloadWidgetService
+  ) {
     this.widget$ = store.select(
       fromSelectors.getCurrentRootCauseAnalysisWidget
     );
@@ -89,9 +102,9 @@ export class BnaWidgetComponent implements OnInit {
       fromSelectors.getRootCauseAnalysisDataNotificationState
     );
 
-    this.savingColor$ = store.select(
-      fromSelectors.getRootCauseAnalysisDataSavingColorState
-    );
+    // this.savingColor$ = store.select(
+    //   fromSelectors.getRootCauseAnalysisDataSavingColorState
+    // );
 
     this.unSavedDataItemValues = {};
 
@@ -127,6 +140,37 @@ export class BnaWidgetComponent implements OnInit {
         rootCauseAnalysisData
       )
     );
+  }
+
+  downloadTable(downloadFormat) {
+    if (this.table) {
+      const dateTime = new Date();
+      const el = this.table.nativeElement;
+      const filename =
+        'Root causes - ' +
+        this.routerParams.dashboard.name +
+        ' - ' +
+        this.selectedOrgUnit +
+        ' - ' +
+        this.selectedPeriod +
+        ' gen. on ' +
+        dateTime.getFullYear() +
+        (dateTime.getMonth() + 1 < 10 ? '-0' : '-') +
+        (dateTime.getMonth() + 1) +
+        (dateTime.getDay() < 10 ? '-0' : '-') +
+        dateTime.getDay() +
+        ' ' +
+        (dateTime.getHours() < 10 ? ':0' : ':') +
+        dateTime.getHours() +
+        (dateTime.getMinutes() < 10 ? ':0' : ':') +
+        dateTime.getMinutes() +
+        'hrs';
+      if (downloadFormat === 'XLSX') {
+        if (el) {
+          this.downloadWidgetService.exportXLS(filename, el.outerHTML);
+        }
+      }
+    }
   }
 
   onDeleteRootCauseAnalysisData(rootCauseAnalysisData: any) {
@@ -189,15 +233,17 @@ export class BnaWidgetComponent implements OnInit {
   }
 
   onEnableContextMenu(e, dataItem) {
-    if (e) {
-      e.stopPropagation();
+    if (dataItem.isActive !== true) {
+      if (e) {
+        e.stopPropagation();
+      }
+      e.cancelBubble = true;
+      this.contextmenuX = e.clientX;
+      this.contextmenuY = e.clientY - 20;
+      this.contextmenuDataItem = dataItem;
+      this.showContextMenu = !this.showContextMenu;
+      return false;
     }
-    e.cancelBubble = true;
-    this.contextmenuX = e.clientX;
-    this.contextmenuY = e.clientY - 20;
-    this.contextmenuDataItem = dataItem;
-    this.showContextMenu = !this.showContextMenu;
-    return false;
   }
 
   onDisableContextMenu() {
@@ -208,6 +254,18 @@ export class BnaWidgetComponent implements OnInit {
     dataItem.showDeleteConfirmation = true;
     this.showContextMenu = false;
     this.toBeDeleted[dataItem.id] = true;
+  }
+
+  onDoneEditing(e, dataItem) {
+    if (e) {
+      e.stopPropagation();
+    }
+    this.store.dispatch(
+      new fromRootCauseAnalysisDataActions.UpdateRootCauseAnalysisData({
+        ...dataItem,
+        isActive: false
+      })
+    );
   }
 
   /**
@@ -270,7 +328,6 @@ export class BnaWidgetComponent implements OnInit {
   }
 
   saveNewData(unsavedDataItemObject) {
-    console.log(unsavedDataItemObject);
     this.store.dispatch(
       new fromRootCauseAnalysisDataActions.CreateRootCauseAnalysisData({
         ...unsavedDataItemObject,

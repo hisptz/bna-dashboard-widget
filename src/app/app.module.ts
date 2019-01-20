@@ -10,6 +10,8 @@ import {
   StoreRouterConnectingModule
 } from '@ngrx/router-store';
 
+import { NgPipesModule } from 'ngx-pipes';
+
 import { environment } from '../environments/environment';
 import { HttpClientModule } from '@angular/common/http';
 
@@ -28,6 +30,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
 import { WidgetItemLoaderComponent } from './components/widget-item-loader/widget-item-loader.component';
 import { WidgetNotificationBarComponent } from './components/widget-notification-bar/widget-notification-bar.component';
 import { WidgetContextMenuComponent } from './components/widget-context-menu/widget-context-menu.component';
+import { directives } from './directives';
 
 @NgModule({
   declarations: [
@@ -39,12 +42,14 @@ import { WidgetContextMenuComponent } from './components/widget-context-menu/wid
     TextAreaInputComponent,
     WidgetItemLoaderComponent,
     WidgetNotificationBarComponent,
-    WidgetContextMenuComponent
+    WidgetContextMenuComponent,
+    ...directives
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
+    NgPipesModule,
 
     AppRoutingModule,
 

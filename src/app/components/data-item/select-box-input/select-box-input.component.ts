@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import * as _ from 'lodash';
-
+import { OrderByPipe } from 'ngx-pipes';
 @Component({
   selector: 'app-select-box-input',
   templateUrl: './select-box-input.component.html',
@@ -33,16 +33,16 @@ export class SelectBoxInputComponent implements OnInit {
       'id',
       this.dataValues[this.dataElement.parentId]
     ]);
-    return !this.dataElement.parentId
+
+    const selectedOptions =  !this.dataElement.parentId
       ? this.groups
       : currentGroup && currentGroup.members
         ? currentGroup.members
         : [];
+    return [{id: '', name: '-- Select/None --' , isDisabled: true}, ...selectedOptions];
   }
 
-  ngOnInit() {
-    console.log(this.backgroundColor);
-  }
+  ngOnInit() {}
 
   onDataValueChange(e) {
     e.stopPropagation();
