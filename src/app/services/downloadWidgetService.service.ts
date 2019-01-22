@@ -127,7 +127,7 @@ export class DownloadWidgetService {
     const slice = Array.prototype.slice;
 
     return slice
-      .call(table.rows)
+      .call(table.rows || [])
       .map(function(row) {
         console.log(row);
         return slice
