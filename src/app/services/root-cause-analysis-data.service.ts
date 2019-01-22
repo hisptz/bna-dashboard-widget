@@ -104,6 +104,7 @@ export class RootCauseAnalysisDataService {
             dashBoardId === spliteDataId[3]
           );
         });
+
         if (filteredDataIds.length > 0) {
           return forkJoin(
             _.map(filteredDataIds, (dataId: string) => {
