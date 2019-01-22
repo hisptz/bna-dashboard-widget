@@ -63,11 +63,11 @@ export class BnaWidgetComponent implements OnInit {
   // savingColor$: Observable<string>;
 
   newRootCauseAnalysisData: fromModels.RootCauseAnalysisData;
-  showContextMenu: boolean = false;
+  showContextMenu = false;
   contextmenuDataItem: RootCauseAnalysisData;
   contextmenuX: any;
   contextmenuY: any;
-  confirmDelete: boolean = false;
+  confirmDelete = false;
   unSavedDataItemValues: any;
 
   /**
