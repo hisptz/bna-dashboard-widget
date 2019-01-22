@@ -25,13 +25,17 @@ export class RootCauseAnalysisDataEffects {
   @Effect({ dispatch: false })
   routerChanged$: Observable<any> = this.actions$.pipe(
     ofType(ROUTER_NAVIGATION),
-    withLatestFrom(this.store.select(getCurrentRootCauseAnalysisConfiguration)),
+    withLatestFrom(
+      this.store.select(getCurrentRootCauseAnalysisConfiguration),
+      this.store.select(fromRouterSelectors.getRouterParams)
+    ),
     tap(
-      ([action, currentConfiguration]: [
+      ([action, currentConfiguration, routeParams]: [
         RouterNavigationAction,
-        RootCauseAnalysisConfiguration
+        RootCauseAnalysisConfiguration,
+        any
       ]) => {
-        if (currentConfiguration) {
+        if (currentConfiguration && !routeParams.download) {
           this.store.dispatch(
             new fromRootCauseAnalysisDataActions.LoadRootCauseAnalysisDatas(
               currentConfiguration.id

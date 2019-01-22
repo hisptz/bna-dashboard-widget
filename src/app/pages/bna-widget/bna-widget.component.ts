@@ -1,4 +1,12 @@
-import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  ViewChild,
+  ElementRef,
+  OnChanges,
+  SimpleChanges
+} from '@angular/core';
 import {
   style,
   state,
@@ -12,7 +20,7 @@ import { listEnterAnimation } from '../../animations/list-enter-animation';
 import { Store } from '@ngrx/store';
 import { State } from '../../store';
 import { Observable, of } from 'rxjs';
-import { filter, map, switchMap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import * as _ from 'lodash';
 import * as fromHelpers from '../../helpers';
 import * as fromModels from '../../store/models';
@@ -41,7 +49,7 @@ import { DownloadWidgetService } from '../../services/downloadWidgetService.serv
     ])
   ]
 })
-export class BnaWidgetComponent implements OnInit {
+export class BnaWidgetComponent implements OnInit, OnChanges {
   @Input()
   routerParams;
   @Input()
@@ -63,11 +71,11 @@ export class BnaWidgetComponent implements OnInit {
   // savingColor$: Observable<string>;
 
   newRootCauseAnalysisData: fromModels.RootCauseAnalysisData;
-  showContextMenu: boolean = false;
+  showContextMenu = false;
   contextmenuDataItem: RootCauseAnalysisData;
   contextmenuX: any;
   contextmenuY: any;
-  confirmDelete: boolean = false;
+  confirmDelete = false;
   unSavedDataItemValues: any;
 
   /**
@@ -123,6 +131,17 @@ export class BnaWidgetComponent implements OnInit {
       });
   }
 
+  ngOnChanges(simpleChanges: SimpleChanges) {
+    if (simpleChanges.routerParams) {
+      const currentRouteParams = simpleChanges.routerParams.currentValue;
+      if (currentRouteParams.download) {
+        this.downloadTable(
+          currentRouteParams.download ? currentRouteParams.download.id : 'CSV'
+        );
+      }
+    }
+  }
+
   ngOnInit() {}
 
   onUpdateRootCauseAnalysisData(rootCauseAnalysisData: any) {
@@ -165,9 +184,11 @@ export class BnaWidgetComponent implements OnInit {
         (dateTime.getMinutes() < 10 ? ':0' : ':') +
         dateTime.getMinutes() +
         'hrs';
-      if (downloadFormat === 'XLSX') {
-        if (el) {
+      if (el) {
+        if (downloadFormat === 'XLS') {
           this.downloadWidgetService.exportXLS(filename, el.outerHTML);
+        } else if (downloadFormat === 'CSV') {
+          this.downloadWidgetService.exportCSV(filename, el.outerHTML);
         }
       }
     }
@@ -199,7 +220,7 @@ export class BnaWidgetComponent implements OnInit {
   }
 
   generateConfigurations(configurationDataElements) {
-    let dataValues: any = {};
+    const dataValues: any = {};
     configurationDataElements.forEach((element, i) => {
       dataValues[element.id] = '';
     });
