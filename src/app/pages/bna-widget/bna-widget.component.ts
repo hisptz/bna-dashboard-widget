@@ -188,7 +188,7 @@ export class BnaWidgetComponent implements OnInit, OnChanges {
         if (downloadFormat === 'XLS') {
           this.downloadWidgetService.exportXLS(filename, el.outerHTML);
         } else if (downloadFormat === 'CSV') {
-          this.downloadWidgetService.exportCSV(filename, el.outerHTML);
+          this.downloadWidgetService.exportCSV(filename, el);
         }
       }
     }

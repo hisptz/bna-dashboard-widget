@@ -34,12 +34,15 @@ export class SelectBoxInputComponent implements OnInit {
       this.dataValues[this.dataElement.parentId]
     ]);
 
-    const selectedOptions =  !this.dataElement.parentId
+    const selectedOptions = !this.dataElement.parentId
       ? this.groups
       : currentGroup && currentGroup.members
-        ? currentGroup.members
-        : [];
-    return [{id: '', name: '-- Select/None --' , isDisabled: true}, ...selectedOptions];
+      ? currentGroup.members
+      : [];
+    return [
+      { id: '', name: '-- Select/None --', isDisabled: true },
+      ...selectedOptions
+    ];
   }
 
   ngOnInit() {}
