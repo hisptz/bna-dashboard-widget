@@ -12,7 +12,7 @@ import { listEnterAnimation } from '../../animations/list-enter-animation';
 import { Store } from '@ngrx/store';
 import { State } from '../../store';
 import { Observable, of } from 'rxjs';
-import { filter, map, switchMap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import * as _ from 'lodash';
 import * as fromHelpers from '../../helpers';
 import * as fromModels from '../../store/models';
