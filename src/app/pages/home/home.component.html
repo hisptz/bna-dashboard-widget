@@ -1,6 +1,6 @@
 <div class="container-fluid home-container">
   <div class="row">
-    <div class="col-12">
+    <div class="col-12" *ngIf="(currentUser$ | async)">
 
       <div class="row mx-1 justify content-between" *ngIf="(currentUser$ | async)">
         <h2 class="widget-heading"> Root Cause Analysis:

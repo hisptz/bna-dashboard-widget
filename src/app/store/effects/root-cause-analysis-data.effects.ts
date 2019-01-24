@@ -17,8 +17,9 @@ import * as fromRootCauseAnalysisDataActions from '../actions/root-cause-analysi
 import { RootCauseAnalysisDataService } from '../../services';
 import { RootCauseAnalysisData } from '../models/root-cause-analysis-data.model';
 import { ROUTER_NAVIGATION, RouterNavigationAction } from '@ngrx/router-store';
-import { getCurrentRootCauseAnalysisConfiguration } from '../selectors';
+import {getCurrentRootCauseAnalysisConfiguration} from '../selectors';
 import { RootCauseAnalysisConfiguration } from '../models';
+import * as fromCurrentUserSelectors from '../selectors/user.selectors';
 
 @Injectable()
 export class RootCauseAnalysisDataEffects {
@@ -51,10 +52,12 @@ export class RootCauseAnalysisDataEffects {
       fromRootCauseAnalysisDataActions.RootCauseAnalysisDataActionTypes
         .LoadRootCauseAnalysisDatas
     ),
-    withLatestFrom(this.store.select(fromRouterSelectors.getRouterParams)),
+    withLatestFrom(this.store.select(fromRouterSelectors.getRouterParams),
+      this.store.select(fromCurrentUserSelectors.getCurrentUser)),
     mergeMap(
-      ([action, routerParams]: [
+      ([action, routerParams, currentUser]: [
         fromRootCauseAnalysisDataActions.LoadRootCauseAnalysisDatas,
+        any,
         any
       ]) => {
         const namespaceParams = _.pick(routerParams, [
@@ -62,11 +65,12 @@ export class RootCauseAnalysisDataEffects {
           'period',
           'dashboard'
         ]);
+        const LastYear: any = new Date().getFullYear() - 1;
         return this.rootCauseAnalysisDataService
           .getRootCauseAnalysisData(
             action.configurationId,
-            namespaceParams.orgUnit ? namespaceParams.orgUnit.id : '',
-            namespaceParams.period ? namespaceParams.period.id : '',
+            namespaceParams.orgUnit ? namespaceParams.orgUnit.id : currentUser.organisationUnits[0].id,
+            namespaceParams.period ? namespaceParams.period.id : LastYear,
             namespaceParams.dashboard ? namespaceParams.dashboard.id : ''
           )
           .pipe(
