@@ -4,6 +4,7 @@ import { Store } from '@ngrx/store';
 import * as fromRoot from './store/reducers/index';
 import { SetCurrentRootCauseAnalysisWidget } from './store/actions/root-cause-analysis-widget.actions';
 import { LoadRootCauseAnalysisConfigurations } from './store/actions/root-cause-analysis-configuration.actions';
+import {LoadCurrentUser} from './store/actions';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -16,6 +17,8 @@ export class AppComponent {
   };
   configurationId = 'rcaconfig';
   constructor(private store: Store<fromRoot.State>) {
+    store.dispatch(new LoadCurrentUser({}));
+
     this.store.dispatch(
       new LoadRootCauseAnalysisConfigurations(
         this.configurationId,

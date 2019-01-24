@@ -9,7 +9,7 @@ export enum UserActionTypes {
 
 export class LoadCurrentUser implements Action {
   readonly type = UserActionTypes.LoadCurrentUser;
-  constructor(public systemInfo: SystemInfo) {}
+  constructor(public systemInfo: any) {}
 }
 
 export class AddCurrentUser implements Action {
