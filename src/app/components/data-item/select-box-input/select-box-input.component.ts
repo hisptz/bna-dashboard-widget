@@ -34,11 +34,15 @@ export class SelectBoxInputComponent implements OnInit {
       this.dataValues[this.dataElement.parentId]
     ]);
 
-    const selectedOptions = !this.dataElement.parentId
+    let selectedOptions = !this.dataElement.parentId
       ? this.groups
       : currentGroup && currentGroup.members
       ? currentGroup.members
-      : [];
+      : [{ id: '', name: '', isDisabled: true }];
+      // check selectedOptions when its undefined to avoid errors
+    if (!selectedOptions) {
+      selectedOptions = [{ id: '', name: '', isDisabled: true }];
+    }
     return [
       { id: '', name: '-- Select/None --', isDisabled: true },
       ...selectedOptions
