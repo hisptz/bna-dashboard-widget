@@ -6,7 +6,8 @@
         <h2 class="widget-heading"> Root Cause Analysis:
           <span class="text-secondary">
             {{(routerParams$ | async).orgUnit ?
-            (routerParams$ | async).orgUnit.name : (currentUser$ | async).organisationUnits[0].name}} -
+            (routerParams$ | async).orgUnit.name :
+            (currentUser$ | async).organisationUnits[0].name}} -
             {{(routerParams$ | async).period ?
             (routerParams$ | async).period.name : lastYear}}
           </span>
@@ -21,8 +22,11 @@
       <!--{{(currentUser$ | async).organisationUnits[0].id}}-->
 
       <app-bna-widget [routerParams]="(routerParams$ | async)"
-                      [selectedOrgUnit]="(routerParams$ | async).orgUnit ? (routerParams$ | async).orgUnit.name : (currentUser$ | async).organisationUnits[0].name"
-                      [selectedPeriod]="(routerParams$ | async).period ? (routerParams$ | async).period.name : lastYear">
+                      [selectedOrgUnit]="(routerParams$ | async).orgUnit ?
+                      (routerParams$ | async).orgUnit.name :
+                      (currentUser$ | async).organisationUnits[0].name"
+                      [selectedPeriod]="(routerParams$ | async).period ?
+                      (routerParams$ | async).period.name : lastYear">
       </app-bna-widget>
     </div>
 
