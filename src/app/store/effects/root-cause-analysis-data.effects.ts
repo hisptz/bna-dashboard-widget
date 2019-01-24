@@ -65,9 +65,9 @@ export class RootCauseAnalysisDataEffects {
         return this.rootCauseAnalysisDataService
           .getRootCauseAnalysisData(
             action.configurationId,
-            namespaceParams.orgUnit.id,
-            namespaceParams.period.id,
-            namespaceParams.dashboard.id
+            namespaceParams.orgUnit ? namespaceParams.orgUnit.id : '',
+            namespaceParams.period ? namespaceParams.period.id : '',
+            namespaceParams.dashboard ? namespaceParams.dashboard.id : ''
           )
           .pipe(
             map(

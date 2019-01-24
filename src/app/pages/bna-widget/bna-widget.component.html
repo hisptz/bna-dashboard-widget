@@ -22,8 +22,8 @@
         </th>
       </tr>
     </thead>
-    <tbody>
-    <!--<tbody *ngIf="(data$ | async) as rootCauseAnalysisData" [@listEnter]>-->
+    <!--<tbody>-->
+    <tbody *ngIf="(data$ | async) as rootCauseAnalysisData" [@listEnter]>
       <tr
         title="Right click for edit/delete options"
         *ngFor="
@@ -122,14 +122,18 @@
           </button>
         </td>
       </tr>
-      <!--<tr *ngIf="!rootCauseAnalysisData.length">-->
-      <tr>
+      <tr *ngIf="!rootCauseAnalysisData.length">
+      <!--<tr>-->
         <td colspan="100%" class="text-sm text-secondary">
           <p class="text-center mb-0">
-            <i>
+            <i *ngIf="selectedPeriod && selectedOrgUnit">
               No registered root causes for {{ selectedOrgUnit }} in
               {{ selectedPeriod }}
             </i>
+            <i *ngIf="!selectedPeriod || !selectedOrgUnit">
+              Seems the widget has been opened outside of dashboard, it needs dashboard item reference
+            </i>
+
           </p>
         </td>
       </tr>
