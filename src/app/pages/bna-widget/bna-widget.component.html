@@ -1,9 +1,11 @@
+<!--*ngIf="(dataLoaded$ | async)"-->
 <div *ngIf="(dataLoaded$ | async)">
   <table
     class="table table-bordered table-responsive custom-table-padding"
     #rootCauseAnalysisTable
     *ngIf="(configuration$ | async) as rootCauseAnalysisConfiguration"
   >
+    <!--*ngIf="(configuration$ | async) as rootCauseAnalysisConfiguration"-->
     <thead class="table-header-cell thead-light">
       <tr>
         <th width="1%">SN.</th>
@@ -20,7 +22,8 @@
         </th>
       </tr>
     </thead>
-    <tbody *ngIf="(data$ | async) as rootCauseAnalysisData" [@listEnter]>
+    <tbody>
+    <!--<tbody *ngIf="(data$ | async) as rootCauseAnalysisData" [@listEnter]>-->
       <tr
         title="Right click for edit/delete options"
         *ngFor="
@@ -119,7 +122,8 @@
           </button>
         </td>
       </tr>
-      <tr *ngIf="!rootCauseAnalysisData.length">
+      <!--<tr *ngIf="!rootCauseAnalysisData.length">-->
+      <tr>
         <td colspan="100%" class="text-sm text-secondary">
           <p class="text-center mb-0">
             <i>

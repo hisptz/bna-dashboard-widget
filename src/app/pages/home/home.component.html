@@ -5,7 +5,10 @@
       <div class="row mx-1 justify content-between">
         <h2 class="widget-heading"> Root Cause Analysis:
           <span class="text-secondary">
-            {{(routerParams$ | async).orgUnit.name}} - {{(routerParams$ | async).period.name}}
+            {{(routerParams$ | async).orgUnit ?
+            (routerParams$ | async).orgUnit.name : 'No selected facility'}} -
+            {{(routerParams$ | async).period ?
+            (routerParams$ | async).period.name : 'No selected period'}}
           </span>
         </h2>
 
@@ -15,8 +18,13 @@
         </span>
       </div>
 
-      <app-bna-widget [routerParams]="(routerParams$ | async)" [selectedOrgUnit]="(routerParams$ | async).orgUnit.name" [selectedPeriod]="(routerParams$ | async).period.name">
+      <app-bna-widget [routerParams]="(routerParams$ | async)"
+                      [selectedOrgUnit]="(routerParams$ | async).orgUnit ? (routerParams$ | async).orgUnit.name : ''"
+                      [selectedPeriod]="(routerParams$ | async).period ? (routerParams$ | async).period.name : ''">
       </app-bna-widget>
     </div>
+
+
+
   </div>
 </div>
