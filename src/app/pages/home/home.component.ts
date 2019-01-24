@@ -13,7 +13,7 @@ export class HomeComponent implements OnInit {
   selectedOrgUnit$: Observable<string>;
   selectedPeriod$: Observable<string>;
   currentUser$: Observable<any>;
-  LastYear: any = new Date().getFullYear() - 1; // its hack for getting lastYear on init
+  lastYear: any = new Date().getFullYear() - 1; // its hack for getting lastYear on init
 
   constructor(private store: Store<State>) {
     this.routerParams$ = store.select(getRouterParams);
