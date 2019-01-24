@@ -20,6 +20,7 @@ import { ROUTER_NAVIGATION, RouterNavigationAction } from '@ngrx/router-store';
 import {getCurrentRootCauseAnalysisConfiguration} from '../selectors';
 import { RootCauseAnalysisConfiguration } from '../models';
 import * as fromCurrentUserSelectors from '../selectors/user.selectors';
+import * as fromSystemInfoSelectors from '../selectors/system-info.selectors';
 
 @Injectable()
 export class RootCauseAnalysisDataEffects {
@@ -53,10 +54,12 @@ export class RootCauseAnalysisDataEffects {
         .LoadRootCauseAnalysisDatas
     ),
     withLatestFrom(this.store.select(fromRouterSelectors.getRouterParams),
-      this.store.select(fromCurrentUserSelectors.getCurrentUser)),
+      this.store.select(fromCurrentUserSelectors.getCurrentUser),
+      this.store.select(fromSystemInfoSelectors.getSystemInfo)),
     mergeMap(
-      ([action, routerParams, currentUser]: [
+      ([action, routerParams, currentUser, systemInfo]: [
         fromRootCauseAnalysisDataActions.LoadRootCauseAnalysisDatas,
+        any,
         any,
         any
       ]) => {
@@ -65,12 +68,11 @@ export class RootCauseAnalysisDataEffects {
           'period',
           'dashboard'
         ]);
-        const LastYear: any = new Date().getFullYear() - 1;
         return this.rootCauseAnalysisDataService
           .getRootCauseAnalysisData(
             action.configurationId,
             namespaceParams.orgUnit ? namespaceParams.orgUnit.id : currentUser.organisationUnits[0].id,
-            namespaceParams.period ? namespaceParams.period.id : LastYear,
+            namespaceParams.period ? namespaceParams.period.id : systemInfo.analysisRelativePeriod,
             namespaceParams.dashboard ? namespaceParams.dashboard.id : ''
           )
           .pipe(

@@ -9,7 +9,8 @@
             (routerParams$ | async).orgUnit.name :
             (currentUser$ | async).organisationUnits[0].name}} -
             {{(routerParams$ | async).period ?
-            (routerParams$ | async).period.name : lastYear}}
+            (routerParams$ | async).period.name :
+            (systemInfo$ | async).analysisRelativePeriod}}
           </span>
         </h2>
 
@@ -19,14 +20,14 @@
         </span>
       </div>
 
-      <!--{{(currentUser$ | async).organisationUnits[0].id}}-->
 
       <app-bna-widget [routerParams]="(routerParams$ | async)"
                       [selectedOrgUnit]="(routerParams$ | async).orgUnit ?
                       (routerParams$ | async).orgUnit.name :
                       (currentUser$ | async).organisationUnits[0].name"
                       [selectedPeriod]="(routerParams$ | async).period ?
-                      (routerParams$ | async).period.name : lastYear">
+                      (routerParams$ | async).period.name :
+                      (systemInfo$ | async).analysisRelativePeriod">
       </app-bna-widget>
     </div>
 
