@@ -2,13 +2,13 @@
   <div class="row">
     <div class="col-12">
 
-      <div class="row mx-1 justify content-between">
+      <div class="row mx-1 justify content-between" *ngIf="(currentUser$ | async)">
         <h2 class="widget-heading"> Root Cause Analysis:
           <span class="text-secondary">
             {{(routerParams$ | async).orgUnit ?
-            (routerParams$ | async).orgUnit.name : 'No selected facility'}} -
+            (routerParams$ | async).orgUnit.name : (currentUser$ | async).organisationUnits[0].name}} -
             {{(routerParams$ | async).period ?
-            (routerParams$ | async).period.name : 'No selected period'}}
+            (routerParams$ | async).period.name : LastYear}}
           </span>
         </h2>
 
@@ -17,6 +17,8 @@
           </i>
         </span>
       </div>
+
+      <!--{{(currentUser$ | async).organisationUnits[0].id}}-->
 
       <app-bna-widget [routerParams]="(routerParams$ | async)"
                       [selectedOrgUnit]="(routerParams$ | async).orgUnit ? (routerParams$ | async).orgUnit.name : ''"
