@@ -1,6 +1,6 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import * as _ from 'lodash';
-import { OrderByPipe } from 'ngx-pipes';
+
 @Component({
   selector: 'app-select-box-input',
   templateUrl: './select-box-input.component.html',
@@ -39,7 +39,7 @@ export class SelectBoxInputComponent implements OnInit {
       : currentGroup && currentGroup.members
       ? currentGroup.members
       : [{ id: '', name: '', isDisabled: true }];
-      // check selectedOptions when its undefined to avoid errors
+    // check selectedOptions when its undefined to avoid errors
     if (!selectedOptions) {
       selectedOptions = [{ id: '', name: '', isDisabled: true }];
     }
