@@ -1,4 +1,5 @@
 import { createSelector } from '@ngrx/store';
+import * as _ from 'lodash';
 import { getRootState, State } from '../reducers';
 import { RouterReducerState } from '@ngrx/router-store';
 
@@ -15,6 +16,22 @@ export const getRouteUrl = createSelector(
 
 export const getRouterParams = createSelector(
   getRouteState,
-  (routeState: any) =>
-    routeState && routeState.state ? routeState.state.queryParams : null
+  (routeState: any) => {
+    const routeParams =
+      routeState && routeState.state ? routeState.state.queryParams : null;
+
+    if (!routeParams) {
+      return null;
+    }
+
+    const newRouteParams = {};
+    _.each(_.keys(routeParams), paramKey => {
+      try {
+          newRouteParams[paramKey] = JSON.parse(routeParams[paramKey]);
+      } catch (e) {
+        newRouteParams[paramKey] = { id: routeParams[paramKey] };
+      }
+    });
+    return newRouteParams;
+  }
 );
