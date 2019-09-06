@@ -1,11 +1,16 @@
 <div class="container-fluid home-container">
   <div class="row">
-    <div class="col-12">
+    <div class="col-12" *ngIf="(currentUser$ | async)">
 
-      <div class="row mx-1 justify content-between">
+      <div class="row mx-1 justify content-between" *ngIf="(currentUser$ | async)">
         <h2 class="widget-heading"> Root Cause Analysis:
           <span class="text-secondary">
-            {{(routerParams$ | async).orgUnit.name}} - {{(routerParams$ | async).period.name}}
+            {{(routerParams$ | async).orgUnit ?
+            (routerParams$ | async).orgUnit.name :
+            (currentUser$ | async).organisationUnits[0].name}} -
+            {{(routerParams$ | async).period ?
+            (routerParams$ | async).period.name :
+            (systemInfo$ | async).analysisRelativePeriod}}
           </span>
         </h2>
 
@@ -15,8 +20,18 @@
         </span>
       </div>
 
-      <app-bna-widget [routerParams]="(routerParams$ | async)" [selectedOrgUnit]="(routerParams$ | async).orgUnit.name" [selectedPeriod]="(routerParams$ | async).period.name">
+
+      <app-bna-widget [routerParams]="(routerParams$ | async)"
+                      [selectedOrgUnit]="(routerParams$ | async).orgUnit ?
+                      (routerParams$ | async).orgUnit.name :
+                      (currentUser$ | async).organisationUnits[0].name"
+                      [selectedPeriod]="(routerParams$ | async).period ?
+                      (routerParams$ | async).period.name :
+                      (systemInfo$ | async).analysisRelativePeriod">
       </app-bna-widget>
     </div>
+
+
+
   </div>
 </div>

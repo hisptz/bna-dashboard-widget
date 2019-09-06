@@ -15,14 +15,14 @@ export class RootCauseAnalysisConfigurationsService {
     this._dataStoreUrl = 'dataStore/rca-config';
   }
   getConfigurationId() {
-    return 'myrcaconfig';
+    return 'rcaconfig';
   }
   getAllConfigurations(configurationId: string) {
     return this.http.get(this._dataStoreUrl).pipe(
       switchMap((configurationIds: string[]) =>
         forkJoin(
-          _.map(configurationIds, (configurationId: string) =>
-            this.http.get(`${this._dataStoreUrl}/${configurationId}`)
+          _.map(configurationIds, (configId: string) =>
+            this.http.get(`${this._dataStoreUrl}/${configId}`)
           )
         )
       ),

@@ -13,7 +13,7 @@ export interface RootCauseAnalysisConfiguration {
         code: number;
       }>;
     };
-    categoryCombo: {
+    categoryCombo?: {
       id: string;
       name: string;
       categoryOptionCombos: Array<{
@@ -23,4 +23,3 @@ export interface RootCauseAnalysisConfiguration {
     };
   }>;
 }
-1;

@@ -17,21 +17,27 @@ import * as fromRootCauseAnalysisDataActions from '../actions/root-cause-analysi
 import { RootCauseAnalysisDataService } from '../../services';
 import { RootCauseAnalysisData } from '../models/root-cause-analysis-data.model';
 import { ROUTER_NAVIGATION, RouterNavigationAction } from '@ngrx/router-store';
-import { getCurrentRootCauseAnalysisConfiguration } from '../selectors';
+import {getCurrentRootCauseAnalysisConfiguration} from '../selectors';
 import { RootCauseAnalysisConfiguration } from '../models';
+import * as fromCurrentUserSelectors from '../selectors/user.selectors';
+import * as fromSystemInfoSelectors from '../selectors/system-info.selectors';
 
 @Injectable()
 export class RootCauseAnalysisDataEffects {
   @Effect({ dispatch: false })
   routerChanged$: Observable<any> = this.actions$.pipe(
     ofType(ROUTER_NAVIGATION),
-    withLatestFrom(this.store.select(getCurrentRootCauseAnalysisConfiguration)),
+    withLatestFrom(
+      this.store.select(getCurrentRootCauseAnalysisConfiguration),
+      this.store.select(fromRouterSelectors.getRouterParams)
+    ),
     tap(
-      ([action, currentConfiguration]: [
+      ([action, currentConfiguration, routeParams]: [
         RouterNavigationAction,
-        RootCauseAnalysisConfiguration
+        RootCauseAnalysisConfiguration,
+        any
       ]) => {
-        if (currentConfiguration) {
+        if (currentConfiguration && !routeParams.download) {
           this.store.dispatch(
             new fromRootCauseAnalysisDataActions.LoadRootCauseAnalysisDatas(
               currentConfiguration.id
@@ -47,10 +53,14 @@ export class RootCauseAnalysisDataEffects {
       fromRootCauseAnalysisDataActions.RootCauseAnalysisDataActionTypes
         .LoadRootCauseAnalysisDatas
     ),
-    withLatestFrom(this.store.select(fromRouterSelectors.getRouterParams)),
+    withLatestFrom(this.store.select(fromRouterSelectors.getRouterParams),
+      this.store.select(fromCurrentUserSelectors.getCurrentUser),
+      this.store.select(fromSystemInfoSelectors.getSystemInfo)),
     mergeMap(
-      ([action, routerParams]: [
+      ([action, routerParams, currentUser, systemInfo]: [
         fromRootCauseAnalysisDataActions.LoadRootCauseAnalysisDatas,
+        any,
+        any,
         any
       ]) => {
         const namespaceParams = _.pick(routerParams, [
@@ -61,9 +71,9 @@ export class RootCauseAnalysisDataEffects {
         return this.rootCauseAnalysisDataService
           .getRootCauseAnalysisData(
             action.configurationId,
-            namespaceParams.orgUnit.id,
-            namespaceParams.period.id,
-            namespaceParams.dashboard.id
+            namespaceParams.orgUnit ? namespaceParams.orgUnit.id : currentUser.organisationUnits[0].id,
+            namespaceParams.period ? namespaceParams.period.id : systemInfo.analysisRelativePeriod,
+            namespaceParams.dashboard ? namespaceParams.dashboard.id : ''
           )
           .pipe(
             map(

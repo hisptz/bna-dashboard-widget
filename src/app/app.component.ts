@@ -1,36 +1,32 @@
-import { Component } from "@angular/core";
-import { Store } from "@ngrx/store";
+import { Component } from '@angular/core';
+import { Store } from '@ngrx/store';
 
-import * as fromRoot from "./store/reducers/index";
-import { LoadRootCauseAnalysisDatas } from "./store/actions/root-cause-analysis-data.actions";
-import {
-  LoadRootCauseAnalysisWidget,
-  SetCurrentRootCauseAnalysisWidget
-} from "./store/actions/root-cause-analysis-widget.actions";
-import {
-  AddRootCauseAnalysisConfigurations,
-  LoadRootCauseAnalysisConfigurations
-} from "./store/actions/root-cause-analysis-configuration.actions";
+import * as fromRoot from './store/reducers/index';
+import { SetCurrentRootCauseAnalysisWidget } from './store/actions/root-cause-analysis-widget.actions';
+import { LoadRootCauseAnalysisConfigurations } from './store/actions/root-cause-analysis-configuration.actions';
+import {LoadCurrentUser, LoadSystemInfo} from './store/actions';
 @Component({
-  selector: "app-root",
-  templateUrl: "./app.component.html",
-  styleUrls: ["./app.component.css"]
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = "bna-widget";
+  title = 'bna-widget';
   routeParams = {
-    dashboardItemId: "myrcawidget"
+    dashboardItemId: 'rcawidget'
   };
-  configurationId = "myrcaconfig";
+  configurationId = 'rcaconfig';
   constructor(private store: Store<fromRoot.State>) {
-    store.dispatch(
+    store.dispatch(new LoadSystemInfo());
+
+    this.store.dispatch(
       new LoadRootCauseAnalysisConfigurations(
         this.configurationId,
         this.routeParams.dashboardItemId
       )
     );
 
-    store.dispatch(
+    this.store.dispatch(
       new SetCurrentRootCauseAnalysisWidget(this.routeParams.dashboardItemId)
     );
   }

@@ -129,7 +129,6 @@ export class DownloadWidgetService {
     return slice
       .call(table.rows)
       .map(function(row) {
-        console.log(row);
         return slice
           .call(row.cells)
           .map(function(cell) {

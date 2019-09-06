@@ -1,116 +1,110 @@
-import * as helper from "../helpers/";
+import * as helper from '../helpers/';
+
+const bottleneckId = helper.generateUid();
+const indicatorId = helper.generateUid();
 
 export const defaultDataSetElementDetails = [
   {
-    name: "OrgUnit",
+    name: 'OrgUnit',
     id: helper.generateUid(),
-    valueType: "AUTO_FILLED",
+    valueType: 'AUTO_FILLED',
+    routerParam: { key: 'name', namespace: 'orgUnit' },
+    optionSetValue: false
+  },
+  {
+    id: helper.generateUid(),
+    name: 'orgUnitId',
+    isHidden: true,
+    valueType: 'AUTO_FILLED',
+    routerParam: {
+      key: 'id',
+      namespace: 'orgUnit'
+    },
+    optionSetValue: false
+  },
+  {
+    name: 'Period',
+    id: helper.generateUid(),
+    valueType: 'AUTO_FILLED',
+    routerParam: {
+      key: 'name',
+      namespace: 'period'
+    },
+    optionSetValue: false
+  },
+  {
+    id: helper.generateUid(),
+    name: 'periodId',
+    isHidden: true,
+    valueType: 'AUTO_FILLED',
+    routerParam: {
+      key: 'id',
+      namespace: 'period'
+    },
+    optionSetValue: false
+  },
+  {
+    name: 'Intervention',
+    id: helper.generateUid(),
+    valueType: 'AUTO_FILLED',
     optionSetValue: false,
-    categoryCombo: {
-      id: helper.generateUid(),
-      name: "default",
-      categoryOptionCombos: [
-        {
-          id: helper.generateUid(),
-          name: " default"
-        }
-      ]
+    routerParam: {
+      key: 'name',
+      namespace: 'dashboard'
     }
   },
   {
-    name: "Period",
     id: helper.generateUid(),
-    valueType: "AUTO_FILLED",
-    optionSetValue: false,
-    categoryCombo: {
-      id: helper.generateUid(),
-      name: "default",
-      categoryOptionCombos: [
-        {
-          id: helper.generateUid(),
-          name: " default"
-        }
-      ]
-    }
+    name: 'interventionId',
+    isHidden: true,
+    valueType: 'AUTO_FILLED',
+    routerParam: {
+      key: 'id',
+      namespace: 'dashboard'
+    },
+    optionSetValue: false
   },
   {
-    name: "Intervention",
+    name: 'Bottleneck',
     id: helper.generateUid(),
-    valueType: "AUTO_FILLED",
-    optionSetValue: false,
-    categoryCombo: {
-      id: helper.generateUid(),
-      name: "default",
-      categoryOptionCombos: [
-        {
-          id: helper.generateUid(),
-          name: " default"
-        }
-      ]
-    }
+    valueType: 'TEXT',
+    optionSetValue: true,
+    associatedId: bottleneckId
   },
   {
-    name: "Bottleneck",
-    id: helper.generateUid(),
-    valueType: "TEXT",
-    optionSetValue: false,
-    categoryCombo: {
-      id: helper.generateUid(),
-      name: "default",
-      categoryOptionCombos: [
-        {
-          id: helper.generateUid(),
-          name: " default"
-        }
-      ]
-    }
+    id: bottleneckId,
+    name: 'bottleneckId',
+    isGroup: true,
+    isHidden: true,
+    valueType: 'TEXT',
+    optionSetValue: true
   },
   {
-    name: "Indicator",
+    name: 'Indicator',
     id: helper.generateUid(),
-    valueType: "TEXT",
-    optionSetValue: false,
-    categoryCombo: {
-      id: helper.generateUid(),
-      name: "default",
-      categoryOptionCombos: [
-        {
-          id: helper.generateUid(),
-          name: " default"
-        }
-      ]
-    }
+    valueType: 'TEXT',
+    parentId: bottleneckId,
+    associatedId: indicatorId,
+    optionSetValue: true
   },
   {
-    name: "Root cause",
-    id: helper.generateUid(),
-    valueType: "TEXT",
-    optionSetValue: false,
-    categoryCombo: {
-      id: helper.generateUid(),
-      name: "default",
-      categoryOptionCombos: [
-        {
-          id: helper.generateUid(),
-          name: " default"
-        }
-      ]
-    }
+    id: indicatorId,
+    name: 'indicatorId',
+    isHidden: true,
+    parentId: bottleneckId,
+    valueType: 'TEXT',
+    optionSetValue: true
   },
   {
-    name: "Solution",
+    name: 'Root cause',
     id: helper.generateUid(),
-    valueType: "TEXT",
-    optionSetValue: false,
-    categoryCombo: {
-      id: helper.generateUid(),
-      name: "default",
-      categoryOptionCombos: [
-        {
-          id: helper.generateUid(),
-          name: " default"
-        }
-      ]
-    }
+    valueType: 'TEXT',
+    optionSetValue: false
+  },
+  {
+    name: 'Solution',
+    id: helper.generateUid(),
+    valueType: 'TEXT',
+    optionSetValue: false
   }
 ];

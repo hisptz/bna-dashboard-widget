@@ -24,6 +24,7 @@ export const getCurrentRootCauseAnalysisConfiguration = createSelector(
     const configurationId = currentRootCauseAnalysisWidget
       ? currentRootCauseAnalysisWidget.configurationId
       : '';
+
     return rootCauseAnalysisConfigurationEntities[configurationId];
   }
 );
