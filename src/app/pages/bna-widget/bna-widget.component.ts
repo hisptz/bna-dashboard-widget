@@ -57,7 +57,7 @@ export class BnaWidgetComponent implements OnInit, OnChanges {
   @Input()
   selectedPeriod;
 
-  @ViewChild('rootCauseAnalysisTable')
+  @ViewChild('rootCauseAnalysisTable', { static: false })
   table: ElementRef;
 
   configuration$: Observable<fromModels.RootCauseAnalysisConfiguration>;
