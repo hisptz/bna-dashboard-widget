@@ -1,5 +1,6 @@
 # BNA Root Cause Data Entry
 
+[![Build Status](https://travis-ci.org/hisptz/bna-dashboard-widget.svg?branch=master)](https://travis-ci.org/hisptz/bna-dashboard-widget)
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 
 Bottleneck analysis root cause data entry widget
