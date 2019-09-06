@@ -1,6 +1,8 @@
-# BnaWidget
+# BNA Root Cause Data Entry
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.1.2.
+[![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
+
+Bottleneck analysis root cause data entry widget
 
 ## Development server
 
