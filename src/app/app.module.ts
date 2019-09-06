@@ -67,7 +67,7 @@ import { directives } from './directives';
     /**
      * @ngrx/router-store keeps router state up-to-date in the store
      */
-    StoreRouterConnectingModule,
+    StoreRouterConnectingModule.forRoot(),
 
     /**
      * Module for registering ngrx store side effects
