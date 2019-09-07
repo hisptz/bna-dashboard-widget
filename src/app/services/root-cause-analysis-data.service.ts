@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
-import { NgxDhis2HttpClientService } from '@hisptz/ngx-dhis2-http-client';
-import { RootCauseAnalysisConfigurationsService } from './root-cause-analysis-configurations.service';
-import { catchError, switchMap } from 'rxjs/operators';
-import { throwError, forkJoin, of } from 'rxjs';
-import { RootCauseAnalysisData } from '../store/models/root-cause-analysis-data.model';
+import { NgxDhis2HttpClientService } from '@iapps/ngx-dhis2-http-client';
 import * as _ from 'lodash';
+import { of, throwError, zip } from 'rxjs';
+import { catchError, switchMap } from 'rxjs/operators';
+
+import { RootCauseAnalysisData } from '../store/models/root-cause-analysis-data.model';
+import { RootCauseAnalysisConfigurationsService } from './root-cause-analysis-configurations.service';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -25,9 +27,7 @@ export class RootCauseAnalysisDataService {
     dashBoardId
   ) {
     return this.http.post(
-      `${this._dataStoreUrl}/${
-        rootCauseAnalysisData.configurationId
-      }_${orgUnitId}_${periodId}_${dashBoardId}_${rootCauseAnalysisData.id}`,
+      `${this._dataStoreUrl}/${rootCauseAnalysisData.configurationId}_${orgUnitId}_${periodId}_${dashBoardId}_${rootCauseAnalysisData.id}`,
       rootCauseAnalysisData
     );
   }
@@ -39,9 +39,7 @@ export class RootCauseAnalysisDataService {
     dashBoardId
   ) {
     return this.http.delete(
-      `${this._dataStoreUrl}/${
-        rootCauseAnalysisData.configurationId
-      }_${orgUnitId}_${periodId}_${dashBoardId}_${rootCauseAnalysisData.id}`
+      `${this._dataStoreUrl}/${rootCauseAnalysisData.configurationId}_${orgUnitId}_${periodId}_${dashBoardId}_${rootCauseAnalysisData.id}`
     );
   }
 
@@ -52,9 +50,7 @@ export class RootCauseAnalysisDataService {
     dashBoardId
   ) {
     return this.http.put(
-      `${this._dataStoreUrl}/${
-        rootCauseAnalysisData.configurationId
-      }_${orgUnitId}_${periodId}_${dashBoardId}_${rootCauseAnalysisData.id}`,
+      `${this._dataStoreUrl}/${rootCauseAnalysisData.configurationId}_${orgUnitId}_${periodId}_${dashBoardId}_${rootCauseAnalysisData.id}`,
       _.omit(rootCauseAnalysisData, [
         'showEditNotification',
         'isActive',
@@ -106,8 +102,8 @@ export class RootCauseAnalysisDataService {
         });
 
         if (filteredDataIds.length > 0) {
-          return forkJoin(
-            _.map(filteredDataIds, (dataId: string) => {
+          return zip(
+            ..._.map(filteredDataIds, (dataId: string) => {
               return this.http.get(`${this._dataStoreUrl}/${dataId}`);
             })
           );
