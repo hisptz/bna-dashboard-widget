@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
+import { NgxDhis2HttpClientService } from '@iapps/ngx-dhis2-http-client';
 import * as _ from 'lodash';
-import { NgxDhis2HttpClientService } from '@hisptz/ngx-dhis2-http-client';
-import { RootCauseAnalysisConfiguration } from '../store/models/root-cause-analysis-configuration.model';
+import { throwError, zip } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
-import { throwError, forkJoin, of } from 'rxjs';
+
 import { defaultDataSetElementDetails } from '../constants/default-configurations';
+import { RootCauseAnalysisConfiguration } from '../store/models/root-cause-analysis-configuration.model';
 
 @Injectable({
   providedIn: 'root'
@@ -20,8 +21,8 @@ export class RootCauseAnalysisConfigurationsService {
   getAllConfigurations(configurationId: string) {
     return this.http.get(this._dataStoreUrl).pipe(
       switchMap((configurationIds: string[]) =>
-        forkJoin(
-          _.map(configurationIds, (configId: string) =>
+        zip(
+          ..._.map(configurationIds, (configId: string) =>
             this.http.get(`${this._dataStoreUrl}/${configId}`)
           )
         )

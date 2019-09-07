@@ -110,10 +110,6 @@ export class BnaWidgetComponent implements OnInit, OnChanges {
       fromSelectors.getRootCauseAnalysisDataNotificationState
     );
 
-    // this.savingColor$ = store.select(
-    //   fromSelectors.getRootCauseAnalysisDataSavingColorState
-    // );
-
     this.unSavedDataItemValues = {};
 
     this.data$

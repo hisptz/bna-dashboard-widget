@@ -31,8 +31,17 @@ export const getAllRootCauseAnalysisData = createSelector(
   (
     rootCauseAnalysisDatas,
     currentConfiguration: RootCauseAnalysisConfiguration,
-    routeParams
+    routeParams: any
   ) => {
+    const routeIndicators = _.flatten(
+      (routeParams ? routeParams.groups || [] : []).map(group => group.members)
+    );
+
+    const indicatorIdReference = _.find(
+      currentConfiguration ? currentConfiguration.dataElements || [] : [],
+      ['name', 'indicatorId']
+    );
+
     return _.map(
       rootCauseAnalysisDatas,
       (rootCauseAnalysisData: RootCauseAnalysisData) => {
@@ -51,11 +60,22 @@ export const getAllRootCauseAnalysisData = createSelector(
               : rootCauseAnalysisData.dataValues[dataElement.id];
           }
         );
+
+        const dataValues = rootCauseAnalysisData.isActive
+          ? newDataValues
+          : rootCauseAnalysisData.dataValues;
+
+        const indicatorInData =
+          dataValues[
+            indicatorIdReference ? indicatorIdReference.id : undefined
+          ];
+
         return {
           ...rootCauseAnalysisData,
-          dataValues: rootCauseAnalysisData.isActive
-            ? newDataValues
-            : rootCauseAnalysisData.dataValues
+          isOrphaned:
+            !_.find(routeIndicators, ['id', indicatorInData]) &&
+            !rootCauseAnalysisData.isActive,
+          dataValues
         };
       }
     );

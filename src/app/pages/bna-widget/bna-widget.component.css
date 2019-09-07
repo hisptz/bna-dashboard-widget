@@ -7,6 +7,10 @@
   background: #e8ebef;
 }
 
+.orphaned {
+  background-color: red;
+}
+
 .auto-filled-input {
   background-color: transparent;
   border: none;
