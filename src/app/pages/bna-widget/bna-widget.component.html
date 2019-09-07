@@ -17,7 +17,9 @@
     </thead>
     <!--<tbody>-->
     <tbody *ngIf="(data$ | async) as rootCauseAnalysisData" [@listEnter]>
-      <tr title="Right click for edit/delete options" [ngClass]="{'orphaned': dataItem.isOrphaned}" *ngFor="
+      <tr
+        title="{{dataItem.isOrphaned ? '(Indicator used seems to not be among bottleneck chart indicators)' : ''}} Right click for edit/delete options"
+        [ngClass]="{'orphaned': dataItem.isOrphaned}" *ngFor="
           let dataItem of rootCauseAnalysisData;
           let i = index;
           trackBy: dataItem?.id
