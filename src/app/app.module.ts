@@ -26,6 +26,7 @@ import { BnaWidgetComponent } from './pages/bna-widget/bna-widget.component';
 import { HomeComponent } from './pages/home/home.component';
 import { effects, metaReducers, reducers } from './store';
 import { RouteSerializer } from './utils';
+import { NgxDhis2HttpClientModule } from '@iapps/ngx-dhis2-http-client';
 
 @NgModule({
   declarations: [
@@ -48,6 +49,12 @@ import { RouteSerializer } from './utils';
     AppRoutingModule,
 
     FormsModule,
+
+    NgxDhis2HttpClientModule.forRoot({
+      version: 1,
+      namespace: 'iapps',
+      models: {}
+    }),
 
     ConfirmationPopoverModule.forRoot({
       confirmButtonType: 'danger' // set defaults here
