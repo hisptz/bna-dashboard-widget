@@ -3,15 +3,15 @@
   <table class="table table-bordered" #rootCauseAnalysisTable *ngIf="configuration as rootCauseAnalysisConfiguration">
     <!--*ngIf="configuration as rootCauseAnalysisConfiguration"-->
     <thead>
-      <tr class="text-muted">
-        <th width="1%">SN.</th>
-        <th width="{{
+      <tr class="text-muted table-header">
+        <td width="1%">#</td>
+        <td width="{{
             100 / (rootCauseAnalysisConfiguration.dataElements.length + 1)
           }}%" [hidden]="dataElement.isHidden" *ngFor="
             let dataElement of rootCauseAnalysisConfiguration.dataElements
           ">
           {{ dataElement.name }}
-        </th>
+        </td>
       </tr>
     </thead>
     <!--<tbody>-->
@@ -29,14 +29,17 @@
             let j = index
           " [ngClass]="{ 'auto-filled': dataElement.valueType == 'AUTO_FILLED' && !dataItem.isOrphaned }"
           (dblclick)="onToggleEdit($event, dataItem)" (contextmenu)="onEnableContextMenu($event, dataItem)">
-          <div *ngIf="
+          <app-data-item [dataElement]="dataElement" [dataValues]="dataItem.dataValues" [isActive]="dataItem.isActive"
+            (dataValueUpdate)="onDataValueUpdate($event, dataItem)">
+          </app-data-item>
+          <!-- <div *ngIf="
               (!dataItem.isActive && !dataItem.isHidden) ||
               (dataItem.isActive &&
                 !dataElement.optionSetValue &&
                 dataElement.valueType == 'AUTO_FILLED')
             " class="form-control auto-filled-label table-cell-data">
             {{ dataItem.dataValues[dataElement.id] }}
-          </div>
+          </div> -->
           <app-select-box-input [backgroundColor]="savingColor" *ngIf="dataItem.isActive && dataElement.optionSetValue"
             [dataItemValue]="dataItem.dataValues[dataElement.id]" [dataElement]="dataElement"
             [dataValues]="dataItem.dataValues" (updateDataValues)="
@@ -46,19 +49,6 @@
                 rootCauseAnalysisConfiguration.dataElement
               )
             " [groups]="routerParams?.groups"></app-select-box-input>
-          <textarea class="form-control table-cell-data custom-text-area" (blur)="
-              onDataValueUpdate(
-                dataElement.id,
-                dataItem,
-                $event,
-                rootCauseAnalysisConfiguration.dataElement
-              )
-            " *ngIf="
-              dataItem.isActive &&
-              !dataElement.optionSetValue &&
-              dataElement.valueType == 'TEXT'
-            " placeholder="{{ dataElement.name }}" tabindex="j-9" autofocus>
-          {{ dataItem.dataValues[dataElement.id] }}</textarea>
           <a title="Save when done" class="text-secondary custom-done-icon" (click)="onDoneEditing($event, dataItem)"
             *ngIf="
               j == rootCauseAnalysisConfiguration.dataElements.length - 1 &&
@@ -78,7 +68,7 @@
 
       <tr *ngIf="appAuthorities.all || appAuthorities.addRootCause">
         <td class="p-1" [attr.colspan]="rootCauseAnalysisConfiguration?.dataElements?.length">
-          <button mat-icon-button matTooltip="Add Root cause"
+          <button class="text-muted" mat-icon-button matTooltip="Add Root cause"
             (click)="onToggleAddNewRootCauseAnalysisData(configuration)">
             <mat-icon>add</mat-icon>
           </button>

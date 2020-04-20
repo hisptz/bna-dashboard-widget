@@ -1,10 +1,5 @@
-/* .widget-table-header {
-  background-color: #276696;
-  color: #ffffff;
-} */
-
 .auto-filled {
-  background: #e8ebef;
+  background: #fafafa;
 }
 
 .orphaned {
@@ -27,6 +22,12 @@
   font-size: 13px !important;
   padding: 0.2rem !important;
   height: auto;
+}
+
+.table-header {
+  font-size: 14px;
+  background: #fafafa;
+  font-weight: 400 !important;
 }
 
 .custom-text-area {

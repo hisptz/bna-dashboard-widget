@@ -63,7 +63,6 @@ export class BnaWidgetComponent implements OnInit, OnChanges {
   @ViewChild('rootCauseAnalysisTable', { static: false })
   table: ElementRef;
 
-  configuration$: Observable<fromModels.RootCauseAnalysisConfiguration>;
   widget$: Observable<fromModels.RootCauseAnalysisWidget>;
   data$: Observable<fromModels.RootCauseAnalysisData[]>;
   configurationLoading$: Observable<boolean>;
@@ -93,9 +92,7 @@ export class BnaWidgetComponent implements OnInit, OnChanges {
     this.widget$ = store.select(
       fromSelectors.getCurrentRootCauseAnalysisWidget
     );
-    this.configuration$ = store.select(
-      fromSelectors.getCurrentRootCauseAnalysisConfiguration
-    );
+
     this.data$ = store.select(fromSelectors.getAllRootCauseAnalysisData);
     this.configurationLoading$ = store.select(
       fromSelectors.getConfigurationLoadingState
@@ -115,19 +112,9 @@ export class BnaWidgetComponent implements OnInit, OnChanges {
 
     this.unSavedDataItemValues = {};
 
-    this.data$
-      .pipe(
-        switchMap((data: any) =>
-          this.configuration$.pipe(
-            map((config: any) => {
-              return { config, lastData: _.last(data) };
-            })
-          )
-        )
-      )
-      .subscribe((dataDetails: any) => {
-        of(dataDetails);
-      });
+    this.data$.subscribe((data: any) => {
+      of({ config: this.configuration, lastData: _.last(data) });
+    });
   }
 
   ngOnChanges(simpleChanges: SimpleChanges) {
@@ -295,19 +282,16 @@ export class BnaWidgetComponent implements OnInit, OnChanges {
    * @param e
    * @param dataItemValue
    */
-  onDataValueUpdate(dataValueId, dataItem, e, dataElements, dataItemValue?) {
-    if (e) {
-      e.stopPropagation();
-    }
-    const dataValue = e ? e.target.value.trim() : dataItemValue;
-    if (dataValue !== '') {
+  onDataValueUpdate({ id, value }, dataItem) {
+    console.log(value);
+    if (value) {
       const unSavedDataItem = this.unSavedDataItemValues[dataItem.id];
       this.unSavedDataItemValues[dataItem.id] = unSavedDataItem
         ? {
             ...unSavedDataItem,
             dataValues: {
               ...unSavedDataItem.dataValues,
-              ...{ [dataValueId]: dataValue },
+              ...{ [id]: value },
             },
           }
         : {
@@ -315,7 +299,7 @@ export class BnaWidgetComponent implements OnInit, OnChanges {
             unsaved: true,
             dataValues: {
               ...dataItem.dataValues,
-              ...{ [dataValueId]: dataValue },
+              ...{ [id]: value },
             },
           };
     }
@@ -374,11 +358,8 @@ export class BnaWidgetComponent implements OnInit, OnChanges {
   onDataValuesUpdate(dataValueObject: any, dataItem, dataElements) {
     _.each(_.keys(dataValueObject), (dataValueKey) => {
       this.onDataValueUpdate(
-        dataValueKey,
-        dataItem,
-        null,
-        dataElements,
-        dataValueObject[dataValueKey]
+        { id: dataValueKey, value: dataValueObject[dataValueKey] },
+        dataItem
       );
     });
     const newDataItem = this.unSavedDataItemValues[dataItem.id];

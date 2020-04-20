@@ -16,9 +16,9 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
 import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { AutoFilledInputComponent } from './components/data-item/auto-filled-input/auto-filled-input.component';
-import { SelectBoxInputComponent } from './components/data-item/select-box-input/select-box-input.component';
-import { TextAreaInputComponent } from './components/data-item/text-area-input/text-area-input.component';
+import { AutoFilledInputComponent } from './components/auto-filled-input/auto-filled-input.component';
+import { SelectBoxInputComponent } from './components/select-box-input/select-box-input.component';
+import { TextAreaInputComponent } from './components/text-area-input/text-area-input.component';
 import { WidgetContextMenuComponent } from './components/widget-context-menu/widget-context-menu.component';
 import { WidgetItemLoaderComponent } from './components/widget-item-loader/widget-item-loader.component';
 import { WidgetNotificationBarComponent } from './components/widget-notification-bar/widget-notification-bar.component';
@@ -29,6 +29,7 @@ import { effects, metaReducers, reducers } from './store';
 import { RouteSerializer } from './utils';
 import { NgxDhis2HttpClientModule } from '@iapps/ngx-dhis2-http-client';
 import { MaterialModule } from './material/material.module';
+import { DataItemComponent } from './components/data-item/data-item.component';
 
 @NgModule({
   declarations: [
@@ -41,6 +42,7 @@ import { MaterialModule } from './material/material.module';
     WidgetItemLoaderComponent,
     WidgetNotificationBarComponent,
     WidgetContextMenuComponent,
+    DataItemComponent,
     ...directives,
   ],
   imports: [
