@@ -1,9 +1,9 @@
 <!--*ngIf="(dataLoaded$ | async)"-->
-<div *ngIf="(dataLoaded$ | async)">
-  <table class="table table-bordered table-responsive custom-table-padding" #rootCauseAnalysisTable
+<div class="table-responsive" *ngIf="(dataLoaded$ | async)">
+  <table class="table table-bordered" #rootCauseAnalysisTable
     *ngIf="(configuration$ | async) as rootCauseAnalysisConfiguration">
     <!--*ngIf="(configuration$ | async) as rootCauseAnalysisConfiguration"-->
-    <thead class="table-header-cell thead-light">
+    <thead>
       <tr>
         <th width="1%">SN.</th>
         <th width="{{

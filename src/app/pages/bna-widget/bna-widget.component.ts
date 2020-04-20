@@ -5,14 +5,14 @@ import {
   ViewChild,
   ElementRef,
   OnChanges,
-  SimpleChanges
+  SimpleChanges,
 } from '@angular/core';
 import {
   style,
   state,
   animate,
   transition,
-  trigger
+  trigger,
 } from '@angular/animations';
 
 import { listEnterAnimation } from '../../animations/list-enter-animation';
@@ -29,6 +29,7 @@ import * as fromSelectors from '../../store/selectors';
 import { RootCauseAnalysisData } from '../../store/models';
 
 import { DownloadWidgetService } from '../../services/downloadWidgetService.service';
+import { AppAuthority } from 'src/app/models/app-authorities.model';
 
 @Component({
   selector: 'app-bna-widget',
@@ -40,22 +41,20 @@ import { DownloadWidgetService } from '../../services/downloadWidgetService.serv
       transition(':enter', [
         // :enter is alias to 'void => *'
         style({ opacity: 0 }),
-        animate(500, style({ opacity: 1 }))
+        animate(500, style({ opacity: 1 })),
       ]),
       transition(':leave', [
         // :leave is alias to '* => void'
-        animate(500, style({ opacity: 0 }))
-      ])
-    ])
-  ]
+        animate(500, style({ opacity: 0 })),
+      ]),
+    ]),
+  ],
 })
 export class BnaWidgetComponent implements OnInit, OnChanges {
-  @Input()
-  routerParams;
-  @Input()
-  selectedOrgUnit;
-  @Input()
-  selectedPeriod;
+  @Input() routerParams;
+  @Input() selectedOrgUnit;
+  @Input() selectedPeriod;
+  @Input() appAuthorities: AppAuthority;
 
   @ViewChild('rootCauseAnalysisTable', { static: false })
   table: ElementRef;
@@ -210,7 +209,7 @@ export class BnaWidgetComponent implements OnInit, OnChanges {
         isActive: true,
         isNew: true,
         configurationId: configuration.id,
-        dataValues: emptyDataValues
+        dataValues: emptyDataValues,
       })
     );
   }
@@ -229,7 +228,7 @@ export class BnaWidgetComponent implements OnInit, OnChanges {
       new fromRootCauseAnalysisDataActions.UpdateRootCauseAnalysisData({
         ...dataItemObject,
         ...dataItem,
-        isActive: true
+        isActive: true,
       })
     );
   }
@@ -244,7 +243,7 @@ export class BnaWidgetComponent implements OnInit, OnChanges {
         ...dataItem,
         showDeleteConfirmation:
           action === 'DELETE' ? false : dataItem.showDeleteConfirmation,
-        isActive: false
+        isActive: false,
       })
     );
   }
@@ -280,7 +279,7 @@ export class BnaWidgetComponent implements OnInit, OnChanges {
     this.store.dispatch(
       new fromRootCauseAnalysisDataActions.UpdateRootCauseAnalysisData({
         ...dataItem,
-        isActive: false
+        isActive: false,
       })
     );
   }
@@ -304,16 +303,16 @@ export class BnaWidgetComponent implements OnInit, OnChanges {
             ...unSavedDataItem,
             dataValues: {
               ...unSavedDataItem.dataValues,
-              ...{ [dataValueId]: dataValue }
-            }
+              ...{ [dataValueId]: dataValue },
+            },
           }
         : {
             ...dataItem,
             unsaved: true,
             dataValues: {
               ...dataItem.dataValues,
-              ...{ [dataValueId]: dataValue }
-            }
+              ...{ [dataValueId]: dataValue },
+            },
           };
     }
     const unsavedDataItemObject = this.unSavedDataItemValues
@@ -348,7 +347,7 @@ export class BnaWidgetComponent implements OnInit, OnChanges {
     this.store.dispatch(
       new fromRootCauseAnalysisDataActions.CreateRootCauseAnalysisData({
         ...unsavedDataItemObject,
-        isActive: false
+        isActive: false,
       })
     );
     this.unSavedDataItemValues = {};
@@ -357,8 +356,8 @@ export class BnaWidgetComponent implements OnInit, OnChanges {
     this.store.dispatch(
       new fromRootCauseAnalysisDataActions.ResetRootCauseAnalysisData({
         notification: {
-          message: emptyNotificationMessage.message
-        }
+          message: emptyNotificationMessage.message,
+        },
       })
     );
   }
@@ -369,7 +368,7 @@ export class BnaWidgetComponent implements OnInit, OnChanges {
    * @param dataItem
    */
   onDataValuesUpdate(dataValueObject: any, dataItem, dataElements) {
-    _.each(_.keys(dataValueObject), dataValueKey => {
+    _.each(_.keys(dataValueObject), (dataValueKey) => {
       this.onDataValueUpdate(
         dataValueKey,
         dataItem,
@@ -401,15 +400,15 @@ export class BnaWidgetComponent implements OnInit, OnChanges {
             ...unSavedDataItem,
             dataValues: {
               ...unSavedDataItem.dataValues,
-              ...{ [dataValueId]: newEnteredData }
-            }
+              ...{ [dataValueId]: newEnteredData },
+            },
           }
         : {
             ...this.newRootCauseAnalysisData,
             dataValues: {
               ...this.newRootCauseAnalysisData.dataValues,
-              ...{ [dataValueId]: newEnteredData }
-            }
+              ...{ [dataValueId]: newEnteredData },
+            },
           };
     }
   }

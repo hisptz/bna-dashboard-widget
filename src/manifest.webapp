@@ -20,9 +20,7 @@
         }
     },
 	"authorities": [
-"MY_APP_ADD_NEW",
-"MY_APP_UPDATE",
-"MY_APP_DELETE"
-
+       "BNA_ADD_ROOT_CAUSE",
+	   "BNA_EDIT_ROOT_CAUSE"
 	]
 }
