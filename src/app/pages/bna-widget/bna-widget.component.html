@@ -77,7 +77,7 @@
       </tr>
 
       <tr *ngIf="appAuthorities.all || appAuthorities.addRootCause">
-        <td [attr.colspan]="rootCauseAnalysisConfiguration?.dataElements?.length">
+        <td class="p-1" [attr.colspan]="rootCauseAnalysisConfiguration?.dataElements?.length">
           <button mat-icon-button matTooltip="Add Root cause"
             (click)="onToggleAddNewRootCauseAnalysisData(configuration)">
             <mat-icon>add</mat-icon>
