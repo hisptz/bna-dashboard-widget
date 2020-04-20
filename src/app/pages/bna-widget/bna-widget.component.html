@@ -1,10 +1,9 @@
 <!--*ngIf="(dataLoaded$ | async)"-->
 <div class="table-responsive" *ngIf="(dataLoaded$ | async)">
-  <table class="table table-bordered" #rootCauseAnalysisTable
-    *ngIf="(configuration$ | async) as rootCauseAnalysisConfiguration">
-    <!--*ngIf="(configuration$ | async) as rootCauseAnalysisConfiguration"-->
+  <table class="table table-bordered" #rootCauseAnalysisTable *ngIf="configuration as rootCauseAnalysisConfiguration">
+    <!--*ngIf="configuration as rootCauseAnalysisConfiguration"-->
     <thead>
-      <tr>
+      <tr class="text-muted">
         <th width="1%">SN.</th>
         <th width="{{
             100 / (rootCauseAnalysisConfiguration.dataElements.length + 1)
@@ -77,10 +76,10 @@
         </td>
       </tr>
 
-      <tr *ngIf="(configuration$ | async) as dataConfiguration">
+      <tr *ngIf="appAuthorities.all || appAuthorities.addRootCause">
         <td [attr.colspan]="rootCauseAnalysisConfiguration?.dataElements?.length">
           <button mat-icon-button matTooltip="Add Root cause"
-            (click)="onToggleAddNewRootCauseAnalysisData(dataConfiguration)">
+            (click)="onToggleAddNewRootCauseAnalysisData(configuration)">
             <mat-icon>add</mat-icon>
           </button>
         </td>

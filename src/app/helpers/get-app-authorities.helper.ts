@@ -7,13 +7,13 @@ export function getAppAuthorities(currentUser: User): AppAuthority {
   const isSuperUser = authorities.includes('ALL');
 
   if (isSuperUser) {
-    return { All: true };
+    return { all: true };
   }
 
   return {
-    All: false,
-    AddRootCause: authorities.includes('BNA_ADD_ROOT_CAUSE'),
-    EditRootCause: authorities.includes('BNA_EDIT_ROOT_CAUSE'),
-    DeleteRootCause: authorities.includes('BNA_DELETE_ROOT_CAUSE'),
+    all: false,
+    addRootCause: authorities.includes('BNA_ADD_ROOT_CAUSE'),
+    editRootCause: authorities.includes('BNA_EDIT_ROOT_CAUSE'),
+    deleteRootCause: authorities.includes('BNA_DELETE_ROOT_CAUSE'),
   };
 }

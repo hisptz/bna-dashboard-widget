@@ -1,6 +1,6 @@
 export interface AppAuthority {
-  All: boolean;
-  AddRootCause?: boolean;
-  EditRootCause?: boolean;
-  DeleteRootCause?: boolean;
+  all: boolean;
+  addRootCause?: boolean;
+  editRootCause?: boolean;
+  deleteRootCause?: boolean;
 }

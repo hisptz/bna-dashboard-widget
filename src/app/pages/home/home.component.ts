@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { AppAuthority } from 'src/app/models/app-authorities.model';
 
@@ -8,8 +8,10 @@ import {
   getCurrentUser,
   getRouterParams,
   State,
+  getCurrentRootCauseAnalysisConfiguration,
 } from '../../store';
 import { getSystemInfo } from '../../store/selectors/system-info.selectors';
+import { RootCauseAnalysisConfiguration } from 'src/app/store/models';
 
 @Component({
   selector: 'app-home',
@@ -22,6 +24,7 @@ export class HomeComponent implements OnInit {
   systemInfo$: Observable<any>;
   currentUser$: Observable<any>;
   appAuthorities$: Observable<AppAuthority>;
+  configuration$: Observable<RootCauseAnalysisConfiguration>;
   lastYear: any = new Date().getFullYear() - 1; // its hack for getting lastYear on init
 
   constructor(private store: Store<State>) {}
@@ -31,5 +34,8 @@ export class HomeComponent implements OnInit {
     this.currentUser$ = this.store.select(getCurrentUser);
     this.systemInfo$ = this.store.select(getSystemInfo);
     this.appAuthorities$ = this.store.select(getAppManagementAuthorities);
+    this.configuration$ = this.store.pipe(
+      select(getCurrentRootCauseAnalysisConfiguration)
+    );
   }
 }

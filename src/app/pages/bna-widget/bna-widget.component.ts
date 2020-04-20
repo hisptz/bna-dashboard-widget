@@ -26,7 +26,10 @@ import * as fromHelpers from '../../helpers';
 import * as fromModels from '../../store/models';
 import * as fromRootCauseAnalysisDataActions from '../../store/actions/root-cause-analysis-data.actions';
 import * as fromSelectors from '../../store/selectors';
-import { RootCauseAnalysisData } from '../../store/models';
+import {
+  RootCauseAnalysisData,
+  RootCauseAnalysisConfiguration,
+} from '../../store/models';
 
 import { DownloadWidgetService } from '../../services/downloadWidgetService.service';
 import { AppAuthority } from 'src/app/models/app-authorities.model';
@@ -55,6 +58,7 @@ export class BnaWidgetComponent implements OnInit, OnChanges {
   @Input() selectedOrgUnit;
   @Input() selectedPeriod;
   @Input() appAuthorities: AppAuthority;
+  @Input() configuration: RootCauseAnalysisConfiguration;
 
   @ViewChild('rootCauseAnalysisTable', { static: false })
   table: ElementRef;

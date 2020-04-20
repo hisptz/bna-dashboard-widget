@@ -22,7 +22,7 @@
 
 
       <app-bna-widget [routerParams]="(routerParams$ | async)" [appAuthorities]="appAuthorities$ | async"
-        [selectedOrgUnit]="(routerParams$ | async).orgUnit ?
+        [configuration]="configuration$ | async" [selectedOrgUnit]="(routerParams$ | async).orgUnit ?
                       (routerParams$ | async).orgUnit.name :
                       (currentUser$ | async).organisationUnits[0].name" [selectedPeriod]="(routerParams$ | async).period ?
                       (routerParams$ | async).period.name :
