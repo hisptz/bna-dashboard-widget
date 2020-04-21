@@ -33,21 +33,24 @@
         </td>
         <td class="p-1">
           <ng-container *ngIf="!dataItem.isActive">
-            <button mat-icon-button [matMenuTriggerFor]="menu">
+            <button mat-icon-button [matMenuTriggerFor]="menu"
+              *ngIf="appAuthorities.all || appAuthorities.editRootCause || appAuthorities.deleteRootCause">
               <mat-icon>more_vert</mat-icon>
             </button>
             <mat-menu #menu="matMenu">
-              <button mat-menu-item (click)="onToggleEdit($event, dataItem)">
+              <button mat-menu-item (click)="onToggleEdit($event, dataItem)"
+                *ngIf="appAuthorities.all || appAuthorities.editRootCause">
                 <mat-icon>edit</mat-icon>
                 <span>Edit</span>
               </button>
-              <button mat-menu-item (click)="onToggleDelete($event, dataItem)">
+              <button mat-menu-item (click)="onToggleDelete($event, dataItem)"
+                *ngIf="appAuthorities.all || appAuthorities.deleteRootCause">
                 <mat-icon>delete</mat-icon>
                 <span>Delete</span>
               </button>
             </mat-menu>
           </ng-container>
-          <button *ngIf="dataItem.isActive" mat-flat-button color="primary"
+          <button class="ml-2 mt-3" *ngIf="dataItem.isActive" mat-flat-button color="primary"
             (click)="onDoneEditing($event, dataItem)">Done</button>
         </td>
         <td class="delete-message" *ngIf="toBeDeleted[dataItem.id]" colspan="100%">
