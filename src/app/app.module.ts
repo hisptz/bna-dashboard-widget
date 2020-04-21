@@ -19,7 +19,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BnaWidgetComponent } from './components/bna-widget/bna-widget.component';
 import { DataItemComponent } from './components/data-item/data-item.component';
-import { WidgetContextMenuComponent } from './components/widget-context-menu/widget-context-menu.component';
 import { WidgetItemLoaderComponent } from './components/widget-item-loader/widget-item-loader.component';
 import { WidgetNotificationBarComponent } from './components/widget-notification-bar/widget-notification-bar.component';
 import { directives } from './directives';
@@ -35,7 +34,6 @@ import { RouteSerializer } from './utils';
     BnaWidgetComponent,
     WidgetItemLoaderComponent,
     WidgetNotificationBarComponent,
-    WidgetContextMenuComponent,
     DataItemComponent,
     ...directives,
   ],
