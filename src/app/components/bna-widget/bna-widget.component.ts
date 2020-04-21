@@ -175,7 +175,8 @@ export class BnaWidgetComponent implements OnInit, OnChanges {
     }
   }
 
-  onDeleteRootCauseAnalysisData(rootCauseAnalysisData: any) {
+  onDeleteRootCauseAnalysisData(e, rootCauseAnalysisData: any) {
+    e.stopPropagation();
     this.store.dispatch(
       new fromRootCauseAnalysisDataActions.DeleteRootCauseAnalysisData(
         rootCauseAnalysisData

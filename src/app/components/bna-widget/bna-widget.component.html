@@ -5,14 +5,14 @@
     <thead>
       <tr class="text-muted table-header">
         <td width="1%">#</td>
-        <td width="{{
-            100 / (rootCauseAnalysisConfiguration.dataElements.length + 1)
-          }}%" [hidden]="dataElement.isHidden" *ngFor="
+        <td [hidden]="dataElement.isHidden" *ngFor="
             let dataElement of rootCauseAnalysisConfiguration.dataElements
           ">
           {{ dataElement.name }}
         </td>
-        <td width="1%">Actions</td>
+        <td>
+          <div class="d-flex justify-content-end pr-1">Actions</div>
+        </td>
       </tr>
     </thead>
     <!--<tbody>-->
@@ -24,7 +24,7 @@
         "
         [matTooltip]="dataItem.isOrphaned ? '(Indicator used seems to not be among bottleneck chart indicators)' : '' +  'Right click for edit/delete options'">
         <td>{{ i + 1 }}</td>
-        <td [hidden]="dataElement.isHidden || toBeDeleted[dataItem.id]"
+        <td [hidden]="dataElement.isHidden"
           *ngFor="let dataElement of rootCauseAnalysisConfiguration.dataElements; let j = index"
           [ngClass]="{ 'auto-filled': dataElement.valueType == 'AUTO_FILLED' && !dataItem.isOrphaned }">
           <app-data-item [dataElement]="dataElement" [dataValues]="dataItem.dataValues" [isActive]="dataItem.isActive"
@@ -32,34 +32,35 @@
           </app-data-item>
         </td>
         <td class="p-1">
-          <ng-container *ngIf="!dataItem.isActive">
-            <button mat-icon-button [matMenuTriggerFor]="menu"
-              *ngIf="appAuthorities.all || appAuthorities.editRootCause || appAuthorities.deleteRootCause">
-              <mat-icon>more_vert</mat-icon>
-            </button>
-            <mat-menu #menu="matMenu">
-              <button mat-menu-item (click)="onToggleEdit($event, dataItem)"
-                *ngIf="appAuthorities.all || appAuthorities.editRootCause">
-                <mat-icon>edit</mat-icon>
-                <span>Edit</span>
+          <div class="d-flex justify-content-end pr-2">
+            <ng-container *ngIf="!dataItem.isActive && !toBeDeleted[dataItem.id]">
+              <button mat-icon-button [matMenuTriggerFor]="menu"
+                *ngIf="appAuthorities.all || appAuthorities.editRootCause || appAuthorities.deleteRootCause">
+                <mat-icon>more_vert</mat-icon>
               </button>
-              <button mat-menu-item (click)="onToggleDelete($event, dataItem)"
-                *ngIf="appAuthorities.all || appAuthorities.deleteRootCause">
-                <mat-icon>delete</mat-icon>
-                <span>Delete</span>
-              </button>
-            </mat-menu>
-          </ng-container>
-          <button class="ml-2 mt-3" *ngIf="dataItem.isActive" mat-flat-button color="primary"
-            (click)="onDoneEditing($event, dataItem)">Done</button>
-        </td>
-        <td class="delete-message" *ngIf="toBeDeleted[dataItem.id]" colspan="100%">
-          Are you sure wish to delete this data? <br />
-          <button class="btn btn-sm btn-success" (click)="onToggleCancelAction($event, dataItem, 'DELETE')">
-            <i class="icon-cancel"></i> No</button>&nbsp;
-          <button class="btn btn-sm btn-danger" (click)="onDeleteRootCauseAnalysisData(dataItem)">
-            <i class="icon-ok-circled2"></i> Yes
-          </button>
+              <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="onToggleEdit($event, dataItem)"
+                  *ngIf="appAuthorities.all || appAuthorities.editRootCause">
+                  <mat-icon>edit</mat-icon>
+                  <span>Edit</span>
+                </button>
+                <button mat-menu-item (click)="onToggleDelete($event, dataItem)"
+                  *ngIf="appAuthorities.all || appAuthorities.deleteRootCause">
+                  <mat-icon>delete</mat-icon>
+                  <span>Delete</span>
+                </button>
+              </mat-menu>
+            </ng-container>
+            <button class="ml-2 mt-3" *ngIf="dataItem.isActive" mat-flat-button color="primary"
+              (click)="onDoneEditing($event, dataItem)">Done</button>
+            <div class="m-2 p-2" *ngIf="toBeDeleted[dataItem.id]">
+              <span>Delete this data? (it cannot be undone)</span>
+              <button class="ml-2" mat-flat-button
+                (click)="onToggleCancelAction($event, dataItem, 'DELETE')">No</button>
+              <button mat-flat-button color="warn"
+                (click)="onDeleteRootCauseAnalysisData($event, dataItem)">Yes</button>
+            </div>
+          </div>
         </td>
       </tr>
 
