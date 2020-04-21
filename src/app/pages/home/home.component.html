@@ -13,21 +13,19 @@
             (systemInfo$ | async).analysisRelativePeriod}}
           </span>
         </h2>
-
-        <span class="ml-auto text-secondary">
-          <i style="font-size:11px"> Right click row to edit/delete
-          </i>
-        </span>
       </div>
 
 
       <app-bna-widget [routerParams]="(routerParams$ | async)" [appAuthorities]="appAuthorities$ | async"
-        [configuration]="configuration$ | async" [rootCauseAnalysisData]="rootCauseAnalysisData$ | async"
-        [selectedOrgUnit]="(routerParams$ | async).orgUnit ?
+        [rootCauseAnalysisConfiguration]="configuration$ | async"
+        [rootCauseAnalysisData]="rootCauseAnalysisData$ | async" [selectedOrgUnit]="(routerParams$ | async).orgUnit ?
                       (routerParams$ | async).orgUnit.name :
                       (currentUser$ | async).organisationUnits[0].name" [selectedPeriod]="(routerParams$ | async).period ?
                       (routerParams$ | async).period.name :
-                      (systemInfo$ | async).analysisRelativePeriod">
+                      (systemInfo$ | async).analysisRelativePeriod" [dataLoading]="dataLoading$ | async"
+        [dataLoaded]="dataLoaded$  | async" [configurationLoading]="configurationLoading$ | async"
+        [configurationLoaded]="configurationLoaded$ | async" [widget]="widget$ | async"
+        [notification]="notification$ | async">
       </app-bna-widget>
     </div>
 

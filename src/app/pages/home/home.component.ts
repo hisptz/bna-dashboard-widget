@@ -10,11 +10,17 @@ import {
   State,
   getCurrentRootCauseAnalysisConfiguration,
   getAllRootCauseAnalysisData,
+  getRootCauseAnalysisDataLoadedState,
+  getRootCauseAnalysisDataLoadingState,
+  getConfigurationLoadingState,
+  getCurrentRootCauseAnalysisWidget,
+  getRootCauseAnalysisDataNotificationState,
 } from '../../store';
 import { getSystemInfo } from '../../store/selectors/system-info.selectors';
 import {
   RootCauseAnalysisConfiguration,
   RootCauseAnalysisData,
+  RootCauseAnalysisWidget,
 } from 'src/app/store/models';
 
 @Component({
@@ -29,7 +35,13 @@ export class HomeComponent implements OnInit {
   currentUser$: Observable<any>;
   appAuthorities$: Observable<AppAuthority>;
   configuration$: Observable<RootCauseAnalysisConfiguration>;
+  dataLoading$: Observable<boolean>;
+  dataLoaded$: Observable<boolean>;
   rootCauseAnalysisData$: Observable<RootCauseAnalysisData[]>;
+  configurationLoading$: Observable<boolean>;
+  configurationLoaded$: Observable<boolean>;
+  widget$: Observable<RootCauseAnalysisWidget>;
+  notification$: Observable<any>;
   lastYear: any = new Date().getFullYear() - 1; // its hack for getting lastYear on init
 
   constructor(private store: Store<State>) {}
@@ -44,6 +56,22 @@ export class HomeComponent implements OnInit {
     );
     this.rootCauseAnalysisData$ = this.store.pipe(
       select(getAllRootCauseAnalysisData)
+    );
+    this.dataLoaded$ = this.store.pipe(
+      select(getRootCauseAnalysisDataLoadedState)
+    );
+    this.dataLoading$ = this.store.pipe(
+      select(getRootCauseAnalysisDataLoadingState)
+    );
+    this.configurationLoading$ = this.store.pipe(
+      select(getConfigurationLoadingState)
+    );
+    this.configurationLoaded$ = this.store.pipe(
+      select(getConfigurationLoadingState)
+    );
+    this.widget$ = this.store.pipe(select(getCurrentRootCauseAnalysisWidget));
+    this.notification$ = this.store.pipe(
+      select(getRootCauseAnalysisDataNotificationState)
     );
   }
 }

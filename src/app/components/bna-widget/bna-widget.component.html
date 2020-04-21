@@ -1,7 +1,5 @@
-<!--*ngIf="(dataLoaded$ | async)"-->
-<div class="table-responsive" *ngIf="(dataLoaded$ | async)">
-  <table class="table table-bordered" #rootCauseAnalysisTable *ngIf="configuration as rootCauseAnalysisConfiguration">
-    <!--*ngIf="configuration as rootCauseAnalysisConfiguration"-->
+<div class="table-responsive" *ngIf="dataLoaded">
+  <table class="table table-bordered" #rootCauseAnalysisTable *ngIf="rootCauseAnalysisConfiguration">
     <thead>
       <tr class="text-muted table-header">
         <td width="1%">#</td>
@@ -15,14 +13,13 @@
         </td>
       </tr>
     </thead>
-    <!--<tbody>-->
     <tbody *ngIf="rootCauseAnalysisData" [@listEnter]>
       <tr [ngClass]="{'orphaned': dataItem.isOrphaned && !toBeDeleted[dataItem.id]}" *ngFor="
           let dataItem of rootCauseAnalysisData;
           let i = index;
           trackBy: dataItem?.id
         "
-        [matTooltip]="dataItem.isOrphaned ? '(Indicator used seems to not be among bottleneck chart indicators)' : '' +  'Right click for edit/delete options'">
+        [matTooltip]="dataItem.isOrphaned ? '(Indicator used seems to not be among bottleneck chart indicators)' : ''">
         <td>{{ i + 1 }}</td>
         <td [hidden]="dataElement.isHidden"
           *ngFor="let dataElement of rootCauseAnalysisConfiguration.dataElements; let j = index"
@@ -65,23 +62,26 @@
       </tr>
 
       <tr *ngIf="appAuthorities.all || appAuthorities.addRootCause">
-        <td class="p-1" [attr.colspan]="rootCauseAnalysisConfiguration?.dataElements?.length">
-          <button class="text-muted" mat-icon-button matTooltip="Add Root cause"
-            (click)="onToggleAddNewRootCauseAnalysisData(configuration)">
-            <mat-icon>add</mat-icon>
-          </button>
+        <td class="p-2" [attr.colspan]="rootCauseAnalysisConfiguration?.dataElements?.length">
+          <div class="d-flex justify-content-end">
+            <button mat-stroked-button color="primary" matTooltip="Add Root cause"
+              (click)="onToggleAddNewRootCauseAnalysisData(rootCauseAnalysisConfiguration)">
+              <mat-icon>add</mat-icon>
+              <span class="ml-2">Add New</span>
+            </button>
+          </div>
         </td>
       </tr>
     </tbody>
   </table>
 </div>
 
-<div [@fadeInOut] *ngIf="(notification$ | async)?.message as notificationMessage">
-  <app-widget-notification-bar (resetNotification)="onResetNotification($event)" [notification]="notificationMessage">
+<div [@fadeInOut] *ngIf="notification?.message">
+  <app-widget-notification-bar (resetNotification)="onResetNotification($event)" [notification]="notification.message">
   </app-widget-notification-bar>
 </div>
 
-<div *ngIf="(!configurationLoaded$ | async) || !(dataLoaded$ | async)">
+<div *ngIf="!configurationLoaded || !dataLoaded">
   <div class="d-flex my-1">
     <div class="flex-fill mx-1" *ngFor="let count of [1, 2, 3, 4, 5, 6, 7]">
       <app-widget-item-loader [height]="'40px'"></app-widget-item-loader>

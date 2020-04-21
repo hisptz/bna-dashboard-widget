@@ -1,5 +1,5 @@
 .auto-filled {
-  background: #fafafa;
+  background: #eeeeee;
 }
 
 .orphaned {
@@ -26,12 +26,11 @@
 
 .table-header {
   font-size: 14px;
-  background: #fafafa;
+  background: #eeeeee;
   font-weight: 400 !important;
 }
 
 .custom-text-area {
-  /* width: 100% !important; */
   padding: 8px 5px !important;
   display: inline !important;
   resize: vertical;
