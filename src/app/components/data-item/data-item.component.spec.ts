@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SelectBoxInputComponent } from './select-box-input.component';
+import { DataItemComponent } from './data-item.component';
 
-describe('SelectBoxInputComponent', () => {
-  let component: SelectBoxInputComponent;
-  let fixture: ComponentFixture<SelectBoxInputComponent>;
+describe('DataItemComponent', () => {
+  let component: DataItemComponent;
+  let fixture: ComponentFixture<DataItemComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SelectBoxInputComponent ]
+      declarations: [ DataItemComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SelectBoxInputComponent);
+    fixture = TestBed.createComponent(DataItemComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

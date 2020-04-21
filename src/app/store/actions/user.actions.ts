@@ -1,10 +1,11 @@
 import { Action } from '@ngrx/store';
-import { User, ErrorMessage, SystemInfo } from '../../models';
+import { SystemInfo } from '../../models';
+import { User, ErrorMessage } from '@iapps/ngx-dhis2-http-client';
 
 export enum UserActionTypes {
   LoadCurrentUser = '[User] Load current User',
   AddCurrentUser = '[User] Add Current User',
-  LoadCurrentUserFail = '[User] Load Current User fail'
+  LoadCurrentUserFail = '[User] Load Current User fail',
 }
 
 export class LoadCurrentUser implements Action {

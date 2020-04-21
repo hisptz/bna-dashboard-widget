@@ -1,6 +1,7 @@
 import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
-import { User, ErrorMessage } from '../../models';
+
 import { UserActions, UserActionTypes } from '../actions/user.actions';
+import { User, ErrorMessage } from '@iapps/ngx-dhis2-http-client';
 
 export interface UserState extends EntityState<User> {
   // additional entities state properties
@@ -33,7 +34,7 @@ export const initialState: UserState = adapter.getInitialState({
   loading: false,
   loaded: false,
   hasError: false,
-  error: null
+  error: null,
 });
 
 export function userReducer(
@@ -47,7 +48,7 @@ export function userReducer(
         loading: true,
         loaded: false,
         hasError: false,
-        error: null
+        error: null,
       };
     }
 
@@ -55,7 +56,7 @@ export function userReducer(
       return adapter.addOne(action.currentUser, {
         ...state,
         loading: false,
-        loaded: true
+        loaded: true,
       });
     }
 
