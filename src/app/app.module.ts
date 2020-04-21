@@ -3,10 +3,12 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NgxDhis2HttpClientModule } from '@iapps/ngx-dhis2-http-client';
 import { EffectsModule } from '@ngrx/effects';
 import {
+  DefaultRouterStateSerializer,
   RouterStateSerializer,
-  StoreRouterConnectingModule, DefaultRouterStateSerializer
+  StoreRouterConnectingModule,
 } from '@ngrx/router-store';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
@@ -15,36 +17,33 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
 import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { AutoFilledInputComponent } from './components/data-item/auto-filled-input/auto-filled-input.component';
-import { SelectBoxInputComponent } from './components/data-item/select-box-input/select-box-input.component';
-import { TextAreaInputComponent } from './components/data-item/text-area-input/text-area-input.component';
+import { BnaWidgetComponent } from './components/bna-widget/bna-widget.component';
+import { DataItemComponent } from './components/data-item/data-item.component';
 import { WidgetContextMenuComponent } from './components/widget-context-menu/widget-context-menu.component';
 import { WidgetItemLoaderComponent } from './components/widget-item-loader/widget-item-loader.component';
 import { WidgetNotificationBarComponent } from './components/widget-notification-bar/widget-notification-bar.component';
 import { directives } from './directives';
-import { BnaWidgetComponent } from './pages/bna-widget/bna-widget.component';
+import { MaterialModule } from './material/material.module';
 import { HomeComponent } from './pages/home/home.component';
 import { effects, metaReducers, reducers } from './store';
 import { RouteSerializer } from './utils';
-import { NgxDhis2HttpClientModule } from '@iapps/ngx-dhis2-http-client';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     BnaWidgetComponent,
-    AutoFilledInputComponent,
-    SelectBoxInputComponent,
-    TextAreaInputComponent,
     WidgetItemLoaderComponent,
     WidgetNotificationBarComponent,
     WidgetContextMenuComponent,
-    ...directives
+    DataItemComponent,
+    ...directives,
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
+    MaterialModule,
 
     AppRoutingModule,
 
@@ -53,11 +52,11 @@ import { NgxDhis2HttpClientModule } from '@iapps/ngx-dhis2-http-client';
     NgxDhis2HttpClientModule.forRoot({
       version: 1,
       namespace: 'iapps',
-      models: {}
+      models: {},
     }),
 
     ConfirmationPopoverModule.forRoot({
-      confirmButtonType: 'danger' // set defaults here
+      confirmButtonType: 'danger', // set defaults here
     }),
 
     /**
@@ -68,7 +67,9 @@ import { NgxDhis2HttpClientModule } from '@iapps/ngx-dhis2-http-client';
     /**
      * @ngrx/router-store keeps router state up-to-date in the store
      */
-    StoreRouterConnectingModule.forRoot({ serializer: DefaultRouterStateSerializer }),
+    StoreRouterConnectingModule.forRoot({
+      serializer: DefaultRouterStateSerializer,
+    }),
 
     /**
      * Module for registering ngrx store side effects
@@ -78,9 +79,9 @@ import { NgxDhis2HttpClientModule } from '@iapps/ngx-dhis2-http-client';
     /**
      * Development tool for debugging ngrx store operations
      */
-    !environment.production ? StoreDevtoolsModule.instrument() : []
+    !environment.production ? StoreDevtoolsModule.instrument() : [],
   ],
   providers: [{ provide: RouterStateSerializer, useClass: RouteSerializer }],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule {}

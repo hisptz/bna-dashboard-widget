@@ -1,10 +1,5 @@
-/* .widget-table-header {
-  background-color: #276696;
-  color: #ffffff;
-} */
-
 .auto-filled {
-  background: #e8ebef;
+  background: #eeeeee;
 }
 
 .orphaned {
@@ -29,12 +24,13 @@
   height: auto;
 }
 
-.table-header-cell {
-  font-size: 13px;
+.table-header {
+  font-size: 14px;
+  background: #eeeeee;
+  font-weight: 400 !important;
 }
 
 .custom-text-area {
-  /* width: 100% !important; */
   padding: 8px 5px !important;
   display: inline !important;
   resize: vertical;
