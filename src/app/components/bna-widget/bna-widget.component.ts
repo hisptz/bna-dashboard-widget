@@ -280,7 +280,7 @@ export class BnaWidgetComponent implements OnInit, OnChanges {
    * @param dataValueObject
    * @param dataItem
    */
-  onDataValuesUpdate(dataValueObject: any, dataItem, dataElements) {
+  onDataValuesUpdate(dataValueObject: any, dataItem) {
     _.each(_.keys(dataValueObject), (dataValueKey) => {
       this.onDataValueUpdate(
         { id: dataValueKey, value: dataValueObject[dataValueKey] },

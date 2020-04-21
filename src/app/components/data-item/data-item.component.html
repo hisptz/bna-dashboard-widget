@@ -11,7 +11,7 @@
 
     <mat-form-field appearance="outline" class="w-100 data-item-field" *ngIf="isActive && dataElement.optionSetValue">
         <mat-label>{{dataElement.name}}</mat-label>
-        <mat-select [value]="dataValues[dataElement.id]" (selectionChange)="onDataValueUpdate($event)">
+        <mat-select [value]="dataValues[dataElement.associatedId]" (selectionChange)="onDataValueUpdate($event, true)">
             <mat-option *ngFor="let selectionOption of selectionOptions" [value]="selectionOption.id"
                 [disabled]="selectionOption.isDisabled">
                 {{selectionOption.name}}
