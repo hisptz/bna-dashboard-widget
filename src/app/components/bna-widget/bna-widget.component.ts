@@ -20,7 +20,6 @@ import { listEnterAnimation } from '../../animations/list-enter-animation';
 import { Store } from '@ngrx/store';
 import { State } from '../../store';
 import { Observable, of } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
 import * as _ from 'lodash';
 import * as fromHelpers from '../../helpers';
 import * as fromModels from '../../store/models';
@@ -59,12 +58,13 @@ export class BnaWidgetComponent implements OnInit, OnChanges {
   @Input() selectedPeriod;
   @Input() appAuthorities: AppAuthority;
   @Input() configuration: RootCauseAnalysisConfiguration;
+  @Input() rootCauseAnalysisData: RootCauseAnalysisData[];
 
   @ViewChild('rootCauseAnalysisTable', { static: false })
   table: ElementRef;
 
   widget$: Observable<fromModels.RootCauseAnalysisWidget>;
-  data$: Observable<fromModels.RootCauseAnalysisData[]>;
+
   configurationLoading$: Observable<boolean>;
   configurationLoaded$: Observable<boolean>;
   dataLoading$: Observable<boolean>;
@@ -93,7 +93,6 @@ export class BnaWidgetComponent implements OnInit, OnChanges {
       fromSelectors.getCurrentRootCauseAnalysisWidget
     );
 
-    this.data$ = store.select(fromSelectors.getAllRootCauseAnalysisData);
     this.configurationLoading$ = store.select(
       fromSelectors.getConfigurationLoadingState
     );
@@ -111,10 +110,6 @@ export class BnaWidgetComponent implements OnInit, OnChanges {
     );
 
     this.unSavedDataItemValues = {};
-
-    this.data$.subscribe((data: any) => {
-      of({ config: this.configuration, lastData: _.last(data) });
-    });
   }
 
   ngOnChanges(simpleChanges: SimpleChanges) {
@@ -257,9 +252,9 @@ export class BnaWidgetComponent implements OnInit, OnChanges {
     this.showContextMenu = false;
   }
 
-  onToggleDelete(dataItem) {
+  onToggleDelete(e, dataItem) {
+    e.stopPropagation();
     dataItem.showDeleteConfirmation = true;
-    this.showContextMenu = false;
     this.toBeDeleted[dataItem.id] = true;
   }
 

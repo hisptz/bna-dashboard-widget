@@ -8,5 +8,6 @@ export interface RootCauseAnalysisData {
   user?: string;
   isActive?: boolean;
   isNew?: boolean;
+  isOrphaned?: boolean;
   savingColor?: string;
 }

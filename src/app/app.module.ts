@@ -3,11 +3,12 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NgxDhis2HttpClientModule } from '@iapps/ngx-dhis2-http-client';
 import { EffectsModule } from '@ngrx/effects';
 import {
+  DefaultRouterStateSerializer,
   RouterStateSerializer,
   StoreRouterConnectingModule,
-  DefaultRouterStateSerializer,
 } from '@ngrx/router-store';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
@@ -16,17 +17,16 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
 import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { BnaWidgetComponent } from './components/bna-widget/bna-widget.component';
+import { DataItemComponent } from './components/data-item/data-item.component';
 import { WidgetContextMenuComponent } from './components/widget-context-menu/widget-context-menu.component';
 import { WidgetItemLoaderComponent } from './components/widget-item-loader/widget-item-loader.component';
 import { WidgetNotificationBarComponent } from './components/widget-notification-bar/widget-notification-bar.component';
 import { directives } from './directives';
-import { BnaWidgetComponent } from './pages/bna-widget/bna-widget.component';
+import { MaterialModule } from './material/material.module';
 import { HomeComponent } from './pages/home/home.component';
 import { effects, metaReducers, reducers } from './store';
 import { RouteSerializer } from './utils';
-import { NgxDhis2HttpClientModule } from '@iapps/ngx-dhis2-http-client';
-import { MaterialModule } from './material/material.module';
-import { DataItemComponent } from './components/data-item/data-item.component';
 
 @NgModule({
   declarations: [

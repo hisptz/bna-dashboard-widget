@@ -9,9 +9,13 @@ import {
   getRouterParams,
   State,
   getCurrentRootCauseAnalysisConfiguration,
+  getAllRootCauseAnalysisData,
 } from '../../store';
 import { getSystemInfo } from '../../store/selectors/system-info.selectors';
-import { RootCauseAnalysisConfiguration } from 'src/app/store/models';
+import {
+  RootCauseAnalysisConfiguration,
+  RootCauseAnalysisData,
+} from 'src/app/store/models';
 
 @Component({
   selector: 'app-home',
@@ -25,6 +29,7 @@ export class HomeComponent implements OnInit {
   currentUser$: Observable<any>;
   appAuthorities$: Observable<AppAuthority>;
   configuration$: Observable<RootCauseAnalysisConfiguration>;
+  rootCauseAnalysisData$: Observable<RootCauseAnalysisData[]>;
   lastYear: any = new Date().getFullYear() - 1; // its hack for getting lastYear on init
 
   constructor(private store: Store<State>) {}
@@ -36,6 +41,9 @@ export class HomeComponent implements OnInit {
     this.appAuthorities$ = this.store.select(getAppManagementAuthorities);
     this.configuration$ = this.store.pipe(
       select(getCurrentRootCauseAnalysisConfiguration)
+    );
+    this.rootCauseAnalysisData$ = this.store.pipe(
+      select(getAllRootCauseAnalysisData)
     );
   }
 }

@@ -7,6 +7,7 @@ import {
   OnChanges,
 } from '@angular/core';
 import { find } from 'lodash';
+import { DataElement } from 'src/app/store/models/data-element.model';
 
 @Component({
   selector: 'app-data-item',
@@ -14,7 +15,7 @@ import { find } from 'lodash';
   styleUrls: ['./data-item.component.css'],
 })
 export class DataItemComponent implements OnInit, OnChanges {
-  @Input() dataElement: any;
+  @Input() dataElement: DataElement;
   @Input() dataValues: any;
   @Input() isActive: boolean;
   @Input() selectionList: any[];

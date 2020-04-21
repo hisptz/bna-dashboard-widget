@@ -12,49 +12,43 @@
           ">
           {{ dataElement.name }}
         </td>
+        <td width="1%">Actions</td>
       </tr>
     </thead>
     <!--<tbody>-->
-    <tbody *ngIf="(data$ | async) as rootCauseAnalysisData" [@listEnter]>
-      <tr
-        title="{{dataItem.isOrphaned ? '(Indicator used seems to not be among bottleneck chart indicators)' : ''}} Right click for edit/delete options"
-        [ngClass]="{'orphaned': dataItem.isOrphaned}" *ngFor="
+    <tbody *ngIf="rootCauseAnalysisData" [@listEnter]>
+      <tr [ngClass]="{'orphaned': dataItem.isOrphaned && !toBeDeleted[dataItem.id]}" *ngFor="
           let dataItem of rootCauseAnalysisData;
           let i = index;
           trackBy: dataItem?.id
-        ">
+        "
+        [matTooltip]="dataItem.isOrphaned ? '(Indicator used seems to not be among bottleneck chart indicators)' : '' +  'Right click for edit/delete options'">
         <td>{{ i + 1 }}</td>
-        <td [hidden]="dataElement.isHidden || toBeDeleted[dataItem.id]" *ngFor="
-            let dataElement of rootCauseAnalysisConfiguration.dataElements;
-            let j = index
-          " [ngClass]="{ 'auto-filled': dataElement.valueType == 'AUTO_FILLED' && !dataItem.isOrphaned }"
-          (dblclick)="onToggleEdit($event, dataItem)" (contextmenu)="onEnableContextMenu($event, dataItem)">
+        <td [hidden]="dataElement.isHidden || toBeDeleted[dataItem.id]"
+          *ngFor="let dataElement of rootCauseAnalysisConfiguration.dataElements; let j = index"
+          [ngClass]="{ 'auto-filled': dataElement.valueType == 'AUTO_FILLED' && !dataItem.isOrphaned }">
           <app-data-item [dataElement]="dataElement" [dataValues]="dataItem.dataValues" [isActive]="dataItem.isActive"
             (dataValueUpdate)="onDataValueUpdate($event, dataItem)" [selectionList]="routerParams?.groups">
           </app-data-item>
-          <!-- <div *ngIf="
-              (!dataItem.isActive && !dataItem.isHidden) ||
-              (dataItem.isActive &&
-                !dataElement.optionSetValue &&
-                dataElement.valueType == 'AUTO_FILLED')
-            " class="form-control auto-filled-label table-cell-data">
-            {{ dataItem.dataValues[dataElement.id] }}
-          </div> -->
-          <!-- <app-select-box-input [backgroundColor]="savingColor" *ngIf="dataItem.isActive && dataElement.optionSetValue"
-            [dataItemValue]="dataItem.dataValues[dataElement.id]" [dataElement]="dataElement"
-            [dataValues]="dataItem.dataValues" (updateDataValues)="
-              onDataValuesUpdate(
-                $event,
-                dataItem,
-                rootCauseAnalysisConfiguration.dataElement
-              )
-            " [groups]="routerParams?.groups"></app-select-box-input> -->
-          <a title="Save when done" class="text-secondary custom-done-icon" (click)="onDoneEditing($event, dataItem)"
-            *ngIf="
-              j == rootCauseAnalysisConfiguration.dataElements.length - 1 &&
-              dataItem.isActive
-            ">
-            <i class="icon-ok-circled2"></i></a>
+        </td>
+        <td class="p-1">
+          <ng-container *ngIf="!dataItem.isActive">
+            <button mat-icon-button [matMenuTriggerFor]="menu">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+              <button mat-menu-item (click)="onToggleEdit($event, dataItem)">
+                <mat-icon>edit</mat-icon>
+                <span>Edit</span>
+              </button>
+              <button mat-menu-item (click)="onToggleDelete($event, dataItem)">
+                <mat-icon>delete</mat-icon>
+                <span>Delete</span>
+              </button>
+            </mat-menu>
+          </ng-container>
+          <button *ngIf="dataItem.isActive" mat-flat-button color="primary"
+            (click)="onDoneEditing($event, dataItem)">Done</button>
         </td>
         <td class="delete-message" *ngIf="toBeDeleted[dataItem.id]" colspan="100%">
           Are you sure wish to delete this data? <br />
@@ -76,12 +70,6 @@
       </tr>
     </tbody>
   </table>
-</div>
-
-<div *ngIf="showContextMenu === true">
-  <app-widget-context-menu [dataItem]="contextmenuDataItem" appClickOutside (clickOutside)="showContextMenu = false"
-    (openEditForm)="onToggleEdit($event)" (openDeleteForm)="onToggleDelete($event)" [x]="contextmenuX"
-    [y]="contextmenuY">{{ contextmenuX }}</app-widget-context-menu>
 </div>
 
 <div [@fadeInOut] *ngIf="(notification$ | async)?.message as notificationMessage">
