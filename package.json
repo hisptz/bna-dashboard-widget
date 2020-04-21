@@ -27,7 +27,7 @@
     "@ngrx/entity": "^9.1.0",
     "@ngrx/router-store": "^9.1.0",
     "@ngrx/store": "^9.1.0",
-    "angular-confirmation-popover": "^4.2.2",
+    "angular-confirmation-popover": "^5.0.0",
     "bootstrap": "^4.4.1",
     "core-js": "^3.6.5",
     "lodash": "^4.17.15",
