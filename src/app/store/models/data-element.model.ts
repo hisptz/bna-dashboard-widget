@@ -5,6 +5,7 @@ export interface DataElement {
   optionSetValue: boolean;
   isHidden?: boolean;
   parentId?: string;
+  associatedId?: string;
   optionSet?: {
     option: Array<{
       id: string;

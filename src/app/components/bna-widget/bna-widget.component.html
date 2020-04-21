@@ -25,7 +25,8 @@
           *ngFor="let dataElement of rootCauseAnalysisConfiguration.dataElements; let j = index"
           [ngClass]="{ 'auto-filled': dataElement.valueType == 'AUTO_FILLED' && !dataItem.isOrphaned }">
           <app-data-item [dataElement]="dataElement" [dataValues]="dataItem.dataValues" [isActive]="dataItem.isActive"
-            (dataValueUpdate)="onDataValueUpdate($event, dataItem)" [selectionList]="routerParams?.groups">
+            (dataValueUpdate)="onDataValueUpdate($event, dataItem)"
+            (dataValuesUpdate)="onDataValuesUpdate($event, dataItem)" [selectionList]="routerParams?.groups">
           </app-data-item>
         </td>
         <td class="p-1">

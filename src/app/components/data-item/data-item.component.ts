@@ -30,6 +30,12 @@ export class DataItemComponent implements OnInit, OnChanges {
     value: string;
   }>();
 
+  @Output() dataValuesUpdate: EventEmitter<{
+    [id: string]: [string];
+  }> = new EventEmitter<{
+    [id: string]: [string];
+  }>();
+
   constructor() {}
 
   ngOnChanges() {
@@ -38,7 +44,7 @@ export class DataItemComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {}
 
-  onDataValueUpdate(e) {
+  onDataValueUpdate(e, groupSelection?: boolean) {
     if (e) {
       let value = e.value;
 
@@ -48,10 +54,19 @@ export class DataItemComponent implements OnInit, OnChanges {
       }
 
       if (value) {
-        this.dataValueUpdate.emit({
-          id: this.dataElement.id,
-          value,
-        });
+        if (groupSelection) {
+          const selectedOption = find(this.selectionOptions, ['id', value]);
+
+          this.dataValuesUpdate.emit({
+            [this.dataElement.id]: selectedOption ? selectedOption.name : '',
+            [this.dataElement.associatedId]: value,
+          });
+        } else {
+          this.dataValueUpdate.emit({
+            id: this.dataElement.id,
+            value,
+          });
+        }
       }
     }
   }
