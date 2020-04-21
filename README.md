@@ -1,9 +1,6 @@
 # BNA Root Cause Data Entry
 
-[![Build Status](https://travis-ci.org/hisptz/bna-dashboard-widget.svg?branch=master)](https://travis-ci.org/hisptz/bna-dashboard-widget)
-[![Maintainability](https://api.codeclimate.com/v1/badges/777402c7899387461c62/maintainability)](https://codeclimate.com/github/hisptz/bna-dashboard-widget/maintainability)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/777402c7899387461c62/test_coverage)](https://codeclimate.com/github/hisptz/bna-dashboard-widget/test_coverage)
-[![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/) [![Greenkeeper badge](https://badges.greenkeeper.io/hisptz/bna-dashboard-widget.svg)](https://greenkeeper.io/)
+[![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 
 Bottleneck analysis root cause data entry widget
 
