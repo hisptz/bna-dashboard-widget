@@ -30,7 +30,7 @@
           " [ngClass]="{ 'auto-filled': dataElement.valueType == 'AUTO_FILLED' && !dataItem.isOrphaned }"
           (dblclick)="onToggleEdit($event, dataItem)" (contextmenu)="onEnableContextMenu($event, dataItem)">
           <app-data-item [dataElement]="dataElement" [dataValues]="dataItem.dataValues" [isActive]="dataItem.isActive"
-            (dataValueUpdate)="onDataValueUpdate($event, dataItem)">
+            (dataValueUpdate)="onDataValueUpdate($event, dataItem)" [selectionList]="routerParams?.groups">
           </app-data-item>
           <!-- <div *ngIf="
               (!dataItem.isActive && !dataItem.isHidden) ||
@@ -40,7 +40,7 @@
             " class="form-control auto-filled-label table-cell-data">
             {{ dataItem.dataValues[dataElement.id] }}
           </div> -->
-          <app-select-box-input [backgroundColor]="savingColor" *ngIf="dataItem.isActive && dataElement.optionSetValue"
+          <!-- <app-select-box-input [backgroundColor]="savingColor" *ngIf="dataItem.isActive && dataElement.optionSetValue"
             [dataItemValue]="dataItem.dataValues[dataElement.id]" [dataElement]="dataElement"
             [dataValues]="dataItem.dataValues" (updateDataValues)="
               onDataValuesUpdate(
@@ -48,7 +48,7 @@
                 dataItem,
                 rootCauseAnalysisConfiguration.dataElement
               )
-            " [groups]="routerParams?.groups"></app-select-box-input>
+            " [groups]="routerParams?.groups"></app-select-box-input> -->
           <a title="Save when done" class="text-secondary custom-done-icon" (click)="onDoneEditing($event, dataItem)"
             *ngIf="
               j == rootCauseAnalysisConfiguration.dataElements.length - 1 &&

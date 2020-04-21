@@ -283,7 +283,6 @@ export class BnaWidgetComponent implements OnInit, OnChanges {
    * @param dataItemValue
    */
   onDataValueUpdate({ id, value }, dataItem) {
-    console.log(value);
     if (value) {
       const unSavedDataItem = this.unSavedDataItemValues[dataItem.id];
       this.unSavedDataItemValues[dataItem.id] = unSavedDataItem

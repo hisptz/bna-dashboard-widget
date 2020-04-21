@@ -3,8 +3,19 @@
         {{dataValues[dataElement.id]}}
     </div>
 
-    <mat-form-field class="w-100" *ngIf="isActive && !dataElement.optionSetValue && dataElement.valueType=='TEXT'">
+    <mat-form-field appearance="outline" class="w-100"
+        *ngIf="isActive && !dataElement.optionSetValue && dataElement.valueType=='TEXT'">
         <mat-label>{{dataElement.name}}</mat-label>
-        <textarea matInput [value]="dataValues[dataElement.id]" (blur)="onDataValueUpdate($event)"></textarea>
+        <textarea matInput [value]="dataValues[dataElement.id]" rows="1" (blur)="onDataValueUpdate($event)"></textarea>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-100" *ngIf="isActive && dataElement.optionSetValue">
+        <mat-label>{{dataElement.name}}</mat-label>
+        <mat-select [value]="dataValues[dataElement.id]" (selectionChange)="onDataValueUpdate($event)">
+            <mat-option *ngFor="let selectionOption of selectionOptions" [value]="selectionOption.id"
+                [disabled]="selectionOption.isDisabled">
+                {{selectionOption.name}}
+            </mat-option>
+        </mat-select>
     </mat-form-field>
 </div>
