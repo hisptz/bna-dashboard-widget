@@ -1,5 +1,6 @@
 # BNA Root Cause Data Entry
 
+[![CI](https://github.com/hisptz/bna-dashboard-widget/workflows/CI/badge.svg)](https://github.com/hisptz/bna-dashboard-widget/actions?query=workflow%3ACI)
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 
 Bottleneck analysis root cause data entry widget
