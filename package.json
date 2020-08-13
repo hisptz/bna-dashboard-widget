@@ -30,7 +30,7 @@
     "angular-confirmation-popover": "^5.0.0",
     "bootstrap": "^4.4.1",
     "core-js": "^3.6.5",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.20",
     "ngx-contextmenu": "^5.4.0",
     "rxjs": "^6.5.5",
     "tslib": "^1.10.0",
