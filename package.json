@@ -45,7 +45,7 @@
     "@ngrx/store-devtools": "^9.1.0",
     "@types/jasmine": "~3.5.10",
     "@types/jasminewd2": "~2.0.8",
-    "@types/node": "^13.13.1",
+    "@types/node": "^15.0.3",
     "codelyzer": "^5.1.2",
     "commitizen": "^4.0.4",
     "cz-conventional-changelog": "^3.1.0",
